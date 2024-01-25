@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html')),
+    path("accounts/", include("allauth.urls")),
     path('admin/', admin.site.urls),
     path('api/api-auth/', include('rest_framework.urls')),
     path('api/dj-rest-auth/logout/', logout_route),
@@ -12,6 +13,7 @@ urlpatterns = [
     path('api/dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
     path('api/', include('sudoku.urls')),
     path('api/', include('player_profile.urls')),
+    path('api/crossword_builder/', include('crosswords.urls')),
 ]
 
 handler404 = TemplateView.as_view(template_name='index.html')

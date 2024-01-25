@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/grid_editor.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-3">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h5>Create New Puzzle</h5>
+            <form id="new-puzzle-form">
+                <div class="row mt-2">
+                    <div class="col-2">
+                        <label for="col-count">Columns</label>
+                    </div>
+                    <div class="col">
+                        <input type="number" id="col-count" max="25" min="3" value="14">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-2">
+                        <label for="row-count">Rows</label>
+                    </div>
+                    <div class="col">
+                        <input type="number" id="row-count" max="25" min="3" value="14">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-2">
+                        <label for="puzzle-type">Puzzle Type</label>
+                    </div>
+                    <div class="col">
+                        <select type="number" id="puzzle-type">
+                            <option value="CROSSWORD">Crossword</option>
+                            <option value="CRANAGRAM">Cranagram</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col">
+                        <input type="submit" value="Generate">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <hr class="mt-5">
+    </div>
+
+    <!-- Overall puzzle stats -->
+    <h2 class="text-center">Stats</h2>
+    <div class="row">
+        <div class="col">
+            <h5># Total</h5>
+        </div>
+        <div class="col">
+            <h5>{{ total_count }}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h5># Complete</h5>
+        </div>
+        <div class="col">
+            <h5>{{ completed_count }}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h5># Reviewed</h5>
+        </div>
+        <div class="col">
+            <h5>{{ reviewed_count }}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h5># Released</h5>
+        </div>
+        <div class="col">
+            <h5>{{ released_count }}</h5>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col text-center">
+            {% for item in puzzles%}
+            <hr>
+            <h5 class="fw-bold">#{{item.puzzle.id}}</h5>
+            <h5 class="fw-bold mb-3">({{ item.puzzle.last_edited }})</h6>
+            <div class="row text-center">
+                <div class="col border">
+                    <span>Clues {{ item.clues_present}}/{{ item.total_clues }}</span>
+                </div>
+                <div class="col border">
+                    <span>Sols {{ item.solutions_present }}/{{ item.total_clues }}</span>
+                </div>
+                <div class="col border">
+                    <span>Cells : {{ item.cell_concentration }}%</span>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col border {% if item.puzzle.complete %}status-true{% else %}status-false{% endif %}">
+                    Complete
+                </div>
+                <div class="col border {% if item.puzzle.reviewed %}status-true{% else %}status-false{% endif %}">
+                    Reviewed
+                </div>
+                <div class="col border {% if item.puzzle.released %}status-true{% else %}status-false{% endif %}">
+                    Released
+                </div>
+            </div>
+            
+            <!-- The holder for the js-generated clickable puzzle thumbnail -->
+            <div id="thumbnail_{{ item.puzzle.id }}"></div>
+
+            <div class="row my-3 text-center">
+                <div class="col">
+                    <button class="btn btn-primary" id="reviewed-button-{{ item.puzzle.id }}">Mark Reviewed</button>
+                    <button class="btn btn-success mx-2" id="released-button-{{ item.puzzle.id }}">Mark Released</button>
+                    <button class="btn btn-danger" id="delete-button-{{ item.puzzle.id }}">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row" id="thumbnail-holder">
+        {% for item in puzzles%}
+        <h1>{{ item.puzzle.cells }}</h1>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+{{ json_list | json_script:"id_puzzle" }}
+<script src="{% static 'js/builder_home.js' %}" type="module"></script>
+{% endblock %}

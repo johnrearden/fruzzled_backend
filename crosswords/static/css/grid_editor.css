@@ -1,0 +1,240 @@
+:root {
+    --grid-cols: 10;
+    --grid-rows: 10;
+    --char-size: 40px;
+    transition: 0.2s all;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+body {
+    padding-top: 64px;
+}
+
+.bg-grey {
+    background-color: #cccccc;
+}
+
+.letter-end {
+    color: red;
+}
+
+.letter-start {
+    color: rgb(20, 97, 0);
+}
+
+.letter-middle {
+    color: blue;
+}
+
+.text-black {
+    color: black;
+}
+
+#grid-editor-div {
+    justify-content: center;
+    display: grid;
+    grid-template-rows: repeat(var(--grid-rows), var(--char-size));
+    grid-template-columns: repeat(var(--grid-cols), var(--char-size));
+}
+
+.puzzle-grid-thumbnail {
+    display: grid;
+    justify-content: center;
+}
+
+.blank {
+    background-color: black;
+}
+
+.cell-div {
+    font-family: sans-serif;
+    font-weight: bold;
+    border: 1px solid black;
+    position: relative;
+    width: var(--char-size);
+    height: var(--char-size);
+}
+
+.cell-value-span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: calc(var(--char-size) * 0.75);
+    line-height: var(--char-size);
+}
+
+.open {
+    color: black;
+}
+
+.open:hover {
+    border: 1px solid blue;
+    background-color: #0000ff55;
+}
+
+.blank:hover {
+    border: 1px solid blue;
+    background-color: #0000ffcc;
+}
+
+.numbered {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    font-size: calc(var(--char-size) * 0.25);
+    line-height: 0.7rem;
+}
+
+.highlighted-cell {
+    box-sizing: border-box;
+    background-color: #ffaa50 !important;
+}
+
+.highlighted-clue {
+    background-color: #ffa50050;
+}
+
+#current-clue-div {
+    height: var(--char-size);
+}
+
+.clue-character {
+    font-family: sans-serif;
+    position: relative;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: calc(var(--char-size) * 0.5);
+    line-height: var(--char-size);
+    padding: 2px;
+}
+
+#matches-div, #definition-div {
+    overflow: auto;
+}
+
+.def-input {
+    width: 100%;
+    font-size: 18px;
+}
+
+.match-word {
+    display: inline-block;
+    font-family: monospace;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 2px 5px;
+    margin: 3px;
+    background-color: #eeeeee;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+}
+
+.match-letter {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.match-word:hover {
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+.letter-button {
+    font-size: 1.2rem;
+    background-color: #0b0954;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    padding: 5px 10px;
+    margin: 0 10px;
+}
+
+.form-switch, .form-check {
+    height: calc(1.2rem + 20px) !important;
+    background-color: #0b0954;
+    color: white;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+#virtual-keyboard {
+    background-color: grey;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.close-button {
+    position: absolute;
+    bottom: 4px;
+    right: 10px;
+    background-color: black !important;
+    color: white;
+}
+
+#clue-display {
+    font-size: 16px;
+}
+
+.virtual-key {
+    display: inline-block;
+    padding-top: 3px;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    line-height: 21px;
+    border-radius: 4px;
+    background-color: lightgrey;
+    border: 1px solid darkgrey;
+    text-transform: uppercase;
+    margin: 2px 2px;
+}
+
+#keyboard-closer:hover {
+    cursor: pointer;
+}
+
+.self-dismissing-message-holder {
+    background-color: rgb(1, 1, 128);
+    color: white;
+    border-radius: 10px;
+    border: 1px solid gray;
+    position: fixed;
+    top: 25%;
+    left: 25%;
+    margin: 0 auto;
+    z-index: 9999;
+    width: 50%;
+    padding: 10px;
+}
+
+#clues-across-list, #clues-down-list {
+    text-align: start;
+}
+
+
+/* These elements style the builder_home page */
+
+.grid_thumbnail {
+    display: grid;
+}
+
+.animation-div {
+    height: 40vh;
+    width: 100vw;
+    background-color: grey;
+    position: relative;
+}
+
+.animation-span {
+    position: absolute;
+    font-size: 4rem;
+}
