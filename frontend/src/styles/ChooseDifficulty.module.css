@@ -1,0 +1,20 @@
+.FadeIn {
+    opacity: 0;
+    animation: fadeIn 2s;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards; 
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    70% {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

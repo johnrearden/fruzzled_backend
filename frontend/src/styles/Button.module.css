@@ -1,0 +1,75 @@
+.Button {
+    /* font-size: 0.8rem; */
+    align-self: center;
+    border-radius: 10px;
+    padding: 4px 10px;
+    background: linear-gradient(var(--brgt-color), var(--button-color));
+    color: var(--fg-color) !important;
+    border: none;
+    margin:  2px 5px !important;
+    box-shadow: 1px 1px 2px 1px var(--shadow-color);
+}
+
+.MinWidth {
+    min-width: 120px;
+}
+
+.Button:hover {
+    margin: 0 3px !important;
+    cursor: pointer;
+    border: 2px solid var(--fg-color);
+}
+
+.Button i {
+    color: inherit;
+}
+
+.Button:hover:active {
+    background-color: var(--brgt-color) !important;
+    border: none;
+}
+
+.Button:active {
+    background-color: var(--brgt-color) !important;
+    border: none;
+}
+
+.Button:focus, .Button:selected {
+    background-color: var(--brgt-color) !important;
+    border: none;
+}
+
+.Wide {
+    padding: 10px 50px;
+    width: 100%;
+}
+
+.Wider {
+    padding: 5px 40px;
+    font-size: 1.1rem;
+}
+
+.NavbarButton {
+    font-size: 0.8rem;
+    align-self: center;
+    border-radius: 10px;
+    padding: 4px 10px;
+    margin-left: 2px;
+    margin-right: 2px;
+    color: var(--fg-color) !important;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.NavbarButton:hover {
+    font-size: 0.8rem;
+    align-self: center;
+    border-radius: 10px;
+    padding: 4px 10px;
+    margin-left: 2px;
+    margin-right: 2px;
+    color: var(--fg-color) !important;
+    background-color: var(--bg-color);
+    box-shadow: none;
+}
+

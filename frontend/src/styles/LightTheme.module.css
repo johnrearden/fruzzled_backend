@@ -1,0 +1,15 @@
+/* :root {
+    --bg-color: #d0d6d6;
+    --fg-color: #041421;
+    --scnd-color: #86b9b0;
+    --thrd-color: #4c7273;
+} */
+
+:root {
+    --bg-color: #d6cfbf;
+    --fg-color: #4e4d49;
+    --scnd-color: #e2c58d;
+    --thrd-color: #b8a690;
+    --brgt-color: #e4dfcb;
+    --warn-color: #e0492b;
+}

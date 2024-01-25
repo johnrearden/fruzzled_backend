@@ -1,0 +1,41 @@
+.NavBar {
+    background-color: var(--nav-bckgnd);
+    border-bottom: 1px solid #dadadf;
+    transition: .2s;
+}
+
+.FreckleFaceFont {
+    font-family: "Freckle Face";
+    color: var(--fg-color);
+}
+
+.NavLink {
+    color: var(--fg-color);
+    padding: 0 14px;
+    margin: auto;
+}
+
+
+.NavLink:hover{
+    color: var(--fg-color);
+}
+
+.NavLink i {
+    font-size: 1.1rem;
+    color: var(--fg-color);
+}
+
+.NavLink i:hover {
+    color: var(--fg-color);
+}
+
+.NavLink span:hover, h4:hover {
+    border-bottom: 1px solid var(--fg-color);
+}
+
+.NavLink span {
+    margin-left: 6px;
+}
+
+
+

@@ -1,0 +1,62 @@
+.icon_button {
+    color: var(--fg-color);
+    background-color: var(--bg-color);
+    border: 1px solid var(--fg-color);
+    border-radius: 4px;
+    margin: 0 5px;
+}
+
+.icon_button:hover {
+    background-color: var(--fg-color);
+    color: var(--bg-color);
+}
+
+i {
+    color: var(--fg-color);
+}
+
+.SuccessMessage {
+    position: absolute;
+    color: var(--fg-color);
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    opacity: 0;
+    transition: 2s all;
+}
+
+.PointerEventsOn {
+    pointer-events: auto;
+}
+
+.PointerEventsOff {
+    pointer-events: none;
+}
+
+.ProfileModal {
+    background-color: var(--thrd-color) !important;
+}
+
+.RevealMessage {
+    animation: fadeIn 1.5s;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards; 
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    70% {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+    
+}
+
+
+

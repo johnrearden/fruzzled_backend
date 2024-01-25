@@ -1,0 +1,16 @@
+.Cell {
+    width: var(--size);
+    height: var(--size);
+    background-color: var(--thrd-color);
+    color: var(--fg-color);
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    /* border: 1px solid var(--bg-color); */
+    
+}
+
+.Digit {
+    text-align: center;
+    font-size: calc(var(--size) * 0.22);
+}

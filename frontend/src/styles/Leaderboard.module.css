@@ -1,0 +1,46 @@
+.RankingRow {
+    color: var(--fg-color);
+}
+
+.RankingHeader {
+    color: var(--scnd-color);
+    font-weight: bold;
+}
+
+.UserRanking {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: yellowgreen;
+    animation: slideIn 0.7s;
+    animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
+}
+
+.FlagBackground {
+    background-color: var(--thrd-color);
+    padding: 10px;
+}
+
+hr {
+    color: var(--fg-color) !important;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    80% {
+        transform: translateX(10%);
+    }
+
+    90% {
+        transform: translateX(-5%);
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

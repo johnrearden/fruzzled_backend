@@ -1,0 +1,59 @@
+.Cell {
+    width: var(--size);
+    height: var(--size);
+    background-color: var(--thrd-color);
+    color: var(--fg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: 1px solid var(--bg-color); */
+    font-size: calc(var(--size) * 0.75);
+}
+
+.Selected {
+    background-color:var(--scnd-color);
+}
+
+.Warning {
+    background-color: var(--brgt-color);
+}
+
+.Clashing_Cell {
+    color: var(--warn-color);
+}
+
+.Offending_Choice {
+    background-color: var(--scnd-color);
+    color: var(--warn-color);
+}
+
+.spin_to_correct {
+    animation: letter_spin 1s;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+.Unclickable {
+    pointer-events: none;
+}
+
+@keyframes letter_spin {
+    from {
+        transform: rotateY(0deg);
+    }
+
+    25% {
+        transform: rotateY(90deg);
+    }
+
+    50% {
+        box-shadow: inset 0px 0px 4px 2px var(--fg-color);
+        color: var(--fg-color);
+        transform: rotateY(0deg);
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+

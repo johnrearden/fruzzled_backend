@@ -1,0 +1,31 @@
+.Grid {
+    border: 2px solid var(--fg-color);
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    gap: 0 0;
+}
+
+.Grid div {
+    border-right: 2px solid var(--bg-color);
+}
+
+.Grid div:nth-child(-n+72) {
+    border-bottom: 2px solid var(--bg-color);
+}
+
+.Grid div:nth-child(n+19):nth-child(-n+27) {
+    border-bottom: 2px solid var(--fg-color);
+}
+
+.Grid div:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 2px solid var(--fg-color);
+}
+
+.Grid div:nth-child(3n) {
+    border-right: 2px solid var(--fg-color);
+}
+
+.Grid div:nth-child(9n) {
+    border-right: none;
+}

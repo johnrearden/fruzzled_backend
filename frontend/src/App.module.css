@@ -1,0 +1,61 @@
+:root {
+    --size: clamp(25px, calc(100vw / 10), 50px);
+}
+
+.App {
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    min-height: 100vh;
+}
+
+.Main {
+    padding-top: 90px;
+}
+
+.Image {
+    max-height: 40vh;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+* {
+    box-sizing: border-box;
+    /* transition: .2s all; */
+}
+
+a {
+    color: var(--thrd-color);
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a i {
+    color: var(--thrd-color);
+    font-size: 0.9rem;
+    padding: 3px;
+    vertical-align: middle;
+}
+
+figure {
+    text-align: center;
+    display: inline-block;
+}
+
+/* scrollbar */
+*::-webkit-scrollbar {
+    width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
