@@ -133,7 +133,19 @@ WSGI_APPLICATION = 'fruzzled_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
+if USE_SERVER_POSTGRES in os.environ:
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'crosswordbackend',
+        'USER': os.environ['DATABASE_USER'],
+        'PASSWORD': os.environ['DATABASE_PASSWORD'],
+        'HOST': 'localhost',
+        'PORT': 5432,
+        'ATOMIC_REQUESTS': True,
+    }
+} else :
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
