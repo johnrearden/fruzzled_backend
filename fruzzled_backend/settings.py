@@ -137,7 +137,7 @@ if 'USE_SERVER_POSTGRES' in os.environ:
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'crosswordbackend',
+        'NAME': os.environ.get('DATABASE_NAME'),
         'USER': os.environ['DATABASE_USER'],
         'PASSWORD': os.environ['DATABASE_PASSWORD'],
         'HOST': 'localhost',
