@@ -133,7 +133,7 @@ WSGI_APPLICATION = 'fruzzled_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if USE_SERVER_POSTGRES in os.environ:
+if 'USE_SERVER_POSTGRES' in os.environ:
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -144,7 +144,8 @@ if USE_SERVER_POSTGRES in os.environ:
         'PORT': 5432,
         'ATOMIC_REQUESTS': True,
     }
-} else :
+} 
+else:
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
