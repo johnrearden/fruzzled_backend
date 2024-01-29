@@ -1,0 +1,16 @@
+.large_icon {
+    width: 2.5vw;
+    height: 2.5vw;
+}
+
+.link {
+    color: black;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.background {
+    background-image: linear-gradient(transparent 0%, #00000010 95%, transparent 100%);
+    padding-bottom: 10px;
+}

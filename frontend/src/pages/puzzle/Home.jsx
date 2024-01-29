@@ -4,8 +4,11 @@ import { LCLSTRG_KEY } from '../../constants/constants'
 import { NavLink } from 'react-router-dom'
 import styles from '../../styles/NavBar.module.css';
 import { Row } from 'react-bootstrap';
+import { SiteLogo } from '../../components/SiteLogo';
 
 const Home = () => {
+
+    const mainLogoText = ['f', 'r', 'u', 'z', 'z', 'l', 'e', 'd'];
 
     const [prevPuzzle, setPrevPuzzle] = useState(null);
 
@@ -19,7 +22,17 @@ const Home = () => {
 
     return (
         <>
-            <div><h1 className="text-center mt-5 mb-3">Sudoku<small className="text-muted"> (demo)</small></h1></div>
+            <Row className="mt-5 d-flex justify-content-center">
+                <SiteLogo
+                    mainText={mainLogoText}
+                />
+            </Row>
+
+            <div className="mt-5">
+                <h1 className="text-center mt-5 mb-3">
+                    Sudoku<small className="text-muted"> (demo)</small>
+                </h1>
+            </div>
             <ChooseDifficulty />
 
             <Row className="justify-content-center mt-5">

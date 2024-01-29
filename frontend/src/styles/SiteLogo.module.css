@@ -1,0 +1,108 @@
+.fancy_text {
+    display: grid;
+    --base-font-size: 100px;
+    position: relative;
+    font-size: var(--base-font-size);
+    line-height: var(--base-font-size);
+    --component-delay: 0.5s;
+}
+
+.FreckleFaceFont {
+    font-family: "Freckle Face";
+}
+
+.shadow {
+    position: absolute;
+    left: 0;
+    right: 0;
+    transform: scale(1, -1) translateY(calc(var(--base-font-size) / -1.6));
+    color: black;
+    opacity: 0.2;
+}
+
+.suffix {
+    font-size: calc(var(--base-font-size) * 0.6);
+    animation-name: slidein;
+    animation-duration: 0.7s;
+    animation-delay: calc(var(--component-delay) + 0.2s);
+    display: inline-block;
+}
+
+.hoppers {
+    display: inline-block;
+}
+
+.hoppers div:nth-child(n) {
+    animation-name: hop;
+    animation-duration: 0.8s;
+}
+
+.hoppers div:nth-child(1) {
+    animation-delay: calc(var(--component-delay) + 0.1s);
+}
+
+.hoppers div:nth-child(2) {
+    animation-delay: calc(var(--component-delay) + 0.15s);
+}
+
+.hoppers div:nth-child(3) {
+    animation-delay: calc(var(--component-delay) + 0.2s);
+}
+
+.hoppers div:nth-child(4) {
+    animation-delay: calc(var(--component-delay) + 0.25s);
+}
+
+.hoppers div:nth-child(5) {
+    animation-delay: calc(var(--component-delay) + 0.3s);
+}
+
+.hoppers div:nth-child(6) {
+    animation-delay: calc(var(--component-delay) + 0.35s);
+}
+
+.hoppers div:nth-child(7) {
+    animation-delay: calc(var(--component-delay) + 0.4s);
+}
+
+.hoppers div:nth-child(8) {
+    animation-delay: calc(var(--component-delay) + 0.45s);
+}
+
+@keyframes slidein {
+    from {
+        transform: translateX(calc(var(--base-font-size) * -6)) rotate(0) scale(0.1);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0) rotate(1080deg) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes hop {
+    from {
+        transform: translateY(0);
+    }
+
+    30% {
+        transform: translateY(calc(var(--base-font-size) * -0.667));
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+@media screen and (max-width:767px) {
+    .fancy_text {
+        --base-font-size: 80px;
+    }
+} 
+
+@media screen and (max-width: 575px) {
+    .fancy_text {
+        --base-font-size: 70px;
+    }
+}

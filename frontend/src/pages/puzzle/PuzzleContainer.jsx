@@ -78,7 +78,6 @@ const PuzzleContainer = () => {
                     getQuery = `?used_puzzles=${puzzleHistory}`;
                 }
                 const url = `/get_random_puzzle/${difficulty}/${getQuery}`;
-                console.log('url: ', url);
                 const { data } = await axiosReq.get(url);
                 setPuzzleData(data);
                 const searchArrays = getSearchArraysFromGrid(data.grid);

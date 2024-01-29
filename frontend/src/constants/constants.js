@@ -9,6 +9,26 @@ export const LCLSTRG_KEY = "puzzleData";
 
 export const NICKNAME_AVAILABLE_THROTTLE_TIMEOUT = 200;
 
+export const GRID_CONTENTS_LS_KEY = 'gridContents';
+
+export const CRANAGRAM_CONTENTS_LS_KEY = 'cranagramContents';
+
+export const CROSSWORD_TIMER_LS_KEY = 'crosswordTimer';
+
+export const CRANAGRAM_TIMER_LS_KEY = 'cranagramTimer';
+
+export const PUZZLE_ID_LS_KEY = 'puzzleId';
+
+export const CRANAGRAM_ID_LS_KEY = 'crannagramId';
+
+export const OPEN_CELL = '#';
+
+export const CLOSED_CELL = '-';
+
+export const LOGO_COLORS = [
+    'red', 'green', 'blue', 'darkred', 'purple', 'orange', 'darkgreen', 'darkblue',
+]
+
 export const COUNTRY_CODES = {
     AF: "Afghanistan",
     AL: "Albania",

@@ -209,7 +209,7 @@ class SavePuzzle(UserPassesTestMixin, APIView):
         return self.request.user.is_staff
 
 
-class GetRecentPuzzles(UserPassesTestMixin, APIView):
+class GetRecentPuzzles(APIView):
     def get(self, request, puzzle_count):
         puzzles = CrosswordPuzzle.objects \
                                  .order_by('-last_edited')[:puzzle_count]
