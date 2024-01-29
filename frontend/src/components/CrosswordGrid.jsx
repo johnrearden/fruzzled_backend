@@ -3,7 +3,6 @@ import { Controls } from './Controls.jsx';
 import { ClueList } from '../components/ClueList';
 import { Cell } from './Cell';
 import { CompletenessDisplay } from './CompletenessDisplay';
-import { Button } from './Button';
 import { replaceCharAt } from '../utils/utils';
 import { GRID_CONTENTS_LS_KEY, OPEN_CELL, CLOSED_CELL, PUZZLE_ID_LS_KEY } from '../constants/constants.js';
 import styles from '../styles/Grid.module.css';
