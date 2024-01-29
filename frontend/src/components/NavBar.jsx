@@ -80,7 +80,7 @@ const NavBar = () => {
                         <h2 
                             className={styles.FreckleFaceFont}
                             title="Return to home page"
-                        >Sudoku</h2>
+                        >Fruzzled</h2>
                     </Navbar.Brand>
                 </NavLink>
                 <Navbar.Toggle

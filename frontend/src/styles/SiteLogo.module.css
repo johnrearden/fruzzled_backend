@@ -1,10 +1,10 @@
 .fancy_text {
     display: grid;
-    --base-font-size: 100px;
+    --base-font-size: 150px;
     position: relative;
     font-size: var(--base-font-size);
     line-height: var(--base-font-size);
-    --component-delay: 0.5s;
+    --component-delay: 0.1s;
 }
 
 .FreckleFaceFont {
@@ -21,6 +21,7 @@
 }
 
 .suffix {
+    color: var(--thrd-color);
     font-size: calc(var(--base-font-size) * 0.6);
     animation-name: slidein;
     animation-duration: 0.7s;

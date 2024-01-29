@@ -3,7 +3,14 @@ import styles from '../styles/SiteLogo.module.css';
 export const SiteLogo = (props) => {
 
     const LOGO_COLORS = [
-        'red', 'green', 'blue', 'darkred', 'purple', 'orange', 'darkgreen', 'darkblue',
+        '#916403', 
+        '#054412', 
+        '#4d1ebd', 
+        'darkred', 
+        'purple', 
+        '#8a8816', 
+        'darkgreen', 
+        '#2368cf',
     ]
 
     const letters = props.mainText.map((char, index) => {
@@ -12,7 +19,8 @@ export const SiteLogo = (props) => {
                 key={`letter_${index}`}
                 className="d-inline-block"
                 style={{
-                    color: `${LOGO_COLORS[index]}`
+                    // color: `${LOGO_COLORS[index]}`
+                    color: 'var(--brgt-color)'
                 }}
             >
                 {char}
@@ -32,7 +40,7 @@ export const SiteLogo = (props) => {
     })
 
     return (
-        <div className={`${styles.fancy_text} ${styles.FreckleFaceFont} text-center`}>
+        <div className={`${styles.fancy_text} ${styles.FreckleFaceFont} text-center mt-5`}>
 
             <div className={styles.app_logo}>
                 <div className={styles.hoppers}>

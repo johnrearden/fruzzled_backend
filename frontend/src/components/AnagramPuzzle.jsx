@@ -95,8 +95,6 @@ export const AnagramPuzzle = ({
 
         const scrollTopOffset = document.documentElement.scrollTop;
         const scrollLeftOffset = document.documentElement.scrollLeft;
-        console.log(`scrollTopOffset : ${scrollTopOffset}`)
-        console.log(`scrollLeftOffset : ${scrollLeftOffset}`)
 
         const draggedTile = letterRef.current;
         const clone = draggedTile.cloneNode(true);
@@ -111,7 +109,6 @@ export const AnagramPuzzle = ({
         clone.style.pointerEvents = 'none';
         clone.style.left = `${bndRectLeft + scrollLeftOffset - margin}px`;
         clone.style.top = `${bndRectTop + scrollTopOffset - margin}px`;
-        console.log(clone.style.left);
         containerRef.current.appendChild(clone);
         
 
@@ -145,7 +142,6 @@ export const AnagramPuzzle = ({
             const newOrder = [...letterOrder];
             const dragged = letterOrder.indexOf(draggedNodeId);
             [newOrder[closestPosition], newOrder[dragged]] = [newOrder[dragged], newOrder[closestPosition]];
-            console.log(newOrder);
             setLetterOrder(newOrder);
         }
 
@@ -155,7 +151,6 @@ export const AnagramPuzzle = ({
             const containingRect = containerRef.current.getBoundingClientRect();
             const tolerance = 0;
             
-            console.log(clientY, containingRect.top, containingRect.bottom)
             if (
                 clientX < containingRect.left - tolerance
                 || clientX > containingRect.right + tolerance

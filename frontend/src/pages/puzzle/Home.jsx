@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
-import styles from '../../styles/NavBar.module.css';
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import styles from '../../styles/Home.module.css';
 import btnStyles from '../../styles/Button.module.css';
 import { Row } from 'react-bootstrap';
 import { SiteLogo } from '../../components/SiteLogo';
@@ -19,9 +19,9 @@ const Home = () => {
                 />
             </Row>
 
-            <h3 className="text-center mt-5">Choose a Puzzle</h3>
+            <h3 className={`${styles.fadeIn} text-center mt-5`}>Choose a Puzzle</h3>
 
-            <Row className="justify-content-center mt-3">
+            <Row className={`${styles.fadeIn} justify-content-center mt-3`}>
                 
                 <button 
                     className={`${btnStyles.Button} mx-3`}
