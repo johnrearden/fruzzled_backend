@@ -1,0 +1,26 @@
+.anagram_holder {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+}
+
+.clone {
+    pointer-events: none;
+    position: absolute;
+    color:     purple;
+}
+
+.outer_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+}
+
+.dragged_letter_box {
+    opacity: 0;
+    pointer-events: none;
+}

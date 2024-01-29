@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode"
 import { axiosReq } from "../api/axiosDefaults"
+import { useEffect, useRef } from "react"
 
 export const fetchMoreData = async (resource, setResource) => {
     try {
@@ -187,3 +188,27 @@ export const getCookie = (name) => {
     }
     return cookieValue;
 };
+
+export const usePrevious = (value) => {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
+
+export const getClosestPosition = (clone, rects) => {
+    let indexOfClosestRect = null;
+    let maxDistance = Infinity;
+    const cloneLeft = clone.getBoundingClientRect().left;
+
+    Object.keys(rects).forEach((key, index) => {
+        const distance = Math.abs(cloneLeft - rects[key].left);
+        if (distance < maxDistance) {
+            maxDistance = distance;
+            indexOfClosestRect = index;
+        }
+    });
+
+    return indexOfClosestRect;
+}

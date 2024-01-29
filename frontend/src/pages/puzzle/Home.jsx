@@ -35,6 +35,12 @@ const Home = () => {
                 >
                     Crossword
                 </button>
+                <button 
+                    className={`${btnStyles.Button} mx-3`}
+                    onClick={() => navigate('/anagram')}
+                >
+                    Anagram
+                </button>
             </Row>
         </>
     )

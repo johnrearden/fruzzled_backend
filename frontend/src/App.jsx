@@ -14,6 +14,7 @@ import Leaderboard from './pages/puzzle/Leaderboard';
 import { Routes, Route } from 'react-router-dom';
 import { CrosswordLoader } from './pages/crossword/CrosswordLoader';
 import SudokuHome from './pages/puzzle/SudokuHome';
+import AnagramSeries from './pages/anagram/AnagramSeries';
 
 
 function App() {
@@ -29,11 +30,24 @@ function App() {
                     <Route
                         path="/get_puzzle/:difficulty"
                         element={ <PuzzleContainer /> } />
-                    <Route path="/leaderboard/:id" element={ <Leaderboard /> }/>
-                    <Route path="/signin" element={ <SignInForm />} />
-                    <Route path="/signup" element={ <SignUpForm /> } />
-                    <Route path="/sudoku_home" element={ <SudokuHome />} />
-                    <Route path="/crossword" element={ <CrosswordLoader />} />
+                    <Route 
+                        path="/leaderboard/:id" 
+                        element={ <Leaderboard /> }/>
+                    <Route 
+                        path="/signin" 
+                        element={ <SignInForm />} />
+                    <Route 
+                        path="/signup" 
+                        element={ <SignUpForm /> } />
+                    <Route 
+                        path="/sudoku_home" 
+                        element={ <SudokuHome />} />
+                    <Route 
+                        path="/crossword" 
+                        element={ <CrosswordLoader />} />
+                    <Route
+                        path="/anagram"
+                        element={ <AnagramSeries />} />
                     <Route
                         path="/"
                         element={ <Home /> } />
