@@ -1,7 +1,7 @@
 .countdown_circle {
     --angle: 360deg;
     --arc-color: red;
-    width: clamp(4rem, 32vw, 8rem);
+    width: clamp(5rem, 40vw, 10rem);
     height: clamp(4rem, 32vw, 8rem);
     position: relative;
     border-radius: 50%;

@@ -33,14 +33,14 @@ export const CountdownTimer = ({ initialTime, running, onTimeUp }) => {
 
     useEffect(() => {
         const timeDelta = initialTime - time;
-        const increment = timeDelta / 90;
+        const increment = timeDelta / 48;
         const interval = setInterval(() => {
             setTime(prev => prev + increment);
         }, 10);
         setTimeout(() => {
             clearInterval(interval);
             setTime(initialTime);
-        }, 1000);
+        }, 500);
     }, [initialTime])
 
     let secs = Math.floor(time);

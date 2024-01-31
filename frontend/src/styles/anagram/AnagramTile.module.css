@@ -51,27 +51,27 @@
     }
 
     20% {
-        background-color: var(--fg-color);
-        box-shadow: inset 0px 0px 4px 2px var(--bg-color);
-        color: var(--bg-color);
+        background-color: var(--bg-color);
+        box-shadow: inset 0px 0px 4px 2px var(--thrd-color);
+        color: var(--thrd-color);
         transform: rotateY(0deg);
     }
 
     40% {
-        background-color: var(--fg-color);
-        box-shadow: inset 0px 0px 4px 2px var(--bg-color);
-        color: var(--bg-color);
+        background-color: var(--bg-color);
+        box-shadow: inset 0px 0px 4px 2px var(--thrd-color);
+        color: var(--thrd-color);
         transform: translateX(0);
         opacity: 1; 
         filter: blur(0);
     }
 
     to {
-        background-color: var(--fg-color);
-        box-shadow: inset 0px 0px 4px 2px var(--bg-color);
-        color: var(--bg-color);
+        background-color: var(--bg-color);
+        box-shadow: inset 0px 0px 4px 2px var(--thrd-color);
+        color: var(--thrd-color);
         transform: translateX(100vw);
         opacity: 0.5;
-        filter: blur(10px);
+        filter: blur(5px);
     }
 }

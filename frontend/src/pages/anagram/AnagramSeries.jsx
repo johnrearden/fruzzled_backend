@@ -12,13 +12,16 @@ const AnagramSeries = () => {
 
     const words = ['lock', 'pitch', 'church', 'sinking', 'doorstop',
         'alignment', 'horsepower'];
+    const shuffledWords = [
+        'lkoc', 'tichp', 'cchhru', 'iingnks', 'potsoodr', 'ginlatnme', 'rewopesroh'
+    ]
     const puzzleViewerRef = useRef(null);
     const [currentAnagramIndex, setCurrentAnagramIndex] = useState(0);
 
     const outOfTime = false;
     const puzzles = words.map((word, index) => {
         const correctLetters = word.split('');
-        const currentLetters = fisherYatesShuffle(correctLetters.slice());
+        const currentLetters = shuffledWords[index].split('');
         const letterOrder = correctLetters.map((_, i) => i);
         const fixedLetters = new Array(word.length).fill(false);
         return (
@@ -36,8 +39,7 @@ const AnagramSeries = () => {
         )
     })
 
-    const onCorrectOrder = (index) => {
-        console.log('onCorrectOrder invoked on puzzle ', index);
+    const onCorrectOrder = () => {
         const nextIndex = currentAnagramIndex + 1;
         setTimerRunning(false);
         setTimeout(() => {
