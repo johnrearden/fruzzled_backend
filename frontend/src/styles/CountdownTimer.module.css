@@ -1,12 +1,13 @@
 .countdown_circle {
     --angle: 360deg;
     --arc-color: red;
-    width: clamp(6rem, 48vw, 12rem);
+    width: clamp(4rem, 32vw, 8rem);
     height: clamp(4rem, 32vw, 8rem);
     position: relative;
     border-radius: 50%;
     background: conic-gradient(var(--arc-color) 0 var(--angle), var(--bg-color) var(--angle) 360deg);
     transition: 0.2s all;
+    font-family: monospace;
 }
 
 .inner_circle {
@@ -24,7 +25,7 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-size: clamp(1.8rem, 12vw, 4rem);
+    font-size: clamp(1.2rem, 8vw, 2.66rem);
     font-weight: bold;
     color: yellow;
 }

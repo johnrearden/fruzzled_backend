@@ -1,12 +1,13 @@
 .letter_box {
     position: relative;
-    background-color: var(--fg-color);
-    color: var(--bg-color);
+    background-color: var(--bg-color);
+    box-shadow: inset 0px 0px 4px 2px var(--fg-color);
+    color: var(--fg-color);
     display: inline-block;
     font-family: sans-serif;
     font-weight: bold;
     text-transform: uppercase;
-    border: 1px solid black;
+    border: 1px solid var(--fg-color);
     text-align: center;
     font-size: clamp(22px, 6.75vw, 45px);
     line-height: clamp(30px, 9vw, 60px);
@@ -38,41 +39,39 @@
 
 @keyframes letter_spin_exit {
     from {
-        background-color: var(--fg-color);
-        color: var(--bg-color);
+        background-color: var(--bg-color);
+        color: var(--fg-color);
         transform: rotateY(0deg);
     }
 
     10% {
-        background-color: var(--fg-color);
-        color: var(--bg-color);
+        background-color: var(--bg-color);
+        color: var(--fg-color);
         transform: rotateY(90deg);
     }
 
     20% {
-        background-color: var(--bg-color);
-        box-shadow: inset 0px 0px 4px 2px var(--scnd-color);
-        color: var(--scnd-color);
+        background-color: var(--fg-color);
+        box-shadow: inset 0px 0px 4px 2px var(--bg-color);
+        color: var(--bg-color);
         transform: rotateY(0deg);
     }
 
     40% {
-        background-color: var(--bg-color);
-        box-shadow: inset 0px 0px 4px 2px var(--scnd-color);
-        color: var(--scnd-color);
+        background-color: var(--fg-color);
+        box-shadow: inset 0px 0px 4px 2px var(--bg-color);
+        color: var(--bg-color);
         transform: translateX(0);
         opacity: 1; 
-    }
-
-    80% {
-        opacity: 0;
+        filter: blur(0);
     }
 
     to {
-        background-color: var(--bg-color);
-        box-shadow: inset 0px 0px 4px 2px var(--scnd-color);
-        color: var(--scnd-color);
+        background-color: var(--fg-color);
+        box-shadow: inset 0px 0px 4px 2px var(--bg-color);
+        color: var(--bg-color);
         transform: translateX(100vw);
-        opacity: 0;
+        opacity: 0.5;
+        filter: blur(10px);
     }
 }

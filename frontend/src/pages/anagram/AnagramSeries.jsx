@@ -7,7 +7,8 @@ import { Row } from 'react-bootstrap';
 
 const AnagramSeries = () => {
 
-    const [timerInitialValue, setTimerInitialValue] = useState(10);
+    const [timerInitialValue, setTimerInitialValue] = useState(13);
+    const [timerRunning, setTimerRunning] = useState(false);
 
     const words = ['lock', 'pitch', 'church', 'sinking', 'doorstop',
         'alignment', 'horsepower'];
@@ -37,8 +38,14 @@ const AnagramSeries = () => {
 
     const onCorrectOrder = (index) => {
         console.log('onCorrectOrder invoked on puzzle ', index);
-        setCurrentAnagramIndex(prev => prev + 1);
-        setTimerInitialValue(10 + currentAnagramIndex * 5);
+        const nextIndex = currentAnagramIndex + 1;
+        setTimerRunning(false);
+        setTimeout(() => {
+            setCurrentAnagramIndex(prev => prev + 1);
+            setTimerRunning(true);
+        }, 1500);
+        
+        setTimerInitialValue(13 + nextIndex * 5);
     }
 
 
@@ -46,7 +53,7 @@ const AnagramSeries = () => {
         <div className={styles.Container}>
             <Row className="d-flex justify-content-center mt-5">
                 <CountdownTimer
-                    initialTime={180}
+                    initialTime={timerInitialValue}
                     running={true}
                     onTimeUp={() => console.log('Times up')}
                 />

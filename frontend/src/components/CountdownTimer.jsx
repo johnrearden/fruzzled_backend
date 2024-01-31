@@ -4,7 +4,7 @@ import styles from '../styles/CountdownTimer.module.css';
 
 export const CountdownTimer = ({ initialTime, running, onTimeUp }) => {
 
-    const [time, setTime] = useState(initialTime);
+    const [time, setTime] = useState(0);
     const [timeUp, setTimeUp] = useState(false);
     const [timerRunning, setTimerRunning] = useState(running);
 
@@ -31,6 +31,18 @@ export const CountdownTimer = ({ initialTime, running, onTimeUp }) => {
         setTimerRunning(running);
     }, [running, timerRunning])
 
+    useEffect(() => {
+        const timeDelta = initialTime - time;
+        const increment = timeDelta / 90;
+        const interval = setInterval(() => {
+            setTime(prev => prev + increment);
+        }, 10);
+        setTimeout(() => {
+            clearInterval(interval);
+            setTime(initialTime);
+        }, 1000);
+    }, [initialTime])
+
     let secs = Math.floor(time);
     const hours = Math.floor(secs / 3600);
     const hourString = hours ? `${hours}:` : '';
@@ -39,9 +51,9 @@ export const CountdownTimer = ({ initialTime, running, onTimeUp }) => {
     secs = secs - minutes * 60;
 
     let color = 'green';
-    if (time < 20 && time >= 11) {
+    if (time < 10 && time > 5) {
         color = 'orange';
-    } else if (time < 11) {
+    } else if (time <= 5) {
         color = 'red';
     }
 
