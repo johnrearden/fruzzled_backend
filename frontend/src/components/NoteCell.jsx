@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../styles/NoteCell.module.css';
+import styles from '../styles/sudoku/NoteCell.module.css';
 
 const NoteCell = ({ searchArray }) => {
 

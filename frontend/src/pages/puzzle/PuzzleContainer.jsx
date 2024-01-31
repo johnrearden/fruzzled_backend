@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
 
 import btnStyles from '../../styles/Button.module.css'
-import styles from '../../styles/PuzzleContainer.module.css'
+import styles from '../../styles/sudoku/PuzzleContainer.module.css'
 import themes from '../../styles/Themes.module.css';
 
 import DigitChooser from '../../components/DigitChooser';

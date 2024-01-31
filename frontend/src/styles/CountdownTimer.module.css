@@ -1,0 +1,30 @@
+.countdown_circle {
+    --angle: 360deg;
+    --arc-color: red;
+    width: clamp(6rem, 24vw, 9rem);
+    height: clamp(4rem, 16vw, 6.75rem);
+    position: relative;
+    border-radius: 50%;
+    background: conic-gradient(var(--arc-color) 0 var(--angle), var(--bg-color) var(--angle) 360deg);
+    transition: 0.2s all;
+}
+
+.inner_circle {
+    position: absolute;
+    left: 5%;
+    top: 5%;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    background-color: var(--bg-color);
+}
+
+.countdown_span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(1.8rem, 8vw, 2.7rem);
+    font-weight: bold;
+    color: yellow;
+}

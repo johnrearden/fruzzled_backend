@@ -6,10 +6,11 @@
     background-color: var(--bg-color);
     color: var(--fg-color);
     min-height: 100vh;
+    height: 100vh;
 }
 
 .Main {
-    padding-top: 90px;
+    margin-top: 79px;
 }
 
 .Image {

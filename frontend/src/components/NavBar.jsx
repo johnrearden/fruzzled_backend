@@ -77,10 +77,10 @@ const NavBar = () => {
             <Container>
                 <NavLink to="/">
                     <Navbar.Brand>
-                        <h2 
+                        <h4 
                             className={styles.FreckleFaceFont}
                             title="Return to home page"
-                        >Fruzzled</h2>
+                        >Fruzzled</h4>
                     </Navbar.Brand>
                 </NavLink>
                 <Navbar.Toggle

@@ -5,7 +5,7 @@ import { Cell } from './Cell';
 import { CompletenessDisplay } from './CompletenessDisplay';
 import { replaceCharAt } from '../utils/utils';
 import { GRID_CONTENTS_LS_KEY, OPEN_CELL, CLOSED_CELL, PUZZLE_ID_LS_KEY } from '../constants/constants.js';
-import styles from '../styles/Grid.module.css';
+import styles from '../styles/crossword/Grid.module.css';
 import btnStyles from '../styles/Button.module.css'
 import { useEffect, useState, useCallback } from 'react';
 import { Row, Col } from 'react-bootstrap';

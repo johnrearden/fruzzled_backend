@@ -1,4 +1,4 @@
-import styles from '../styles/AnagramPuzzle.module.css';
+import styles from '../styles/anagram/AnagramPuzzle.module.css';
 import { useEffect, useState, createRef, useRef, useLayoutEffect } from 'react';
 import { usePrevious } from '../utils/utils';
 import { AnagramTile } from './AnagramTile';
@@ -13,7 +13,8 @@ export const AnagramPuzzle = ({
     fixedLetters,
     onCorrectOrder,
     outOfTime,
-    completed }) => {
+    completed,
+    }) => {
 
     // State, triggering re-renders
     const [letterOrder, setLetterOrder] = useState([...parentLetterOrder]);
@@ -231,6 +232,9 @@ export const AnagramPuzzle = ({
             />
         );
     });
+
+    
+    
 
     return (
         <div

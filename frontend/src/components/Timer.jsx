@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { millisToTimeString } from '../utils/utils';
-import styles from '../styles/Timer.module.css';
+import styles from '../styles/sudoku/Timer.module.css';
 
 const Timer = ({ startTime }) => {
 

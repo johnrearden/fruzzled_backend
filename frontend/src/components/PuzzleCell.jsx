@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styles from '../styles/PuzzleCell.module.css'
+import styles from '../styles/sudoku/PuzzleCell.module.css'
 
 // Testing this component is a little awkward, esp cypress e2e tests, 
 // as the puzzle cells appear (with their test_ids) before the get_random_puzzle

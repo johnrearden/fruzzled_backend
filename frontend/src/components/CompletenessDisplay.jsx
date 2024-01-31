@@ -1,4 +1,4 @@
-import styles from '../styles/CompletenessDisplay.module.css';
+import styles from '../styles/sudoku/CompletenessDisplay.module.css';
 
 export const CompletenessDisplay = ({ completenessPercentage, shorthand }) => {
 

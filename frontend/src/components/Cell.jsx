@@ -1,4 +1,4 @@
-import styles from '../styles/Cell.module.css';
+import styles from '../styles/crossword/Cell.module.css';
 
 export const Cell = (props) => {
 

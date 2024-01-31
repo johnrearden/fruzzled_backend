@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '../styles/DigitChooser.module.css'
+import styles from '../styles/sudoku/DigitChooser.module.css'
 
 const DigitChooser = (props) => {
 

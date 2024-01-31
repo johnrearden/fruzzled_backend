@@ -1,0 +1,7 @@
+.Container {
+    padding-top: 100px;
+}
+
+.PuzzleViewer {
+    transition: .5s all;
+}

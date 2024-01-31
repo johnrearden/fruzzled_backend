@@ -1,5 +1,5 @@
 import { Container, Row, Col } from 'react-bootstrap';
-import styles from '../styles/Keyboard.module.css';
+import styles from '../styles/crossword/Keyboard.module.css';
 import { useEffect, useState } from 'react';
 
 export const Keyboard = (props) => {

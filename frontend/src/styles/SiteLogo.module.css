@@ -98,12 +98,18 @@
 
 @media screen and (max-width:767px) {
     .fancy_text {
-        --base-font-size: 80px;
+        --base-font-size: 120px;
     }
 } 
 
 @media screen and (max-width: 575px) {
     .fancy_text {
-        --base-font-size: 70px;
+        --base-font-size: 100px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .fancy_text {
+        --base-font-size: calc(100vw / 5);
     }
 }

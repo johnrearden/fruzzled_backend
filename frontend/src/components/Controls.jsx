@@ -1,5 +1,5 @@
 import { Row, Col } from 'react-bootstrap';
-import styles from '../styles/Controls.module.css';
+import styles from '../styles/crossword/Controls.module.css';
 import { CrosswordTimer } from './CrosswordTimer';
 
 

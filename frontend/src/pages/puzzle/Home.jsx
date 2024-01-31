@@ -13,35 +13,39 @@ const Home = () => {
 
     return (
         <>
-            <Row className="mt-5 d-flex justify-content-center">
+            <Row className="mt-5 pt-5 d-flex justify-content-center">
                 <SiteLogo
                     mainText={mainLogoText}
                 />
             </Row>
 
-            <h3 className={`${styles.fadeIn} text-center mt-5`}>Choose a Puzzle</h3>
+            <h5 className={`${styles.fadeIn} text-center mt-5`}>Choose a Puzzle</h5>
 
             <Row className={`${styles.fadeIn} justify-content-center mt-3`}>
-                
-                <button 
-                    className={`${btnStyles.Button} mx-3`}
+                <button
+                    className={`${btnStyles.Button} px-3 mx-3`}
                     onClick={() => navigate('/sudoku_home')}
                 >
                     Sudoku
                 </button>
-                <button 
-                    className={`${btnStyles.Button} mx-3`}
+            </Row>
+            <Row className={`${styles.fadeIn} justify-content-center mt-3`}>
+                <button
+                    className={`${btnStyles.Button} px-3 mx-3`}
                     onClick={() => navigate('/crossword')}
                 >
                     Crossword
                 </button>
-                <button 
-                    className={`${btnStyles.Button} mx-3`}
+            </Row>
+            <Row className={`${styles.fadeIn} justify-content-center mt-3`}>
+                <button
+                    className={`${btnStyles.Button} px-3 mx-3`}
                     onClick={() => navigate('/anagram')}
                 >
                     Anagram
                 </button>
             </Row>
+
         </>
     )
 }

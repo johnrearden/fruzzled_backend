@@ -1,6 +1,6 @@
 import React from 'react'
 import PuzzleCell from './PuzzleCell'
-import styles from '../styles/Puzzle.module.css'
+import styles from '../styles/sudoku/Puzzle.module.css'
 import { Row } from 'react-bootstrap'
 import NoteCell from './NoteCell'
 

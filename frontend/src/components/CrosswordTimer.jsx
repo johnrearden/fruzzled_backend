@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { CROSSWORD_TIMER_LS_KEY, PUZZLE_ID_LS_KEY } from '../constants/constants';
-import styles from '../styles/CrosswordTimer.module.css';
+import styles from '../styles/crossword/CrosswordTimer.module.css';
 
 export const CrosswordTimer = (props) => {
     const [seconds, setSeconds] = useState(0);

@@ -1,10 +1,15 @@
 import React, { forwardRef } from 'react';
-import styles from '../styles/AnagramTile.module.css';
+import styles from '../styles/anagram/AnagramTile.module.css';
 import { LOGO_COLORS } from '../constants/constants';
 
 
 // eslint-disable-next-line react/display-name
-export const AnagramTile = forwardRef(({ letter, id, fixed, completed, fingerPointer, onPointerDown }, ref) => {
+export const AnagramTile = forwardRef(({ 
+    letter, 
+    id, 
+    fixed, 
+    completed, 
+    onPointerDown}, ref) => {
 
     let className = styles.letter_box;
     let delayStyle = {};
@@ -14,12 +19,13 @@ export const AnagramTile = forwardRef(({ letter, id, fixed, completed, fingerPoi
         delayStyle = {
             animationDelay: `${delay}ms`,
             '--logo_color_choice': `${color_choice}`,
+            
         };
         className = `${styles.letter_box} ${styles.correct} ${styles.color_flash}`;
         
     } else if (fixed) {
         className = `${styles.letter_box} ${styles.spin_to_correct}`;
-    }
+    } 
 
     return (
         <div

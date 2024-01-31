@@ -1,5 +1,5 @@
 import { Row, Col } from "react-bootstrap";
-import styles from '../styles/ClueList.module.css';
+import styles from '../styles/crossword/ClueList.module.css';
 
 export const ClueList = (props) => {
 

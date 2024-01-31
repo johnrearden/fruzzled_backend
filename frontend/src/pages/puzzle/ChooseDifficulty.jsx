@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row } from 'react-bootstrap'
 import btnStyles from '../../styles/Button.module.css'
-import styles from '../../styles/ChooseDifficulty.module.css';
+import styles from '../../styles/sudoku/ChooseDifficulty.module.css';
 import { useNavigate } from 'react-router-dom'
 import { LCLSTRG_KEY } from '../../constants/constants'
 
