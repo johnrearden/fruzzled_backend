@@ -1,4 +1,5 @@
 .NavBar {
+    min-height: 79px;
     background-color: var(--nav-bckgnd);
     border-bottom: 1px solid #dadadf;
     transition: .2s;

@@ -19,6 +19,7 @@ body {
         sans-serif; */
 
     font-family: 'Quicksand', sans-serif;
+    background-color: var(--bg-color);
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

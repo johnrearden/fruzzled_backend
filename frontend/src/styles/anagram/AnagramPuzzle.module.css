@@ -18,9 +18,23 @@
     align-items: center;
     justify-content: center;
     padding: 6px;
+
+    animation: fade_in 2s;
+    animation-timing-function: linear();
+    animation-fill-mode: forwards;
 }
 
 .dragged_letter_box {
     opacity: 0;
     pointer-events: none;
+}
+
+@keyframes fade_in {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1;
+    }
 }

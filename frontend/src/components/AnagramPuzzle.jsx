@@ -13,12 +13,12 @@ export const AnagramPuzzle = ({
     fixedLetters,
     onCorrectOrder,
     outOfTime,
-    completed,
     }) => {
 
     // State, triggering re-renders
     const [letterOrder, setLetterOrder] = useState([...parentLetterOrder]);
     const previousLetterOrder = usePrevious(letterOrder);
+    const [completed, setCompleted] = useState(false);
 
     // Refs, keeping track of DOM nodes and their bounding rects
     const domRefs = useRef([]);
@@ -186,7 +186,8 @@ export const AnagramPuzzle = ({
                     }
                 });
                 if (isCorrect) {
-                    onCorrectOrder();
+                    setCompleted(true);
+                    setTimeout(() => onCorrectOrder(), 1500);
                 }
             }
 

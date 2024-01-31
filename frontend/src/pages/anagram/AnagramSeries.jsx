@@ -15,7 +15,6 @@ const AnagramSeries = () => {
     const [currentAnagramIndex, setCurrentAnagramIndex] = useState(0);
 
     const outOfTime = false;
-    const completed = false;
     const puzzles = words.map((word, index) => {
         const correctLetters = word.split('');
         const currentLetters = fisherYatesShuffle(correctLetters.slice());
@@ -31,11 +30,9 @@ const AnagramSeries = () => {
                 correctLetters={correctLetters}
                 fixedLetters={fixedLetters}
                 outOfTime={outOfTime}
-                completed={completed}
                 onCorrectOrder={() => onCorrectOrder(index)}
             />
         )
-
     })
 
     const onCorrectOrder = (index) => {

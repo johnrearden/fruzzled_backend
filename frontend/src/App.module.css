@@ -10,6 +10,7 @@
 }
 
 .Main {
+    background-color: var(--bg-color);
     margin-top: 79px;
 }
 

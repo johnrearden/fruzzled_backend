@@ -14,15 +14,14 @@ export const AnagramTile = forwardRef(({
     let className = styles.letter_box;
     let delayStyle = {};
     if (completed) {
-        const delay = Math.random() * 500;
+        const delay = 0;
         const color_choice = LOGO_COLORS[Math.floor(Math.random() * LOGO_COLORS.length)];
         delayStyle = {
             animationDelay: `${delay}ms`,
             '--logo_color_choice': `${color_choice}`,
             
         };
-        className = `${styles.letter_box} ${styles.correct} ${styles.color_flash}`;
-        
+        className = `${styles.letter_box} ${styles.spin_to_correct}`;
     } else if (fixed) {
         className = `${styles.letter_box} ${styles.spin_to_correct}`;
     } 
