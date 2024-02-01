@@ -16,7 +16,7 @@
     cursor: move;
     touch-action: none;
     user-select: none;
-    margin: 1px;
+    margin: 2px;
     --logo_color_choice: black;
 }
 
@@ -32,7 +32,8 @@
 }
 
 .spin_to_correct {
-    animation: letter_spin_exit 2s;
+    animation: letter_spin_exit 1.5s;
+    animation-delay: 0.5s;
     animation-timing-function: linear();
     animation-fill-mode: forwards;
 }
@@ -44,34 +45,39 @@
         transform: rotateY(0deg);
     }
 
-    10% {
+    15% {
         background-color: var(--bg-color);
         color: var(--fg-color);
         transform: rotateY(90deg);
     }
 
-    20% {
-        background-color: var(--bg-color);
-        box-shadow: inset 0px 0px 4px 2px var(--thrd-color);
-        color: var(--thrd-color);
+    30% {
+        background-color: var(--fg-color);
+        box-shadow: inset 0px 0px 4px 2px var(--bg-color);
+        color: var(--bg-color);
         transform: rotateY(0deg);
     }
 
-    40% {
-        background-color: var(--bg-color);
-        box-shadow: inset 0px 0px 4px 2px var(--thrd-color);
-        color: var(--thrd-color);
-        transform: translateX(0);
+    50% {
+        background-color: var(--fg-color);
+        box-shadow: inset 0px 0px 4px 2px var(--bg-color);
+        color: var(--bg-color);
+        transform: translateY(0);
         opacity: 1; 
-        filter: blur(0);
+    }
+
+    90% {
+        background-color: var(--fg-color);
+        box-shadow: inset 0px 0px 4px 2px var(--bg-color);
+        color: var(--bg-color);
+        opacity: 0; 
     }
 
     to {
-        background-color: var(--bg-color);
-        box-shadow: inset 0px 0px 4px 2px var(--thrd-color);
-        color: var(--thrd-color);
-        transform: translateX(100vw);
-        opacity: 0.5;
-        filter: blur(5px);
+        background-color: var(--fg-color);
+        box-shadow: inset 0px 0px 4px 2px var(--bg-color);
+        color: var(--bg-color);
+        transform: translateY(200px);
+        opacity: 0.0;
     }
 }

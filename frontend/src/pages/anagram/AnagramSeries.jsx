@@ -42,14 +42,12 @@ const AnagramSeries = () => {
     const onCorrectOrder = () => {
         const nextIndex = currentAnagramIndex + 1;
         setTimerRunning(false);
+        setCurrentAnagramIndex(prev => prev + 1);
         setTimeout(() => {
-            setCurrentAnagramIndex(prev => prev + 1);
             setTimerRunning(true);
-        }, 1500);
-        
+        }, 1000);
         setTimerInitialValue(13 + nextIndex * 5);
     }
-
 
     return (
         <div className={styles.Container}>

@@ -187,8 +187,7 @@ export const AnagramPuzzle = ({
                 });
                 if (isCorrect) {
                     setCompleted(true);
-                    onCorrectOrder();
-                    // setTimeout(() => onCorrectOrder(), 1500);
+                    setTimeout(() => onCorrectOrder(), 1500);
                 }
             }
 
