@@ -1,41 +1,84 @@
-.NavBar {
-    min-height: 79px;
-    background-color: var(--nav-bckgnd);
-    border-bottom: 1px solid #dadadf;
-    transition: .2s;
-}
-
 .FreckleFaceFont {
     font-family: "Freckle Face";
-    color: var(--fg-color);
 }
-
-.NavLink {
-    color: var(--fg-color);
-    padding: 0 14px;
-    margin: auto;
-}
-
 
 .NavLink:hover{
+    color: var(--common-warm);
+}
+
+.NavLink i, i {
+    font-size: 1.3rem;
+}
+
+.NavLink i:hover, i:hover {
+    color:var(--common-warm) !important;
+}
+
+.NavContainer {
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100vw;
+    min-height: 75px;
+}
+
+.HomeSection {
     color: var(--fg-color);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    padding-left: 50px;
 }
 
-.NavLink i {
-    font-size: 1.1rem;
-    color: var(--fg-color);
+.LinkSection {
+    color: inherit;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    padding-right: 30px;
 }
 
-.NavLink i:hover {
-    color: var(--fg-color);
+.LinkSection i {
+    color: var(--thrd-color);
 }
 
-.NavLink span:hover, h4:hover {
-    border-bottom: 1px solid var(--fg-color);
+/* .LinkSection i:hover {
+    color: var(--thrd-color);
+} */
+
+.HomeIcon {
+    display: none;
 }
 
-.NavLink span {
-    margin-left: 6px;
+.HomeText:hover, .HomeIcon:hover {
+    color: var(--common-warm);
+}
+
+@media screen and (max-width: 576px) {
+    .HomeIcon {
+        display: block;
+    }
+
+    .HomeText {
+        display: none;
+    }
+
+    .HomeSection {
+        padding-left: 15px;
+    }
+
+    .LinkSection {
+        padding-right: 15px;
+    }
+
+    .NavLink i, i {
+        font-size: 1.1rem;
+    }
+
 }
 
 

@@ -20,7 +20,7 @@ export const SiteLogo = (props) => {
                 className="d-inline-block"
                 style={{
                     // color: `${LOGO_COLORS[index]}`
-                    color: 'var(--brgt-color)'
+                    color: 'var(--scnd-color)'
                 }}
             >
                 {char}

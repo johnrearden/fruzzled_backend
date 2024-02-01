@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Navbar, Nav, Container} from 'react-bootstrap';
+import { Navbar, Nav, Container, Row, Col } from 'react-bootstrap';
 import { NavLink } from "react-router-dom";
 import styles from "../styles/NavBar.module.css";
 import btnStyles from "../styles/Button.module.css";
@@ -46,14 +46,6 @@ const NavBar = () => {
                 // activeClassName={styles.Active}
                 to="/signin">
                 <i className="fa-solid fa-arrow-right-to-bracket"></i>
-                <span>Login</span>
-            </NavLink>
-            <NavLink
-                className={styles.NavLink}
-                // activeClassName={styles.Active}
-                to="/signup">
-                <i className="fa-regular fa-user"></i>
-                <span>Sign Up</span>
             </NavLink>
         </>
     );
@@ -68,75 +60,73 @@ const NavBar = () => {
                     handleSignout();
                 }}>
                 <i className="fa-solid fa-person-walking-arrow-right"></i>
-                <span>Logout</span>
             </NavLink>
         </>)
 
     return (
-        <Navbar expanded={expanded} className={styles.NavBar} fixed="top" expand="md">
-            <Container>
-                <NavLink to="/">
-                    <Navbar.Brand>
-                        <h4 
-                            className={styles.FreckleFaceFont}
-                            title="Return to home page"
-                        >Fruzzled</h4>
-                    </Navbar.Brand>
-                </NavLink>
-                <Navbar.Toggle
-                    ref={ref}
-                    aria-controls="basic-navbar-nav"
-                    onClick={() => setExpanded(!expanded)} />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="ml-auto text-left">
-                        
-                        
-                        {/* Button to toggle light/dark theme */}
-                        <button
-                            aria-label="theme-toggle-button"
-                            className={`${btnStyles.NavbarButton} mr-3`}
-                            onClick={handleThemeToggle}
-                            title={`Switch to ${theme==="light" ? "dark" : "light"} theme`}
-                        >
-                            {theme === 'light' ? (
-                                <i className="fa-solid fa-moon"></i>
-                            ) : (
-                                <i className="fa-solid fa-sun"></i>
-                            )}
-                        </button>
+        <>
+            <div className={styles.NavContainer}>
+                <div className={styles.HomeSection}>
+                    <NavLink to="/">
+                        <div className={styles.HomeText}>
+                            <h4
+                                className={styles.FreckleFaceFont}
+                                title="Return to home page"
+                            >fruzzled</h4>
+                        </div>
+                        <div className={styles.HomeIcon}>
+                            <NavLink
+                                className={styles.NavLink}
+                                // activeClassName={styles.Active}
+                                title="Return to home page"
+                                to="/"
+                            >
+                                <div className='d-flex align-items-center'>
+                                    <i className="fa-solid fa-house"></i>
+                                </div>
+                            </NavLink>
+                        </div>
 
-                        <NavLink
-                            className={styles.NavLink}
-                            // activeClassName={styles.Active}
-                            title="Return to home page"
-                            to="/">
-                            <div className='d-flex align-items-center'>
-                                <i className="fa-solid fa-house"></i>
-                            </div>
-                        </NavLink>
-
-                        {currentUser ? loggedInIcons : loggedOutIcons}
-
-                        { profile && (
-                            <div className="mx-3">
-                                <span className="mx-2 my-auto">{profile.nickname}</span>
-                                <ReactCountryFlag
-                                    className="emojiFlag"
-                                    countryCode={profile.country}
-                                    svg
-                                    style={{
-                                        fontSize: '2em',
-                                        lineHeight: '2em',
-                                    }}
-                                    aria-label={profile.country}
-                                ></ReactCountryFlag>
-                            </div>
+                    </NavLink>
+                </div>
+                <div className={styles.LinkSection}>
+                    <span
+                        aria-label="theme-toggle-button"
+                        className="d-flex align-items-center mr-3"
+                        onClick={handleThemeToggle}
+                        title={`Switch to ${theme === "light" ? "dark" : "light"} theme`}
+                    >
+                        {theme === 'light' ? (
+                            <i className="fa-solid fa-moon"></i>
+                        ) : (
+                            <i className="fa-solid fa-sun"></i>
                         )}
+                    </span>
 
-                    </Nav>
-                </Navbar.Collapse>
-            </Container >
-        </Navbar >
+
+                    {currentUser ? loggedInIcons : loggedOutIcons}
+
+                    {profile && (
+                        <div className="mx-3">
+                            <ReactCountryFlag
+                                className="emojiFlag"
+                                countryCode={profile.country}
+                                svg
+                                style={{
+                                    fontSize: '2em',
+                                    lineHeight: '2em',
+                                }}
+                                aria-label={profile.country}
+                            ></ReactCountryFlag>
+                        </div>
+                    )}
+                </div>
+
+
+            </div>
+
+        </>
+
 
     )
 }
