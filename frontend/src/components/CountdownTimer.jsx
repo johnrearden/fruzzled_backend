@@ -21,7 +21,7 @@ export const CountdownTimer = ({ initialTime, running, onTimeUp }) => {
     }, 20);
 
     useEffect(() => {
-        if (time < 1 && !timeUp) {
+        if (time < 0.05 && !timeUp && timerRunning) {
             setTimeUp(true);
             onTimeUp();
         }
@@ -43,7 +43,7 @@ export const CountdownTimer = ({ initialTime, running, onTimeUp }) => {
         }, 500);
     }, [initialTime])
 
-    let secs = Math.floor(time);
+    let secs = time >= 0 ? Math.floor(time) : 0;
     const hours = Math.floor(secs / 3600);
     const hourString = hours ? `${hours}:` : '';
     secs = secs - hours * 3600;
@@ -57,7 +57,9 @@ export const CountdownTimer = ({ initialTime, running, onTimeUp }) => {
         color = 'red';
     }
 
-    const displayString = `${hourString}${String(minutes).padStart(1, '0')}:${String(secs).padStart(2, '0')}`;
+    const displayString = time > 0 ? 
+        `${hourString}${String(minutes).padStart(1, '0')}:${String(secs).padStart(2, '0')}`
+        : <span style={{ fontSize: '4rem'}}>{'\u{1F620}'}</span>
     const angle = time / initialTime * 360;
     const circleStyle = { "--angle": `${angle}deg`, "--arc-color": `${color}` };
 

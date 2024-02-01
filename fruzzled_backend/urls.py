@@ -14,6 +14,7 @@ urlpatterns = [
     path('api/', include('sudoku.urls')),
     path('api/', include('player_profile.urls')),
     path('api/crossword_builder/', include('crosswords.urls')),
+    path('api/', include('anagrams.urls')),
 ]
 
 handler404 = TemplateView.as_view(template_name='index.html')

@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Anagram, AnagramSeries
 
-# Register your models here.
+
+admin.site.register(Anagram)
+admin.site.register(AnagramSeries)
