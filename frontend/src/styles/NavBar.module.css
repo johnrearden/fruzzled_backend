@@ -10,7 +10,7 @@
     font-size: 1.3rem;
 }
 
-.NavLink i:hover, i:hover {
+.NavLink i:hover {
     color:var(--common-warm) !important;
 }
 

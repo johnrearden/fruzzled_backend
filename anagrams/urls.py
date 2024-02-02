@@ -8,4 +8,7 @@ urlpatterns = [
     path('get_random_anagram/',
           views.GetRandomAnagram.as_view(),
           name='get_random_anagram'),
+    path('create_anagram_series/',
+          views.CreateNewAnagramSeries.as_view(),
+          name='create_anagram_series'),
 ]

@@ -74,20 +74,21 @@ const NavBar = () => {
                                 title="Return to home page"
                             >fruzzled</h4>
                         </div>
-                        <div className={styles.HomeIcon}>
-                            <NavLink
-                                className={styles.NavLink}
-                                // activeClassName={styles.Active}
-                                title="Return to home page"
-                                to="/"
-                            >
-                                <div className='d-flex align-items-center'>
-                                    <i className="fa-solid fa-house"></i>
-                                </div>
-                            </NavLink>
-                        </div>
-
                     </NavLink>
+                    <div className={styles.HomeIcon}>
+                        <NavLink
+                            className={styles.NavLink}
+                            // activeClassName={styles.Active}
+                            title="Return to home page"
+                            to="/"
+                        >
+                            <div className='d-flex align-items-center'>
+                                <i className="fa-solid fa-house"></i>
+                            </div>
+                        </NavLink>
+                    </div>
+
+
                 </div>
                 <div className={styles.LinkSection}>
                     <span

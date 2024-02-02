@@ -21,7 +21,7 @@
 
 * {
     box-sizing: border-box;
-    /* transition: .2s all; */
+    transition: .1s all;
 }
 
 a {

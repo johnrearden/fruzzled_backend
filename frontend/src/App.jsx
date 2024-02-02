@@ -15,6 +15,7 @@ import { Routes, Route } from 'react-router-dom';
 import { CrosswordLoader } from './pages/crossword/CrosswordLoader';
 import SudokuHome from './pages/puzzle/SudokuHome';
 import AnagramSeries from './pages/anagram/AnagramSeries';
+import AnagramCreator from './pages/anagram/AnagramCreator';
 
 
 function App() {
@@ -48,6 +49,9 @@ function App() {
                     <Route
                         path="/anagram"
                         element={ <AnagramSeries />} />
+                    <Route
+                        path="/anagram_creator"
+                        element={ <AnagramCreator />} />
                     <Route
                         path="/"
                         element={ <Home /> } />

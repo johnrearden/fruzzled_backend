@@ -1,4 +1,5 @@
-from rest_framework import generics
+from django.http import JsonResponse
+from rest_framework import generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Anagram, AnagramSeries
@@ -20,5 +21,25 @@ class GetRandomAnagram(APIView):
         serializer = AnagramSeriesSerializer(series)
 
         return Response(serializer.data)
+
+
+class CreateNewAnagramSeries(APIView):
+
+    permission_classes = [permissions.IsAdminUser]
+
+    def post(self, request):
+        series = AnagramSeries(creator=request.user)
+        series.save()
+        words = request.POST['words'].split(',')
+        print(words)
+        for word in words:
+            anagram = Anagram(
+                word=word,
+                creator=request.user,
+                series=series,
+            )
+            anagram.save()
+
+        return JsonResponse({'data' : 'Yo yo yo!'})
 
 
