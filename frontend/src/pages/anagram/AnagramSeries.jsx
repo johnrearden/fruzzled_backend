@@ -8,7 +8,7 @@ import { axiosReq } from '../../api/axiosDefaults';
 
 const AnagramSeries = () => {
 
-    const [timerInitialValue, setTimerInitialValue] = useState(10);
+    const [timerInitialValue, setTimerInitialValue] = useState(30);
     const [timerRunning, setTimerRunning] = useState(false);
 
     const [loaded, setLoaded] = useState(false);
@@ -82,7 +82,7 @@ const AnagramSeries = () => {
         setTimerRunning(false);
         setTimeout(() => {
             setCurrentAnagramIndex(prev => prev + 1);
-            setTimerInitialValue(10 + nextIndex * 5);
+            setTimerInitialValue(10 + nextIndex * 20);
         }, 1500)
         setTimeout(() => {
             setTimerRunning(true);

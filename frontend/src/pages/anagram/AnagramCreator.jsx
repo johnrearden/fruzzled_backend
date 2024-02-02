@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import { axiosReq, axiosRes } from '../../api/axiosDefaults';
 
-const SHORTEST_WORD = 4;
+const SHORTEST_WORD = 3;
 const MAX_ANAGRAMS = 7;
 
 const AnagramCreator = () => {
     const [anagrams, setAnagrams] = useState([
+        Array(3).fill('_').join(''),
         Array(4).fill('_').join(''),
         Array(5).fill('_').join(''),
         Array(6).fill('_').join(''),
-        Array(7).fill('_').join(''),
-        Array(8).fill('_').join(''),
     ]);
 
     const addAnagram = () => {
