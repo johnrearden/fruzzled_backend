@@ -106,6 +106,7 @@ const AnagramCreator = () => {
                 maxLength={index + 4}
             ></input>
             <button
+                type="button"
                 className={btnStyles.Button}
                 onClick={() => handleWordRequest(index, index + SHORTEST_WORD)}
             >
@@ -118,29 +119,32 @@ const AnagramCreator = () => {
         <div className={styles.Outer}>
             <h5 className="text-center">New Anagram Series</h5>
             <form
-                onSubmit={handleSubmit}
                 className="mt-2"
             >
                 {anagramInputs}
             </form>
             <div className="mt-2 text-center">
                 <button
+                    type="button"
                     onClick={addAnagram}
                     disabled={anagrams.length >= MAX_ANAGRAMS}
                     className={`${btnStyles.Button} ${styles.ActionButton}`}
                 >+</button>
                 <button
+                    type="button"
                     onClick={removeAnagram}
                     disabled={anagrams.length <= MIN_ANAGRAMS}
                     className={`${btnStyles.Button} ${styles.ActionButton}`}
                 >-</button>
                 <button
+                    type="button"
                     onClick={fillAll}
                     className={`${btnStyles.Button} ${styles.ActionButton}`}
                 >Fill</button>
             </div>
             <div className="mt-2 text-center">
                 <button
+                    type="button"
                     onClick={handleSubmit}
                     className={`${btnStyles.Button} ${styles.SaveButton}`}
                 >Save</button>
