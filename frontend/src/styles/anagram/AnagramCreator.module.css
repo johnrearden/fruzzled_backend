@@ -1,0 +1,34 @@
+.Outer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.Input {
+    background: var(--fg-color);
+    border: 1px solid var(--bg-color);
+    box-sizing: border-box;
+    border-radius: 2px;
+    color: var(--bg-color);
+    text-align: center;
+    padding: 3px 10px;
+    margin: 3px 20px;
+    width: 150px;
+}
+
+.ActionButton {
+    width: 65px;
+}
+
+.SaveButton {
+    width: 150px;
+}
+
+.WordLength {
+    display: inline-block;
+    width: 20px;
+    text-align: end;
+}

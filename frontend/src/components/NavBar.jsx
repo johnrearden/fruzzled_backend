@@ -55,12 +55,25 @@ const NavBar = () => {
         <>
             <NavLink
                 className={styles.NavLink}
+                to="/anagram_creator"
+                >
+                <i className="fa-solid fa-shuffle"></i>
+            </NavLink>
+            <NavLink
+                className={styles.NavLink}
+                to="/"
+                >
+                <i className="fa-solid fa-table-cells-large"></i>
+            </NavLink>
+            <NavLink
+                className={styles.NavLink}
                 to="/"
                 onClick={() => {
                     handleSignout();
                 }}>
                 <i className="fa-solid fa-person-walking-arrow-right"></i>
             </NavLink>
+
         </>)
 
     return (

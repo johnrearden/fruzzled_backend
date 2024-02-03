@@ -2,6 +2,10 @@
     font-family: "Freckle Face";
 }
 
+.NavLink {
+    margin: 0 10px;
+}
+
 .NavLink:hover{
     color: var(--common-warm);
 }
