@@ -302,7 +302,8 @@ export class Grid {
             }
         }
 
-
+        console.log('reindexed')
+        console.log(this.clues);
     }
 
     // Handle a keyup event on the document

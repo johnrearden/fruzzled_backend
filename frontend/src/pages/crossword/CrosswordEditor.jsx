@@ -1,26 +1,80 @@
-import { Keyboard } from './Keyboard';
-import { Controls } from './Controls.jsx';
-import { ClueList } from '../components/ClueList';
-import { Cell } from './Cell';
-import { CompletenessDisplay } from './CompletenessDisplay';
-import { replaceCharAt } from '../utils/utils';
-import { GRID_CONTENTS_LS_KEY, OPEN_CELL, CLOSED_CELL, PUZZLE_ID_LS_KEY } from '../constants/constants.js';
-import styles from '../styles/crossword/Grid.module.css';
-import btnStyles from '../styles/Button.module.css'
-import { useEffect, useState, useCallback } from 'react';
+import { Keyboard } from '../../components/Keyboard';
+import { ClueList } from '../../components/ClueList';
+import { Cell } from '../../components/Cell';
+import { replaceCharAt } from '../../utils/utils';
+import { GRID_CONTENTS_LS_KEY, OPEN_CELL, CLOSED_CELL, PUZZLE_ID_LS_KEY } from '../../constants/constants.js';
+import styles from '../../styles/crossword/Grid.module.css';
+import btnStyles from '../../styles/Button.module.css'
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Row, Col } from 'react-bootstrap';
+import { Grid } from '../../../../crosswords/static/js/crossword_grid.js';
 
 const MAX_DIMENSION = 25;
 
-export const CrosswordGrid = ({ data }) => {
+export const CrosswordEditor = ({ data }) => {
 
-    console.log(data);
-
-    const [currentCell, setCurrentCell] = useState(data.clues[0].start_col + data.clues[0].start_row * data.puzzle.grid.width);
+    const [currentCell, setCurrentCell] = useState(0);
     const [currentClue, setCurrentClue] = useState(0);
     const [showCellCorrectness, setShowCellCorrectness] = useState(false);
     const [indicatorLetter, setIndicatorLetter] = useState('');
     const [onMobile, setOnMobile] = useState(false);
+
+    // A reference to the internal Grid state object.
+    const gridRef = useRef(null);
+
+
+    // Create and index the clues on load.
+    useEffect(() => {
+        const gridAsJSON = {
+            cells: data.puzzle.grid.cells,
+            width: data.puzzle.grid.width,
+            height: data.puzzle.grid.height
+        }
+        gridRef.current = new Grid(gridAsJSON, []);
+
+        // Populate the cellReferences array
+        let array = new Array(gridRef.current.clues.length);
+        const width = gridRef.current.width;
+        const height = gridRef.current.height;
+        for (let i = 0; i < array.length; i++) {
+            array[i] = new Array();
+            const clue = gridRef.current.clues[i];
+            for (let j = 0; j < clue.cellList.length; j++) {
+                let cellIndex;
+                if (clue.orientation === 'AC') {
+                    cellIndex = clue.startCol + j + (clue.startRow * width);
+                } else {
+                    cellIndex = clue.startCol + ((j + clue.startRow) * width);
+                }
+                array[i].push(cellIndex);
+            }
+        }
+        console.log('cellReferences : ', array);
+        setCellReferences(array);
+
+        // Populate the clueReferences array
+        const length = width * height;
+        array = new Array(length);
+        for (let i = 0; i < array.length; i++) {
+            array[i] = new Array();
+        }
+        gridRef.current.clues.forEach((clue, number) => {
+            for (let i = 0; i < clue.cellList.length; i++) {
+                const startCol = parseInt(clue.startCol);
+                const startRow = parseInt(clue.startRow);
+                let index = 0;
+                if (clue.orientation === 'AC') {
+                    index = startCol + i + (startRow * width);
+                    // Ensure AC clues are always first in intersection cells for consistent clicking
+                    array[index].unshift(number);
+                } else {
+                    index = startCol + ((i + startRow) * width);
+                    array[index].push(number);
+                }
+            }
+        });
+        setClueReferences(array);
+    }, [data])
 
 
     // This flag is toggled each time a key is pressed, otherwise repeated presses of the 
@@ -35,14 +89,6 @@ export const CrosswordGrid = ({ data }) => {
      */
     const [gridContents, setGridContents] = useState(data.puzzle.grid.cells);
 
-    useEffect(() => {
-        const storedGridContents = window.localStorage.getItem(GRID_CONTENTS_LS_KEY);
-        const storedPuzzleId = window.localStorage.getItem(PUZZLE_ID_LS_KEY);
-        if (storedPuzzleId == data.puzzle.id) {
-            setGridContents(storedGridContents);
-        }
-    }, [data.puzzle.grid.cells, data.puzzle.id]);
-
     /**
      * An array, with an element for each clue, which stores a list of the cells
      * occupied by that clue on the grid. 
@@ -50,25 +96,7 @@ export const CrosswordGrid = ({ data }) => {
      * Allows a clue to know which cells it
      * contains.
      */
-    const [cellReferences, setCellReferences] = useState(() => {
-        let array = new Array(data.clues.length);
-        let width = data.puzzle.grid.width;
-        for (let i = 0; i < array.length; i++) {
-            array[i] = new Array();
-            const clue = data.clues[i];
-            for (let j = 0; j < clue.solution.length; j++) {
-                let cellIndex;
-                if (clue.orientation === 'AC') {
-                    cellIndex = clue.start_col + j + (clue.start_row * width);
-                } else {
-                    cellIndex = clue.start_col + ((j + clue.start_row) * width);
-                }
-                array[i].push(cellIndex);
-            }
-
-        }
-        return array;
-    });
+    const [cellReferences, setCellReferences] = useState([]);
 
     /**
      * An array, with an element for each cell, which stores a list of the 
@@ -76,32 +104,16 @@ export const CrosswordGrid = ({ data }) => {
      * 
      * Allows a cell to know which clue(s) it affects.
      */
-    const [clueReferences, setClueReferences] = useState(() => {
-        const width = data.puzzle.grid.width;
-        const height = data.puzzle.grid.height;
-        const length = width * height;
-        let array = new Array(length);
-        for (let i = 0; i < array.length; i++) {
-            array[i] = new Array();
-        }
-        data.clues.forEach((clue, number) => {
-            for (let i = 0; i < clue.solution.length; i++) {
-                const startCol = parseInt(clue.start_col);
-                const startRow = parseInt(clue.start_row);
-                let index = 0;
-                if (clue.orientation === 'AC') {
-                    index = startCol + i + (startRow * width);
-                    // Ensure AC clues are always first in intersection cells for consistent clicking
-                    array[index].unshift(number);
-                } else {
-                    index = startCol + ((i + startRow) * width);
-                    array[index].push(number);
-                }
+    const [clueReferences, setClueReferences] = useState([]);
 
-            }
-        });
-        return array;
-    });
+
+    useEffect(() => {
+        const storedGridContents = window.localStorage.getItem(GRID_CONTENTS_LS_KEY);
+        const storedPuzzleId = window.localStorage.getItem(PUZZLE_ID_LS_KEY);
+        if (storedPuzzleId == data.puzzle.id) {
+            setGridContents(storedGridContents);
+        }
+    }, [data.puzzle.grid.cells, data.puzzle.id]);
 
     /**
      * Handles events generated by user clicking on individual cells.
@@ -116,14 +128,14 @@ export const CrosswordGrid = ({ data }) => {
             const orthogonalClueIndex = result >= clueReferences[cellIndex].length ? 0 : result;
             setCurrentClue(clueReferences[cellIndex][orthogonalClueIndex]);
         } else {
-            const clue = data.clues[clueReferences[cellIndex][0]];
+            const clue = gridRef.current.clues[clueReferences[cellIndex][0]];
             if (clue.orientation === "AC" && clueReferences[cellIndex].length > 1) {
 
                 // Check if the AC clue (if both are present) is filled. There's no point 
                 // in defaulting to selecting the AC clue if it is - bad UX.
                 let clueAlreadyFilled = true;
-                for (let x = clue.start_col; x < clue.start_col + clue.solution.length; x++) {
-                    const index = x + clue.start_row * data.puzzle.grid.width;
+                for (let x = clue.startCol; x < clue.startCol + clue.cellList.length; x++) {
+                    const index = x + clue.startRow * gridRef.current.width;
                     if (gridContents[index] === '#') {
                         clueAlreadyFilled = false
                     }
@@ -258,6 +270,9 @@ export const CrosswordGrid = ({ data }) => {
 
 
     // Rendering process begins here
+    if (!gridRef.current) {
+        return (<span>Loading...</span>);
+    }
     const grid = data.puzzle.grid;
     const cellsWidthRatio = 100 / (grid.width + 4);
     const myStyle = {
@@ -323,7 +338,6 @@ export const CrosswordGrid = ({ data }) => {
     });
 
     const openCellCount = gridContents.length - closedCellCount;
-    const calculatedPercentComplete = Math.floor(filledCellCount / openCellCount * 100);
 
     if (typeof (window) !== "undefined" && typeof (window) !== null) {
         const mobile = window.matchMedia("(any-pointer:coarse)").matches;
@@ -335,7 +349,6 @@ export const CrosswordGrid = ({ data }) => {
 
     return (
         <div className={styles.container}>
-            <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
             <Row className="mt-2">
                 <Col className='d-flex justify-content-center'>
                     <div
@@ -356,27 +369,11 @@ export const CrosswordGrid = ({ data }) => {
                             rows="2"
                             readOnly
                             className={styles.current_clue_display}
-                            value={currentClue != null ? data.clues[currentClue].clue : ''}>
+                            value={currentClue != null ? data.clues[currentClue]?.clue : ''}>
                         </textarea>
                     </Col>
                 </Row>
             }
-
-
-            <Row className="mt-3">
-                <Col className="d-flex justify-content-around">
-                    <CompletenessDisplay
-                        completenessPercentage={calculatedPercentComplete}
-                        shorthand={false}
-                    />
-                    <button 
-                        className={btnStyles.Button}
-                        onClick={onDoneClick}>
-                        Check
-                    </button>
-                </Col>
-
-            </Row>
 
             <Row className='mt-4'>
                 <ClueList

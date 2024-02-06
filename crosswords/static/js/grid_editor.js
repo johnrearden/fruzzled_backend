@@ -86,7 +86,8 @@ const renderClues = (clues) => {
  * 
  * @param {Grid} grid 
  */
-const drawGrid = (grid) => {
+const 
+drawGrid = (grid) => {
     const width = grid.width;
     const height = grid.height;
     const cells = grid.cells;

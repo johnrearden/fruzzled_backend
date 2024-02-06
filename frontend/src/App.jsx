@@ -16,6 +16,7 @@ import { CrosswordLoader } from './pages/crossword/CrosswordLoader';
 import SudokuHome from './pages/puzzle/SudokuHome';
 import AnagramSeries from './pages/anagram/AnagramSeries';
 import AnagramCreator from './pages/anagram/AnagramCreator';
+import CreateNewCrossword from './pages/crossword/CreateNewCrossword';
 
 
 function App() {
@@ -52,6 +53,9 @@ function App() {
                     <Route
                         path="/anagram_creator"
                         element={ <AnagramCreator />} />
+                    <Route
+                        path="/create_crossword"
+                        element={ <CreateNewCrossword />} />
                     <Route
                         path="/"
                         element={ <Home /> } />

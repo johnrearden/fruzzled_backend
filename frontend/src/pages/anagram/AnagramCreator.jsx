@@ -40,7 +40,6 @@ const AnagramCreator = () => {
 
     const handleWordRequest = async (index, length) => {
         const queryStr = new Array(length).fill('_').join('');
-        console.log(`looking for a word of length ${length}`);
         try {
             const { data } = await axiosRes.get(`/crossword_builder/query/${queryStr}/`);
             const copy = [...anagrams];
@@ -77,7 +76,6 @@ const AnagramCreator = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('submitting');
         const url = '/create_anagram_series/';
         const formData = new FormData();
         formData.append('words', anagrams);

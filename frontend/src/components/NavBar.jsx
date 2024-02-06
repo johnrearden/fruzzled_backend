@@ -61,7 +61,7 @@ const NavBar = () => {
             </NavLink>
             <NavLink
                 className={styles.NavLink}
-                to="/"
+                to="/create_crossword"
                 >
                 <i className="fa-solid fa-table-cells-large"></i>
             </NavLink>
