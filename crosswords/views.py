@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Count
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
@@ -80,7 +81,7 @@ class GetMatchingWord(APIView):
         for i, char in enumerate(query):
             if char != '_':
                 known_chars.append((i, char))
-
+        print(known_chars)
         length = len(query)
         result_list = []
         full_list = DictionaryWord.objects.filter(length=length) \
@@ -211,8 +212,13 @@ class SavePuzzle(UserPassesTestMixin, APIView):
 
 class GetRecentPuzzles(APIView):
     def get(self, request, puzzle_count):
+        # puzzles = CrosswordPuzzle.objects \
+        #                          .order_by('-last_edited')[:puzzle_count]
+                                 
         puzzles = CrosswordPuzzle.objects \
-                                 .order_by('-last_edited')[:puzzle_count]
+            .annotate(num_clues=Count('clues')) \
+            .filter(num_clues__gte=0)[:puzzle_count]
+        puzzles = puzzles.filter()
         puzzle_list = []
         for puzzle in puzzles:
             cell_concentration = get_cell_concentration(puzzle)

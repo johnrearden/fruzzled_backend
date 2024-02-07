@@ -35,6 +35,11 @@ export const Cell = (props) => {
     ) 
         : 
     (
-        <div className={ styles.closed }></div>
+        <div 
+            className={ styles.closed }
+            onClick={props.isEditing ? 
+                () => props.clickHandler(props.index) 
+                : () => {}}
+        ></div>
     )
 }

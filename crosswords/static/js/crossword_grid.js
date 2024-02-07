@@ -14,7 +14,7 @@ export class Clue {
         this.orientation = orientation;
         this.startRow = startRow;
         this.startCol = startCol;
-        this.number = 0;
+        this.clue_number = 0;
         this.len = 1;
     }
 
@@ -28,7 +28,7 @@ export class Clue {
         return {
             'solution': solution_string,
             'clue': this.clue,
-            'clue_number': this.number,
+            'clue_number': this.clue_number,
             'orientation': this.orientation,
             'start_row': this.startRow,
             'start_col': this.startCol,
@@ -261,9 +261,9 @@ export class Grid {
                 // An AC and a DN clue share a starting cell - they get the same number
                 for (let clue of clueList) {
                     if (clue.orientation === 'AC') {
-                        clue.number = acrossCounter;
+                        clue.clue_number = acrossCounter;
                     } else {
-                        clue.number = acrossCounter;
+                        clue.clue_number = acrossCounter;
                         unusableDownIndices.push(acrossCounter);
                     }
                 }
@@ -273,14 +273,14 @@ export class Grid {
                 const clue = clueList[0];
                 if (clue.orientation === 'AC') {
                     // AC clues cannot have duplicate numbers
-                    clue.number = acrossCounter;
+                    clue.clue_number = acrossCounter;
                     acrossCounter++;
                 } else {
                     // Ensure a DN clue does not reuse a number
                     while (unusableDownIndices.includes(downCounter)) {
                         downCounter++;
                     }
-                    clue.number = downCounter;
+                    clue.clue_number = downCounter;
                     unusableDownIndices.push(downCounter);
                     downCounter++;
                 }
@@ -295,7 +295,7 @@ export class Grid {
             if (clueCache.get(key)) {
                 item.clue = clueCache.get(key);
             }
-            if (wordLengthCache.get(key)) {
+            if (false && wordLengthCache.get(key)) {
                 item.word_lengths = wordLengthCache.get(key);
             } else {
                 item.word_lengths = `(${item.len})`;
