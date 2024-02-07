@@ -23,7 +23,7 @@ export const Cell = (props) => {
     return props.inUse ? (
         <div
             className={ classString }
-            onClick={ () => props.clickHandler(props.index) }
+            onClick={ (event) => props.clickHandler(props.index, event) }
         >
             <span 
                 className={ styles.cell_value }
@@ -38,7 +38,7 @@ export const Cell = (props) => {
         <div 
             className={ styles.closed }
             onClick={props.isEditing ? 
-                () => props.clickHandler(props.index) 
+                (event) => props.clickHandler(props.index, event) 
                 : () => {}}
         ></div>
     )

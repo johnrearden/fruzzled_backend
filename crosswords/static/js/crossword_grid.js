@@ -7,7 +7,7 @@ export const NONE = "-";
 
 export class Clue {
     constructor(startRow, startCol, orientation) {
-        this.clue = '';
+        this.clue = 'asdfasdfasd';
         this.cellList = [];
         this.orthogs = [];
         this.word_lengths = '';

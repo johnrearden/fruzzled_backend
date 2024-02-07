@@ -37,3 +37,18 @@
     color: white;
     transition: all .3s;
 }
+
+.CustomDialog {
+    width: 90vw !important;
+    min-width: 90vw !important;
+    max-width: 100vw !important;
+}
+
+.Definition {
+    margin-bottom: 10px;
+}
+
+.Definition:hover {
+    color: var(--brgt-color);
+    cursor: pointer;
+}
