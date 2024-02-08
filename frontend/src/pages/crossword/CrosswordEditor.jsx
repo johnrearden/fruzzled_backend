@@ -9,8 +9,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { Row, Col, Modal } from 'react-bootstrap';
 import { Grid } from '../../../../crosswords/static/js/crossword_grid.js';
 import { axiosRes } from '../../api/axiosDefaults.js';
-import axios from 'axios';
-import { CompletenessDisplay } from '../../components/CompletenessDisplay.jsx';
+import { OPEN } from '../../../../crosswords/static/js/crossword_grid.js';
 
 const MAX_DIMENSION = 25;
 
@@ -366,6 +365,33 @@ export const CrosswordEditor = ({ data }) => {
     const handleDefinitionSelection = (definition) => {
         gridRef.current.clues[currentClue].clue = definition;
         setClues(gridRef.current.clues);
+        setShowCluesModal(false);
+    }
+
+    const clearCells = () => {
+        const clue = gridRef.current.clues[currentClue];
+        let gridCopy = gridContents.slice();
+        for (let cell of clue.cellList) {
+            // Check if cell is in use by an intersecting (and complete) solution. If so, 
+            // don't erase it.
+            if (cell.clueAcross && cell.clueDown) {
+                const intersector = clue.orientation === "AC" ? cell.clueDown : cell.clueAcross;
+                let allCellsFilled = true;
+
+                for (let c of intersector.cellList) {
+                    if (c.value === '' || c.value === OPEN) {
+                        allCellsFilled = false;
+                    }
+                }
+                if (allCellsFilled) {
+                    continue;
+                }
+            }
+            // Remove each cell's value
+            cell.value = '';
+            gridCopy = replaceCharAt(gridCopy, cell.index, OPEN);
+        }
+        setGridContents(gridCopy);
     }
 
 
@@ -488,6 +514,9 @@ export const CrosswordEditor = ({ data }) => {
                         onClick={getDefinitions}
                     >Get Definitions
                     </button>
+                    <button
+                        onClick={clearCells}
+                    >Clear current clue cells</button>
                 </Col>
             </Row>
 
