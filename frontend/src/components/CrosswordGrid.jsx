@@ -177,7 +177,7 @@ export const CrosswordGrid = ({ data }) => {
      * @param {*} event 
      */
     const onCellKeyup = (index, event) => {
-        setLastChar(event.code);
+        setLastChar(event.which);
         const keyIsChar = event.keyCode >= 65 && event.keyCode <= 90;
         if (keyIsChar) {
             const char = event.key?.toUpperCase();
