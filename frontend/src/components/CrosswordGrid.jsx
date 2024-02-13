@@ -177,9 +177,9 @@ export const CrosswordGrid = ({ data }) => {
      * @param {*} event 
      */
     const onCellKeyup = (index, event) => {
-        setLastChar(event.which || event.code);
+        setLastChar(event.code);
         const keyIsChar = event.keyCode >= 65 && event.keyCode <= 90;
-        if (keyIsChar || event.keyCode === 229) {
+        if (keyIsChar) {
             const char = event.key?.toUpperCase();
             let gridCopy = gridContents.slice();
             gridCopy = replaceCharAt(gridCopy, index, char);
