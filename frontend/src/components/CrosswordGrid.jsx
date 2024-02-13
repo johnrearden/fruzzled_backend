@@ -177,7 +177,7 @@ export const CrosswordGrid = ({ data }) => {
      * @param {*} event 
      */
     const onCellKeyup = (index, event) => {
-        setLastChar(event.key);
+        setLastChar(event.which || event.code);
         const keyIsChar = event.keyCode >= 65 && event.keyCode <= 90;
         if (keyIsChar) {
             const char = event.key?.toUpperCase();
@@ -185,13 +185,11 @@ export const CrosswordGrid = ({ data }) => {
             gridCopy = replaceCharAt(gridCopy, index, char);
             setGridContents(gridCopy);
             setCurrentCell(getNextCell(index));
-            setLastChar(event.key);
         } else if (event.key === "Backspace" || event.key === "Delete") {
             let gridCopy = gridContents.slice();
             gridCopy = replaceCharAt(gridCopy, index, OPEN_CELL);
             setGridContents(gridCopy);
             setCurrentCell(getPreviousCell(index));
-            setLastChar('Backspace')
         }
     }
 
