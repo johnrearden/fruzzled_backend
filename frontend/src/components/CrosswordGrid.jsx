@@ -54,7 +54,7 @@ export const CrosswordGrid = ({ data }) => {
         }
     }, [data.puzzle.grid.cells, data.puzzle.id]);
 
-
+    const [lastChar, setLastChar] = useState("");
 
     /**
      * An array, with an element for each clue, which stores a list of the cells
@@ -166,7 +166,7 @@ export const CrosswordGrid = ({ data }) => {
         if (index > 0) {
             return cellReferences[currentClue][index - 1];
         } else {
-            return position; //
+            return position;
         }
     }
 
@@ -184,11 +184,13 @@ export const CrosswordGrid = ({ data }) => {
             gridCopy = replaceCharAt(gridCopy, index, char);
             setGridContents(gridCopy);
             setCurrentCell(getNextCell(index));
+            setLastChar(event.key);
         } else if (event.key === "Backspace" || event.key === "Delete") {
             let gridCopy = gridContents.slice();
             gridCopy = replaceCharAt(gridCopy, index, OPEN_CELL);
             setGridContents(gridCopy);
             setCurrentCell(getPreviousCell(index));
+            setLastChar('Backspace')
         }
     }
 
@@ -297,6 +299,7 @@ export const CrosswordGrid = ({ data }) => {
 
     return (
         <div className={styles.container}>
+            Last Char: {lastChar}
             <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
             <h5 className="text-center">Crossword {data.puzzle.id}</h5>
             <Row className="mt-2">
