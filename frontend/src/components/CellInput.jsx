@@ -19,19 +19,24 @@ export const CellInput = forwardRef(({
     const cellStyle = {
         width: `clamp(12px, ${cellsWidthRatio}vw, ${maxDimension}px)`,
         height: `clamp(12px, ${cellsWidthRatio}vw, ${maxDimension}px)`,
-        fontSize: `clamp(12px, ${cellsWidthRatio}vw, ${maxDimension}px)`,
+        fontSize: `clamp(9px, ${cellsWidthRatio / 1.3}vw, ${maxDimension * 0.75}px)`,
     }
+    
 
     const styleHighlighted = highlighted ? styles.part_of_current_clue : '';
     let classString;
-    classString = `${styles.cellInput} ${cellStyle} ${styleHighlighted}`;
+    classString = `${styles.cellInput} ${styleHighlighted}`;
+
+    console.log(classString);
+
 
     return inUse ? (
         <input
             type="text"
             ref={ref}
             pattern={/[a-z]/}
-            className={classString}
+            className={ classString }
+            style={cellStyle}
             onClick={(event) => clickHandler(index, event)}
             onChange={(event) => changeHandler(index, event)}
             value={letter}

@@ -21,6 +21,11 @@
     font-weight: bold;
 }
 
+.cellInput:focus, .cellInput::selection {
+    outline: 0;
+    background-color: #ffaa50 !important;
+}
+
 .cellInput::selection {
     background-color: #fdd996;
 }
