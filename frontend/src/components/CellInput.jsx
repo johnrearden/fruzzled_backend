@@ -6,7 +6,7 @@ export const CellInput = forwardRef(({
     index,
     letter,
     clickHandler,
-    changeHandler,
+    keyUpHandler,
     cellsWidthRatio,
     maxDimension,
     selected,
@@ -27,19 +27,16 @@ export const CellInput = forwardRef(({
     let classString;
     classString = `${styles.cellInput} ${styleHighlighted}`;
 
-    console.log(classString);
-
-
     return inUse ? (
         <input
             type="text"
             ref={ref}
-            pattern={/[a-z]/}
             className={ classString }
             style={cellStyle}
             onClick={(event) => clickHandler(index, event)}
-            onChange={(event) => changeHandler(index, event)}
+            onKeyUp={(event) => keyUpHandler(index, event)}
             value={letter}
+            autoCapitalize='characters'
         />
     ) :
         (
