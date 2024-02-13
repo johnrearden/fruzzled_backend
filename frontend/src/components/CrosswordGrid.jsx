@@ -186,8 +186,13 @@ export const CrosswordGrid = ({ data }) => {
     }
 
     const onCellInput = (index, event) => {
-        const char = event.target.value?.toUpperCase();
-        if (char >= 'A' && char <= 'Z') {
+        const length = event.target.value?.length;
+        let char = event.target.value?.toUpperCase();
+        if (length && length > 1) {
+            char = char.split('').pop();
+        }
+        console.log(char);
+        if ((/[a-zA-Z]/).test(char)) {
             let gridCopy = gridContents.slice();
             gridCopy = replaceCharAt(gridCopy, index, char);
             setGridContents(gridCopy);
