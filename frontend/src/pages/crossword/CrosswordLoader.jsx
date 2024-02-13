@@ -9,7 +9,7 @@ export const CrosswordLoader = () => {
 
     useEffect(() => {
         const handleMount = async () => {
-            const url = '/crossword_builder/get_puzzle/242/';
+            const url = '/crossword_builder/get_puzzle/67/';
             const { data } = await axiosReq.get(url);
             setData(data.puzzle);
             setLoaded(true);
