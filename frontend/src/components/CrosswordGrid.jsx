@@ -7,21 +7,18 @@ import { replaceCharAt } from '../utils/utils';
 import { GRID_CONTENTS_LS_KEY, OPEN_CELL, CLOSED_CELL, PUZZLE_ID_LS_KEY } from '../constants/constants.js';
 import styles from '../styles/crossword/Grid.module.css';
 import btnStyles from '../styles/Button.module.css'
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef, createRef } from 'react';
 import { Row, Col } from 'react-bootstrap';
 
-const MAX_DIMENSION = 25;
+const MAX_DIMENSION = 32;
 
 export const CrosswordGrid = ({ data }) => {
-
-    console.log(data);
 
     const [currentCell, setCurrentCell] = useState(data.clues[0].start_col + data.clues[0].start_row * data.puzzle.grid.width);
     const [currentClue, setCurrentClue] = useState(0);
     const [showCellCorrectness, setShowCellCorrectness] = useState(false);
     const [indicatorLetter, setIndicatorLetter] = useState('');
     const [onMobile, setOnMobile] = useState(false);
-
 
     // This flag is toggled each time a key is pressed, otherwise repeated presses of the 
     // same key would not result in an rerender of the Keyboard as the indicator letter 
@@ -42,6 +39,8 @@ export const CrosswordGrid = ({ data }) => {
             setGridContents(storedGridContents);
         }
     }, [data.puzzle.grid.cells, data.puzzle.id]);
+
+
 
     /**
      * An array, with an element for each clue, which stores a list of the cells
@@ -144,16 +143,10 @@ export const CrosswordGrid = ({ data }) => {
      * 
      * @param {Integer} clueNumber 
      */
-    const onClueClick = (clueId) => {
+    const onClueClick = (clueIndex) => {
 
-        let clue;
-        let clueIndex;
-        for (let i = 0; i < data.clues.length; i++) {
-            if (data.clues[i].id === clueId) {
-                clue = data.clues[i];
-                clueIndex = i;
-            }
-        }
+        const clue = data.clues[clueIndex];
+
         const startCol = clue.start_col;
         const startRow = clue.start_row;
         const cellIndex = startCol + startRow * data.puzzle.grid.width;
@@ -336,8 +329,9 @@ export const CrosswordGrid = ({ data }) => {
     return (
         <div className={styles.container}>
             <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
+            <h5 className="text-center">Crossword {data.puzzle.id}</h5>
             <Row className="mt-2">
-                <Col className='d-flex justify-content-center'>
+                <Col xs={12} md={8} className='d-flex justify-content-center'>
                     <div
                         id="gridDiv"
                         style={myStyle}
@@ -347,35 +341,27 @@ export const CrosswordGrid = ({ data }) => {
                     </div>
 
                 </Col>
-            </Row>
-
-            {!showKeyboard &&
-                <Row className="mt-2">
-                    <Col>
-                        <textarea
-                            rows="2"
-                            readOnly
-                            className={styles.current_clue_display}
-                            value={currentClue != null ? data.clues[currentClue].clue : ''}>
-                        </textarea>
-                    </Col>
-                </Row>
-            }
-
-
-            <Row className="mt-3">
-                <Col className="d-flex justify-content-around">
+                <Col xs={12} md={4}
+                    className="d-flex flex-column justify-content-center align-items-center"
+                >
+                    <textarea
+                        rows="4"
+                        readOnly
+                        className={styles.current_clue_display}
+                        value={currentClue != null ? data.clues[currentClue].clue : ''}>
+                    </textarea>
+                    <hr></hr>
                     <CompletenessDisplay
                         completenessPercentage={calculatedPercentComplete}
                         shorthand={false}
                     />
-                    <button 
-                        className={btnStyles.Button}
+                    <button
+                        className={`${btnStyles.Button} mt-2`}
                         onClick={onDoneClick}>
                         Check
                     </button>
-                </Col>
 
+                </Col>
             </Row>
 
             <Row className='mt-4'>
@@ -385,14 +371,14 @@ export const CrosswordGrid = ({ data }) => {
                 ></ClueList>
             </Row>
 
-            {showKeyboard &&
+            {/* {showKeyboard &&
                 <Keyboard
                     clickHandler={handleKeyPress}
                     indicatorLetter={indicatorLetter}
                     keyboardTripswitch={keyboardTripswitch}
                     clueString={data.clues[currentClue].clue}>
                 </Keyboard>
-            }
+            } */}
         </div>
     );
 }

@@ -12,10 +12,10 @@
 }
 
 .current_clue_display {
-    background-color: #00000020;
-    width: 80vw;
+    background-color: var(--fg-color);
+    width: 100%;
     max-width: 500px;
-    color: black;
+    color: var(--bg-color);
     border: 1px solid #00000025;
     padding: 0.4rem;
     user-select: none;
@@ -38,12 +38,6 @@
     transition: all .3s;
 }
 
-.CustomDialog {
-    width: 90vw !important;
-    min-width: 90vw !important;
-    max-width: 100vw !important;
-}
-
 .Definition {
     margin-bottom: 10px;
 }
@@ -51,4 +45,18 @@
 .Definition:hover {
     color: var(--brgt-color);
     cursor: pointer;
+}
+
+.Alert {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+}
+
+.WordInput {
+    text-align: center;
+    font-size: 1.3rem;
+    font-family: monospace;
+    width: 1.3rem;
+    height: 1.3rem;
 }

@@ -37,9 +37,7 @@ export const Cell = (props) => {
     (
         <div 
             className={ styles.closed }
-            onClick={props.isEditing ? 
-                (event) => props.clickHandler(props.index, event) 
-                : () => {}}
+            onClick={(event) => props.clickHandler(props.index, event)}
         ></div>
     )
 }

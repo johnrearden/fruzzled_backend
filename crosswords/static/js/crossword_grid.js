@@ -7,7 +7,7 @@ export const NONE = "-";
 
 export class Clue {
     constructor(startRow, startCol, orientation) {
-        this.clue = 'asdfasdfasd';
+        this.clue = 'No clue yet';
         this.cellList = [];
         this.orthogs = [];
         this.word_lengths = '';
@@ -99,11 +99,21 @@ export class Grid {
             const value = cell.isOpen ? '#' : '-';
             cellValues.push(value);
         }
+        const gridString = cellValues.join('');
         return {
-            'grid_string': cellValues.join(''),
+            'grid_string': gridString,
             'width': this.width,
             'height': this.height,
         }
+    }
+
+    getGridString = () => {
+        const cellValues = [];
+        for (let cell of this.cells) {
+            const value = cell.isOpen? cell.value : '-';
+            cellValues.push(value);
+        }
+        return cellValues.join('');
     }
 
     reindex = () => {
@@ -302,8 +312,7 @@ export class Grid {
             }
         }
 
-        console.log('reindexed')
-        console.log(this.clues);
+        // console.log('reindexed')
     }
 
     // Handle a keyup event on the document

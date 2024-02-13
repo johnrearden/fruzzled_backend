@@ -11,6 +11,7 @@ from .models import CrosswordPuzzle, CrosswordClue, PuzzleType
 from .serializers import GridSerializer, CrosswordPuzzleSerializer, \
                          CrosswordClueSerializer
 from .utils import get_cell_concentration
+import json
 
 
 class BuilderHome(View):
@@ -149,9 +150,12 @@ class DeletePuzzle(UserPassesTestMixin, APIView):
         return self.request.user.is_staff
 
 
-class SavePuzzle(UserPassesTestMixin, APIView):
+class SavePuzzle(APIView):
+
+    permission_classes = [permissions.IsAdminUser]
+
     def post(self, request, *args, **kwargs):
-        clues_data = request.data['clues']
+        clues_data = json.loads(request.data['clues'])
 
         if request.data['puzzle_id']:
 
@@ -159,7 +163,7 @@ class SavePuzzle(UserPassesTestMixin, APIView):
             id = int(request.data['puzzle_id'])
             puzzle = get_object_or_404(CrosswordPuzzle, pk=id)
             grid_data = request.data['grid']
-            puzzle.grid.cells = grid_data['grid_string']
+            puzzle.grid.cells = grid_data
             puzzle.grid.save()
 
             # Remove any clues previously associated with this puzzle.
@@ -252,9 +256,6 @@ class GetRecentPuzzles(APIView):
 
         return Response({'puzzles': puzzle_list})
 
-    def test_func(self):
-        return self.request.user.is_staff
-
 
 class CreateNewPuzzle(APIView):
 
@@ -281,8 +282,8 @@ class CreateNewPuzzle(APIView):
 
 
 class GetPuzzle(APIView):
-    def get(self, request, id):
-        puzzle = get_object_or_404(CrosswordPuzzle, pk=id)
+    def get(self, request, puzzle_id):
+        puzzle = get_object_or_404(CrosswordPuzzle, pk=puzzle_id)
         cell_concentration = get_cell_concentration(puzzle)
 
         # Retrieve the clues for this crossword, and count the

@@ -34,8 +34,7 @@ const CreateNewCrossword = () => {
             const id = data['new_puzzle_id'];
             url = `/crossword_builder/get_puzzle/${id}/`;
             const response = await axiosRes.get(url);
-            setData(response.data.puzzle
-                );
+            setData(response.data.puzzle);
             setEditing(true);
 
         } catch (err) {

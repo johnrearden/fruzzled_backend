@@ -6,10 +6,11 @@ import { GRID_CONTENTS_LS_KEY, OPEN_CELL, CLOSED_CELL, PUZZLE_ID_LS_KEY } from '
 import styles from '../../styles/crossword/Grid.module.css';
 import btnStyles from '../../styles/Button.module.css'
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { Row, Col, Modal } from 'react-bootstrap';
+import { Row, Col, Modal, Button, Alert } from 'react-bootstrap';
 import { Grid } from '../../../../crosswords/static/js/crossword_grid.js';
-import { axiosRes } from '../../api/axiosDefaults.js';
-import { OPEN } from '../../../../crosswords/static/js/crossword_grid.js';
+import { axiosReq, axiosRes } from '../../api/axiosDefaults.js';
+import { OPEN, CLOSED } from '../../../../crosswords/static/js/crossword_grid.js';
+import { createCellReferences, createClueReferences } from '../../utils/crossword_utils.js';
 
 const MAX_DIMENSION = 25;
 
@@ -21,81 +22,6 @@ export const CrosswordEditor = ({ data }) => {
     const [onMobile, setOnMobile] = useState(false);
     const [isEditingGrid, setIsEditingGrid] = useState(false);
     const [clues, setClues] = useState([]);
-
-    const [showCandidatesModal, setShowCandidatesModal] = useState(false);
-    const [candidates, setCandidates] = useState([]);
-
-    const [showCluesModal, setShowCluesModal] = useState(false);
-    const [dbDefinitions, setDBDefinitions] = useState([]);
-    const [apiDefinitions, setAPIDefinitions] = useState([]);
-
-    // A reference to the internal Grid state object.
-    const gridRef = useRef(null);
-
-    // Create and index the clues on load.
-    useEffect(() => {
-        const gridAsJSON = {
-            cells: data.puzzle.grid.cells,
-            width: data.puzzle.grid.width,
-            height: data.puzzle.grid.height
-        }
-        gridRef.current = new Grid(gridAsJSON, []);
-        setClues(gridRef.current.clues);
-
-        // Populate the cellReferences array
-        populateCellReferences();
-
-        // Populate the clueReferences array
-        populateClueReferences();
-        
-    }, [data])
-
-    const populateCellReferences = () => {
-        const array = new Array(gridRef.current.clues.length);
-        const width = gridRef.current.width;
-        
-        for (let i = 0; i < array.length; i++) {
-            array[i] = new Array();
-            const clue = gridRef.current.clues[i];
-            for (let j = 0; j < clue.cellList.length; j++) {
-                let cellIndex;
-                if (clue.orientation === 'AC') {
-                    cellIndex = clue.startCol + j + (clue.startRow * width);
-                } else {
-                    cellIndex = clue.startCol + ((j + clue.startRow) * width);
-                }
-                array[i].push(cellIndex);
-            }
-        }
-        setCellReferences(array);
-    }
-
-    const populateClueReferences = () => {
-        const width = gridRef.current.width;
-        const height = gridRef.current.height;
-        const length = width * height;
-        const array = new Array(length);
-        for (let i = 0; i < array.length; i++) {
-            array[i] = new Array();
-        }
-        gridRef.current.clues.forEach((clue, number) => {
-            for (let i = 0; i < clue.cellList.length; i++) {
-                const startCol = parseInt(clue.startCol);
-                const startRow = parseInt(clue.startRow);
-                let index = 0;
-                if (clue.orientation === 'AC') {
-                    index = startCol + i + (startRow * width);
-                    // Ensure AC clues are always first in intersection cells for consistent clicking
-                    array[index].unshift(number);
-                } else {
-                    index = startCol + ((i + startRow) * width);
-                    array[index].push(number);
-                }
-            }
-        });
-        setClueReferences(array);
-    }
-
 
     // This flag is toggled each time a key is pressed, otherwise repeated presses of the 
     // same key would not result in an rerender of the Keyboard as the indicator letter 
@@ -126,6 +52,70 @@ export const CrosswordEditor = ({ data }) => {
      */
     const [clueReferences, setClueReferences] = useState([]);
 
+    const [showCandidatesModal, setShowCandidatesModal] = useState(false);
+    const [candidates, setCandidates] = useState([]);
+
+    const [showCluesModal, setShowCluesModal] = useState(false);
+    const [dbDefinitions, setDBDefinitions] = useState([]);
+    const [apiDefinitions, setAPIDefinitions] = useState([]);
+
+    const [showClueTextModal, setShowClueTextModal] = useState(false);
+    const [currentClueModalText, setCurrentClueModalText] = useState("");
+
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [successAlertText, setSuccessAlertText] = useState("");
+    const [alertVariant, setAlertVariant] = useState('success');
+
+    // A reference to the internal Grid state object.
+    const gridRef = useRef(null);
+
+    // Create and index the clues on load.
+    useEffect(() => {
+        console.log(data);
+        const gridAsJSON = {
+            cells: data.puzzle.grid.cells,
+            width: data.puzzle.grid.width,
+            height: data.puzzle.grid.height
+        }
+        const clueArray = data.clues.length ? data.clues : [];
+        const gridModel = new Grid(gridAsJSON, clueArray);
+        gridRef.current = gridModel;
+        setClues(gridModel.clues);
+        setGridContents(gridModel.getGridString());
+
+        // Populate the cellReferences array
+        const cellReferences = createCellReferences(gridRef.current);
+        setCellReferences(cellReferences);
+
+        // Populate the clueReferences array
+        const clueReferences = createClueReferences(gridRef.current);
+        setClueReferences(clueReferences);
+
+    }, [data]);
+
+    const saveCrossword = async () => {
+        const list = [];
+        for (let clue of clues) {
+            list.push(clue.convertToObject());
+        }
+        const gridString = gridRef.current.getGridObject().grid_string;
+        const formData = new FormData();
+        formData.append('puzzle_id', data.puzzle.id);
+        formData.append('clues', JSON.stringify(list));
+        formData.append('grid', gridString);
+
+        const url = '/crossword_builder/save_puzzle/';
+        try {
+            const { data } = await axiosReq.post(url, formData);
+            setAlertVariant('success');
+            setSuccessAlertText('Crossword saved')
+            setShowSuccessAlert(true);
+            //setTimeout(() => setShowSuccessAlert(false), 1000);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     /**
      * Handles events generated by user clicking on individual cells.
      * @param {Integer} cellIndex 
@@ -135,7 +125,7 @@ export const CrosswordEditor = ({ data }) => {
         // Handle case where user is toggling cell open or closed
         if (isEditingGrid || event.ctrlKey) {
             const currentChar = gridContents.charAt(cellIndex);
-            const newChar = currentChar === "#" ? "-" : "#";
+            const newChar = currentChar === CLOSED ? OPEN : CLOSED;
             let copy = gridContents.slice();
             copy = replaceCharAt(copy, cellIndex, newChar);
             setGridContents(copy);
@@ -143,8 +133,11 @@ export const CrosswordEditor = ({ data }) => {
             gridRef.current.cells[cellIndex].isOpen = !isOpen;
             gridRef.current.reindex();
             setClues(gridRef.current.clues);
-            populateCellReferences();
-            populateClueReferences();
+            setCellReferences(createCellReferences(gridRef.current));
+            setClueReferences(createClueReferences(gridRef.current));
+            return;
+        } else if (!gridRef.current.cells[cellIndex].isOpen) {
+            // Take no action if not editing and cell is closed
             return;
         }
 
@@ -184,22 +177,15 @@ export const CrosswordEditor = ({ data }) => {
      * 
      * @param {Integer} clueNumber 
      */
-    const onClueClick = (clueId) => {
-
-        let clue;
-        let clueIndex;
-        for (let i = 0; i < clues.length; i++) {
-            if (clues[i].id === clueId) {
-                clue = clues[i];
-                clueIndex = i;
-            }
-        }
+    const onClueClick = (clueIndex) => {
+        const clue = clues[clueIndex];
         const startCol = clue.start_col;
         const startRow = clue.start_row;
         const cellIndex = startCol + startRow * gridRef.current.width;
         setCurrentCell(cellIndex);
         setCurrentClue(clueIndex);
-        window.scrollTo(0, 0);
+        setCurrentClueModalText(clues[currentClue].clue);
+        setShowClueTextModal(true);
     }
 
 
@@ -209,11 +195,33 @@ export const CrosswordEditor = ({ data }) => {
      * method of mutating state array using map function in React.
      * @param {Integer} keyCode 
      */
-    const handleKeyPress = useCallback((keyCode) => {
-
+    const handleKeyPress = useCallback(event => {
+        const keyCode = event.keyCode;
         if (currentClue == null) return;
 
         setKeyboardTripswitch(prev => !prev);
+
+        if (event.altKey) {
+            switch (event.key) {
+                case 'q': {
+                    getPotentials();
+                    break;
+                }
+                case 'd': {
+                    getDefinitions();
+                    break;
+                }
+                case 'c': {
+                    clearCells();
+                    break;
+                }
+                case 's': {
+                    saveCrossword();
+                    break;
+                }
+            }
+            return;
+        }
 
         /**
          * Saves the new gridContents string to localStorage, and calls setGridContents
@@ -226,7 +234,6 @@ export const CrosswordEditor = ({ data }) => {
             window.localStorage.setItem(PUZZLE_ID_LS_KEY, data.puzzle.id);
             setGridContents(newGridContents);
         }
-
 
         const advanceCurrentCell = () => {
             const index = cellReferences[currentClue].indexOf(currentCell);
@@ -273,6 +280,7 @@ export const CrosswordEditor = ({ data }) => {
         }
     }, [cellReferences, clueReferences, currentCell, currentClue, data.puzzle.id, gridContents]);
 
+
     /**
      * Add key listener to window on page load, and remove it when page is 
      * closed
@@ -282,11 +290,12 @@ export const CrosswordEditor = ({ data }) => {
             return;
         }
         const handleTyping = (event) => {
-            handleKeyPress(event.keyCode);
+            handleKeyPress(event);
         }
         window.addEventListener('keyup', handleTyping);
         return () => window.removeEventListener('keyup', handleTyping);
     }, [onMobile, handleKeyPress]);
+
 
     const getPotentials = async () => {
         const clueCells = gridRef.current.clues[currentClue].cellList;
@@ -358,14 +367,19 @@ export const CrosswordEditor = ({ data }) => {
         })
         setGridContents(gridContentsCopy);
         setShowCandidatesModal(false);
-
-        // Update the gridContents
     }
 
     const handleDefinitionSelection = (definition) => {
         gridRef.current.clues[currentClue].clue = definition;
         setClues(gridRef.current.clues);
         setShowCluesModal(false);
+    }
+
+    const onClueTextAreaChange = (event) => {
+        const newClueText = event.target.value;
+        gridRef.current.clues[currentClue].clue = newClueText;
+        setClues(gridRef.current.clues);
+        setCurrentClueModalText(newClueText);
     }
 
     const clearCells = () => {
@@ -387,7 +401,6 @@ export const CrosswordEditor = ({ data }) => {
                     continue;
                 }
             }
-            // Remove each cell's value
             cell.value = '';
             gridCopy = replaceCharAt(gridCopy, cell.index, OPEN);
         }
@@ -410,10 +423,8 @@ export const CrosswordEditor = ({ data }) => {
     let filledCellCount = 0;
 
     const cells = [...gridContents].map((char, pointer) => {
-
         const highlighted = clueReferences[pointer].includes(currentClue);
         const selected = pointer === currentCell;
-
         let letter;
         if (char === CLOSED_CELL) {
             closedCellCount += 1;
@@ -425,14 +436,10 @@ export const CrosswordEditor = ({ data }) => {
             filledCellCount += 1;
         }
 
-        // Create an empty list named cells, and then fill it with Cell components
-        // based on the gridContents string. The key prop is required by React.
-
-
         return (
             <Cell key={`cell-${pointer}`}
                 inUse={char !== CLOSED_CELL}
-                isEditing={true}
+                isEditing={isEditingGrid}
                 index={pointer}
                 letter={letter}
                 clickHandler={onCellClick}
@@ -461,10 +468,10 @@ export const CrosswordEditor = ({ data }) => {
     ));
 
     const dbDefinitionSpans = dbDefinitions.map((def, index) => (
-        <div 
+        <div
             key={index}
             className={styles.Definition}
-            onClick={() => {handleDefinitionSelection(def)}}
+            onClick={() => { handleDefinitionSelection(def) }}
         >
             <span>{index + 1} : </span>
             <span>{def}</span>
@@ -472,9 +479,9 @@ export const CrosswordEditor = ({ data }) => {
     ));
 
     const apiOutputSpans = apiDefinitions.map((def, index) => (
-        <div 
+        <div
             key={`apidiv_${index}`}
-            onClick={() => {handleDefinitionSelection(def)}}
+            onClick={() => { handleDefinitionSelection(def) }}
             className={styles.Definition}>
             <span>{index + 1} : </span>
             <span>{def}</span>
@@ -508,30 +515,41 @@ export const CrosswordEditor = ({ data }) => {
                     </div>
                     <button
                         onClick={getPotentials}
-                        className="mt-3"
-                    >Get Words</button>
+                        className={`${btnStyles.Button} mt-3`}
+                    >
+                        <i className="fa-solid fa-puzzle-piece mr-3"></i>
+                        Get Words</button>
                     <button
                         onClick={getDefinitions}
-                    >Get Definitions
+                        className={`${btnStyles.Button} mt-1`}
+                    >
+                        <i className="fa-solid fa-circle-question mr-3"></i>
+                        Get Definitions
                     </button>
                     <button
                         onClick={clearCells}
-                    >Clear current clue cells</button>
+                        className={`${btnStyles.Button} mt-1`}
+                    >
+                        <i className="fa-solid fa-trash mr-3"></i>
+                        Clear Word</button>
+                    <button
+                        onClick={() => {
+                            setCurrentClueModalText(clues[currentClue].clue);
+                            setShowClueTextModal(true);
+                        }}
+                        className={`${btnStyles.Button} mt-1`}
+                    >
+                        <i className="fa-solid fa-pen-to-square mr-3"></i>
+                        Edit Clue Text</button>
+                    <button
+                        onClick={saveCrossword}
+                        className={`${btnStyles.Button} mt-1`}
+                    >
+                        <i className="fa-solid fa-cloud-arrow-up mr-3"></i>
+                        Save Crossword
+                    </button>
                 </Col>
             </Row>
-
-            {!showKeyboard &&
-                <Row className="mt-2">
-                    <Col>
-                        <textarea
-                            rows="2"
-                            readOnly
-                            className={styles.current_clue_display}
-                            value={currentClue != null ? data.clues[currentClue]?.clue : ''}>
-                        </textarea>
-                    </Col>
-                </Row>
-            }
 
             <Row className='mt-4'>
                 <ClueList
@@ -540,18 +558,19 @@ export const CrosswordEditor = ({ data }) => {
                 ></ClueList>
             </Row>
 
-            {showKeyboard &&
+            {/* {showKeyboard &&
                 <Keyboard
                     clickHandler={handleKeyPress}
                     indicatorLetter={indicatorLetter}
                     keyboardTripswitch={keyboardTripswitch}
-                    clueString={data.clues[currentClue].clue}>
+                    clueString={currentClue ? data.clues[currentClue].clue : ''}>
                 </Keyboard>
-            }
+            } */}
 
-            <Modal 
+            <Modal
                 show={showCandidatesModal}
                 onHide={() => setShowCandidatesModal(false)}
+                animation={false}
             >
                 <Modal.Header closeButton>
                     <Modal.Title>Choose Word</Modal.Title>
@@ -565,13 +584,12 @@ export const CrosswordEditor = ({ data }) => {
                 </Modal.Body>
             </Modal>
 
-            <Modal 
+            <Modal
                 show={showCluesModal}
                 onHide={() => setShowCluesModal(false)}
-                className={styles.CustomModal}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Clue Search : { currentWord }</Modal.Title>
+                    <Modal.Title>Clue Search : {currentWord}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <h4 className="text-center">Database</h4>
@@ -580,6 +598,40 @@ export const CrosswordEditor = ({ data }) => {
                     {apiOutputSpans}
                 </Modal.Body>
             </Modal>
+
+            <Modal
+                show={showClueTextModal}
+                onHide={() => setShowClueTextModal(false)}
+                className={styles.CustomModal}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Clue text for : {currentWord}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <textarea
+                        rows="6"
+                        className={styles.current_clue_display}
+                        value={currentClueModalText}
+                        onChange={onClueTextAreaChange}
+                    >
+                    </textarea>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        variant="primary"
+                        onClick={() => setShowClueTextModal(false)}
+                    >Save changes</Button>
+                </Modal.Footer>
+            </Modal>
+
+            {showSuccessAlert && (
+            <Alert 
+                variant={alertVariant}
+                className={styles.Alert}
+            >
+                {successAlertText}
+            </Alert>
+            )}
         </div>
     );
 }

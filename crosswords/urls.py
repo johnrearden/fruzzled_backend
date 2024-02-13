@@ -8,7 +8,7 @@ urlpatterns = [
     path('get_definition/<str:query>/', views.GetDefinition.as_view()),
     path('get_grid/', views.GetGrid.as_view(), name='get_grid'),
     path('save_puzzle/', views.SavePuzzle.as_view(), name='save_puzzle'),
-    path('get_puzzle/<int:id>/', views.GetPuzzle.as_view(), name='get_puzzle'),
+    path('get_puzzle/<int:puzzle_id>/', views.GetPuzzle.as_view(), name='get_puzzle'),
     path('get_recent_puzzles/<int:puzzle_count>/',
          views.GetRecentPuzzles.as_view(),
          name='get_recent_puzzles'),

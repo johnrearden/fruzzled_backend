@@ -9,7 +9,7 @@ export const ClueList = (props) => {
     props.clues.forEach((item, index) => {
         const listItem = (
             <li key={index}>
-                <Row onClick={() => props.onClueClick(item.id)}>
+                <Row onClick={() => props.onClueClick(index)}>
                     <Col xs='1' className=''>
                         <span>{item.clue_number}</span>
                     </Col>
