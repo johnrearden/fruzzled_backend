@@ -177,7 +177,7 @@ export const CrosswordGrid = ({ data }) => {
      * @param {*} event 
      */
     const onCellKeyup = (index, event) => {
-        setLastChar(event.which);
+        
         const keyIsChar = event.keyCode >= 65 && event.keyCode <= 90;
         if (keyIsChar) {
             const char = event.key?.toUpperCase();
@@ -191,6 +191,10 @@ export const CrosswordGrid = ({ data }) => {
             setGridContents(gridCopy);
             setCurrentCell(getPreviousCell(index));
         }
+    }
+
+    const onCellInput = (index, event) => {
+        setLastChar(event.target.value);
     }
 
     /**
@@ -274,6 +278,7 @@ export const CrosswordGrid = ({ data }) => {
                 letter={letter}
                 clickHandler={onCellClick}
                 keyUpHandler={onCellKeyup}
+                inputHandler={onCellInput}
                 cellsWidthRatio={cellsWidthRatio}
                 maxDimension={MAX_DIMENSION}
                 selected={selected}

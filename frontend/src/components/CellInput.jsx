@@ -7,6 +7,7 @@ export const CellInput = forwardRef(({
     letter,
     clickHandler,
     keyUpHandler,
+    inputHandler,
     cellsWidthRatio,
     maxDimension,
     selected,
@@ -35,6 +36,7 @@ export const CellInput = forwardRef(({
             style={cellStyle}
             onClick={(event) => clickHandler(index, event)}
             onKeyUp={(event) => keyUpHandler(index, event)}
+            onInput={(event) => inputHandler(index, event)}
             value={letter}
             autoCapitalize='characters'
         />
