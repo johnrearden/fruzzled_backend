@@ -9,16 +9,30 @@ import styles from '../styles/crossword/Grid.module.css';
 import btnStyles from '../styles/Button.module.css'
 import { useEffect, useState, useCallback, useRef, createRef } from 'react';
 import { Row, Col } from 'react-bootstrap';
+import { CellInput } from './CellInput.jsx';
 
 const MAX_DIMENSION = 32;
 
 export const CrosswordGrid = ({ data }) => {
 
+    // An array to hold references to the underlying html inputs, to allow
+    // the next/previous input to be focused on input value change.
+    let cellRefs = [];
+
     const [currentCell, setCurrentCell] = useState(data.clues[0].start_col + data.clues[0].start_row * data.puzzle.grid.width);
+    useEffect(() => {
+        if (cellRefs[currentCell].current) {
+            cellRefs[currentCell].current.focus();
+            cellRefs[currentCell].current.select();
+        }
+    }, [currentCell])
     const [currentClue, setCurrentClue] = useState(0);
     const [showCellCorrectness, setShowCellCorrectness] = useState(false);
     const [indicatorLetter, setIndicatorLetter] = useState('');
     const [onMobile, setOnMobile] = useState(false);
+
+
+    
 
     // This flag is toggled each time a key is pressed, otherwise repeated presses of the 
     // same key would not result in an rerender of the Keyboard as the indicator letter 
@@ -138,20 +152,53 @@ export const CrosswordGrid = ({ data }) => {
         };
     }
 
+    const getNextCell = (position) => {
+        const index = cellReferences[currentClue].indexOf(position);
+        if (index < cellReferences[currentClue].length - 1) {
+            return cellReferences[currentClue][index + 1];
+        } else {
+            return position;
+        }
+    }
+
+    const getPreviousCell = (position) => {
+        const index = cellReferences[currentClue].indexOf(position);
+        if (index > 0) {
+            return cellReferences[currentClue][index - 1];
+        } else {
+            return position;
+        }
+    }
+
+    const onCellChange = (index, event) => {
+        const char = event.target.value[0]?.toUpperCase();
+        if (char) {
+            let gridCopy = gridContents.slice();
+            gridCopy = replaceCharAt(gridCopy, index, char);
+            setGridContents(gridCopy);
+            setCurrentCell(getNextCell(index));
+        } else {
+            let gridCopy = gridContents.slice();
+            gridCopy = replaceCharAt(gridCopy, index, OPEN_CELL);
+            setGridContents(gridCopy);
+            setCurrentCell(getPreviousCell(index));
+        }
+
+    }
+
     /**
      * Handles clicks on clues in child component ClueList.
      * 
      * @param {Integer} clueNumber 
      */
     const onClueClick = (clueIndex) => {
-
         const clue = data.clues[clueIndex];
-
         const startCol = clue.start_col;
         const startRow = clue.start_row;
         const cellIndex = startCol + startRow * data.puzzle.grid.width;
         setCurrentCell(cellIndex);
         setCurrentClue(clueIndex);
+        cellRefs[cellIndex].current.select();
         window.scrollTo(0, 0);
     }
 
@@ -239,7 +286,7 @@ export const CrosswordGrid = ({ data }) => {
      * closed
      */
     useEffect(() => {
-        if (onMobile) {
+        if (onMobile || true) {
             return;
         }
         const handleTyping = (event) => {
@@ -261,8 +308,8 @@ export const CrosswordGrid = ({ data }) => {
     let closedCellCount = 0;
     let filledCellCount = 0;
 
+    cellRefs = [];
     const cells = [...gridContents].map((char, pointer) => {
-
         const highlighted = clueReferences[pointer].includes(currentClue);
         const selected = pointer === currentCell;
 
@@ -296,14 +343,17 @@ export const CrosswordGrid = ({ data }) => {
 
         // Create an empty list named cells, and then fill it with Cell components
         // based on the gridContents string. The key prop is required by React.
-
-
+        const ref = createRef();
+        cellRefs.push(ref);
         return (
-            <Cell key={`cell-${pointer}`}
+            <CellInput
+                key={`cell-${pointer}`}
+                ref={ref}
                 inUse={char !== CLOSED_CELL}
                 index={pointer}
                 letter={letter}
                 clickHandler={onCellClick}
+                changeHandler={onCellChange}
                 cellsWidthRatio={cellsWidthRatio}
                 maxDimension={MAX_DIMENSION}
                 selected={selected}
@@ -311,7 +361,7 @@ export const CrosswordGrid = ({ data }) => {
                 showCorrectness={showCellCorrectness}
                 correct={correct}
                 semantic={true}
-            ></Cell>
+            ></CellInput>
         )
     });
 

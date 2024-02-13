@@ -1,0 +1,55 @@
+.cell_div {
+    font-family: sans-serif;
+    border: 1px solid black;
+    position: relative;
+    user-select: none;
+    background-color: white;
+    transition: 0.5s all;
+}
+
+.cell_value {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.cellInput {
+    text-align: center;
+    font-weight: bold;
+}
+
+.cellInput::selection {
+    background-color: #fdd996;
+}
+
+.part_of_current_clue {
+    background-color: #fdd996;
+}
+
+.selected_cell {
+    background-color: #ffaa50 !important;
+}
+
+.closed {
+    opacity: 0;
+}
+
+.correct_cell {
+    color: #00ff00;
+}
+
+.incorrect_cell {
+    color: #ff0000;
+    background-color: white;
+}
+
+.semantic {
+    color: black;
+}
+
+.non_semantic {
+    color: #cccccc;
+}
