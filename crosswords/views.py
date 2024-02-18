@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Count
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, permissions
+from rest_framework import status, permissions, generics
 from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -11,7 +11,17 @@ from .models import CrosswordPuzzle, CrosswordClue, PuzzleType
 from .serializers import GridSerializer, CrosswordPuzzleSerializer, \
                          CrosswordClueSerializer
 from .utils import get_cell_concentration
+from django_filters.rest_framework import DjangoFilterBackend
 import json
+
+
+class PuzzleList(generics.ListCreateAPIView):
+    queryset = CrosswordPuzzle.objects.all()
+    authentication_classes = []
+    serializer_class = CrosswordPuzzleSerializer
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['complete', 'reviewed', 'released',]
 
 
 class BuilderHome(View):
@@ -212,49 +222,6 @@ class SavePuzzle(APIView):
 
     def test_func(self):
         return self.request.user.is_staff
-
-
-class GetRecentPuzzles(APIView):
-    def get(self, request, puzzle_count):
-        # puzzles = CrosswordPuzzle.objects \
-        #                          .order_by('-last_edited')[:puzzle_count]
-                                 
-        puzzles = CrosswordPuzzle.objects \
-            .annotate(num_clues=Count('clues')) \
-            .filter(num_clues__gte=0)[:puzzle_count]
-        puzzles = puzzles.filter()
-        puzzle_list = []
-        for puzzle in puzzles:
-            cell_concentration = get_cell_concentration(puzzle)
-
-            # Retrieve the clues for this crossword, and count the
-            # number of them that have a non-empty clue string. Also count the
-            # number of them that have a complete solution
-            clues = CrosswordClue.objects.filter(puzzle=puzzle)
-            if not clues:
-                clue_count = 0
-                solution_count = 0
-            else:
-                clue_count = 0
-                solution_count = 0
-                for clue in clues:
-                    if len(clue.clue) > 0:
-                        clue_count += 1
-                    if '#' not in clue.solution:
-                        solution_count += 1
-            puzzle_serializer = CrosswordPuzzleSerializer(puzzle)
-            clue_serialzer = CrosswordClueSerializer(clues, many=True)
-            data = {
-                'puzzle': puzzle_serializer.data,
-                'clues': clue_serialzer.data,
-                'cell_concentration': cell_concentration,
-                'clues_present': clue_count,
-                'solutions_present': solution_count,
-                'total_clues': len(clues)
-            }
-            puzzle_list.append(data)
-
-        return Response({'puzzles': puzzle_list})
 
 
 class CreateNewPuzzle(APIView):

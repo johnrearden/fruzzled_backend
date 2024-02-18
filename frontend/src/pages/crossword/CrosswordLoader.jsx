@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { axiosReq } from "../../api/axiosDefaults";
 import { CrosswordGrid } from "../../components/CrosswordGrid";
+import { CrosswordThumbnail } from "../../components/CrosswordThumbnail";
 
 
 export const CrosswordLoader = () => {
@@ -9,7 +10,7 @@ export const CrosswordLoader = () => {
 
     useEffect(() => {
         const handleMount = async () => {
-            const url = '/crossword_builder/get_puzzle/67/';
+            const url = '/crossword_builder/get_puzzle/5/';
             const { data } = await axiosReq.get(url);
             setData(data.puzzle);
             setLoaded(true);
@@ -19,7 +20,11 @@ export const CrosswordLoader = () => {
     }, [])
 
     const component = loaded ? (
-        <CrosswordGrid data={data} />
+        <>
+            <CrosswordGrid data={data} />
+            
+        </>
+
     ) : (
         <span>Loading</span>
     )

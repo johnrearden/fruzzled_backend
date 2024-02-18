@@ -31,9 +31,6 @@ export const CrosswordGrid = ({ data }) => {
     const [indicatorLetter, setIndicatorLetter] = useState('');
     const [onMobile, setOnMobile] = useState(false);
 
-
-    
-
     // This flag is toggled each time a key is pressed, otherwise repeated presses of the 
     // same key would not result in an rerender of the Keyboard as the indicator letter 
     // would remain unchanged
@@ -191,7 +188,6 @@ export const CrosswordGrid = ({ data }) => {
         if (length && length > 1) {
             char = char.split('').pop();
         }
-        console.log(char);
         if ((/[a-zA-Z]/).test(char)) {
             let gridCopy = gridContents.slice();
             gridCopy = replaceCharAt(gridCopy, index, char);
@@ -308,7 +304,6 @@ export const CrosswordGrid = ({ data }) => {
 
     return (
         <div className={styles.container}>
-            Last Char: {lastChar}
             <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
             <h5 className="text-center">Crossword {data.puzzle.id}</h5>
             <Row className="mt-2">

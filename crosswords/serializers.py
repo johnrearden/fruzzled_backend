@@ -18,8 +18,9 @@ class CrosswordClueSerializer(serializers.ModelSerializer):
 class CrosswordPuzzleSerializer(serializers.ModelSerializer):
 
     grid = GridSerializer()
+    clues = CrosswordClueSerializer(many=True, read_only=True)
 
     class Meta:
         model = CrosswordPuzzle
-        fields = ['id', 'created_on', 'creator', 'last_edited', 'puzzle_type',
-                  'grid', 'complete', 'reviewed', 'released']
+        fields = ['id', 'created_on', 'creator', 'clues', 'last_edited', 
+                  'puzzle_type', 'grid', 'complete', 'reviewed', 'released']

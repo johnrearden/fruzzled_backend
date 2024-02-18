@@ -1,0 +1,40 @@
+:root {
+    --minicell-size: 15px;
+}
+
+.Container {
+    width: max-content;
+}
+
+.MiniCell {
+    font-family: sans-serif;
+    font-weight: bolder;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    color: black;
+    background-color: white;
+    user-select: none;
+    text-transform: uppercase;
+    font-size: calc(var(--minicell-size) * 0.8);
+    line-height: var(--minicell-size);
+    text-align: center;
+}
+
+.MiniGrid {
+    background-color: black;
+    display: grid;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    width: max-content;
+}
+
+.EmptyCell {
+    color: black;
+    background-color: black;
+    border: none;
+}
+
+.PuzzleId {
+    text-align: center;
+    color: var(--fg-color);
+}

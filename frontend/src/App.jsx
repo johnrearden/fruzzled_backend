@@ -18,6 +18,7 @@ import AnagramSeries from './pages/anagram/AnagramSeries';
 import AnagramCreator from './pages/anagram/AnagramCreator';
 import CreateNewCrossword from './pages/crossword/CreateNewCrossword';
 import { CrosswordEditLoader } from './pages/crossword/CrosswordEditLoader';
+import { CrosswordDashboard } from './pages/crossword/CrosswordDashboard';
 
 
 function App() {
@@ -55,8 +56,8 @@ function App() {
                         path="/anagram_creator"
                         element={ <AnagramCreator />} />
                     <Route
-                        path="/create_crossword"
-                        element={ <CreateNewCrossword />} />
+                        path="/crossword_dashboard"
+                        element={ <CrosswordDashboard />} />
                     <Route
                         path="/edit_crossword/:id"
                         element={ <CrosswordEditLoader />} />
