@@ -4,7 +4,7 @@ import { ClueList } from '../components/ClueList';
 import { Cell } from './Cell';
 import { CompletenessDisplay } from './CompletenessDisplay';
 import { replaceCharAt } from '../utils/utils';
-import { GRID_CONTENTS_LS_KEY, OPEN_CELL, CLOSED_CELL, PUZZLE_ID_LS_KEY } from '../constants/constants.js';
+import { GRID_CONTENTS_LS_KEY, PUZZLE_ID_LS_KEY } from '../constants/constants.js';
 import styles from '../styles/crossword/Grid.module.css';
 import btnStyles from '../styles/Button.module.css'
 import { useEffect, useState, useCallback, useRef, createRef } from 'react';
@@ -176,7 +176,7 @@ export const CrosswordGrid = ({ data }) => {
     const onCellKeyup = (index, event) => {
         if (event.key === "Backspace" || event.key === "Delete") {
             let gridCopy = gridContents.slice();
-            gridCopy = replaceCharAt(gridCopy, index, OPEN_CELL);
+            gridCopy = replaceCharAt(gridCopy, index, "#");
             setGridContents(gridCopy);
             setCurrentCell(getPreviousCell(index));
         }
@@ -256,10 +256,10 @@ export const CrosswordGrid = ({ data }) => {
         }
 
         let letter;
-        if (char === CLOSED_CELL) {
+        if (char === "-") {
             closedCellCount += 1;
         }
-        if (char === CLOSED_CELL || char === OPEN_CELL) {
+        if (char === "-" || char === "#") {
             letter = '';
         } else {
             letter = char;
@@ -274,7 +274,7 @@ export const CrosswordGrid = ({ data }) => {
             <CellInput
                 key={`cell-${pointer}`}
                 ref={ref}
-                inUse={char !== CLOSED_CELL}
+                inUse={char !== "-"}
                 index={pointer}
                 letter={letter}
                 clickHandler={onCellClick}

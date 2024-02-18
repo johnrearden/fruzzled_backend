@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { axiosReq, axiosRes } from '../../api/axiosDefaults';
 import { CrosswordEditor } from './CrosswordEditor';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const CreateNewCrossword = () => {
+
+    const navigate = useNavigate();
 
     const [data, setData] = useState({});
     const [editing, setEditing] = useState(false);
@@ -32,10 +35,11 @@ const CreateNewCrossword = () => {
         try {
             let { data } = await axiosRes.post(url, formData);
             const id = data['new_puzzle_id'];
-            url = `/crossword_builder/get_puzzle/${id}/`;
-            const response = await axiosRes.get(url);
-            setData(response.data.puzzle);
-            setEditing(true);
+            // url = `/crossword_builder/get_puzzle/${id}/`;
+            // const response = await axiosRes.get(url);
+            // setData(response.data.puzzle);
+            // setEditing(true);
+            navigate(`/edit_crossword/${id}`);
 
         } catch (err) {
             console.log(err);
@@ -47,9 +51,9 @@ const CreateNewCrossword = () => {
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
                 if (r % 2 === 0) {
-                    array.push('#');
+                    array.push("#");
                 } else {
-                    const symbol = c % 2 === 0 ? '#' : '-';
+                    const symbol = c % 2 === 0 ? "#" : "-";
                     array.push(symbol);
                 }
             }

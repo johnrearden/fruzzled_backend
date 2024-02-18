@@ -4,6 +4,7 @@
 
 .Container {
     width: max-content;
+    text-align: center;
 }
 
 .MiniCell {

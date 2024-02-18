@@ -21,10 +21,6 @@ export const PUZZLE_ID_LS_KEY = 'puzzleId';
 
 export const CRANAGRAM_ID_LS_KEY = 'crannagramId';
 
-export const OPEN_CELL = '#';
-
-export const CLOSED_CELL = '-';
-
 export const LOGO_COLORS = [
     'red', 'green', 'blue', 'darkred', 'purple', 'orange', 'darkgreen', 'darkblue',
 ]

@@ -16,7 +16,7 @@ import json
 
 
 class PuzzleList(generics.ListCreateAPIView):
-    queryset = CrosswordPuzzle.objects.all()
+    queryset = CrosswordPuzzle.objects.all().order_by('-created_on')
     authentication_classes = []
     serializer_class = CrosswordPuzzleSerializer
 
@@ -212,10 +212,16 @@ class SavePuzzle(APIView):
                 start_col=item['start_col'],
             )
             if len(new_clue.clue) == 0 or '#' in new_clue.solution:
-                puzzle_complete = False
+                allow_complete = False
+            
 
         # Save the crossword puzzle
-        puzzle.complete = puzzle_complete
+        if request.POST['complete']:
+            puzzle.complete = allow_complete and request.POST['complete'] == 'true'
+        if request.POST['reviewed']:
+            puzzle.reviewed = request.POST['reviewed'] == 'true'
+        if request.POST['released']:
+            puzzle.released = request.POST['released'] == 'true'
         puzzle.save()
 
         return JsonResponse({'puzzle_id': puzzle.id})

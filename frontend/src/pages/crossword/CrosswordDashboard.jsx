@@ -3,6 +3,7 @@ import { CrosswordThumbnail } from '../../components/CrosswordThumbnail';
 import { axiosReq } from '../../api/axiosDefaults';
 import { Col, Container, Row, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import btnStyles from '../../styles/Button.module.css';
 
 export const CrosswordDashboard = () => {
     const [puzzleList, setPuzzleList] = useState([]);
@@ -34,7 +35,7 @@ export const CrosswordDashboard = () => {
     }
 
     const sideBar = (
-        <ToggleButtonGroup 
+        <ToggleButtonGroup
             vertical
             type="checkbox"
             value={filters}
@@ -61,7 +62,14 @@ export const CrosswordDashboard = () => {
 
     return (
         <Container>
-            <Row className="w-100 d-flex justify-content-center">
+            <Row className="d-flex justify-content-center">
+                <Link to={'/create_crossword'}>
+                    <button className={btnStyles.Button}>
+                        New Crossword
+                    </button>
+                </Link>
+            </Row>
+            <Row className="d-flex justify-content-center mt-3">
                 <Col xs={'auto'}>
                     {sideBar}
                 </Col>

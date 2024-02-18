@@ -2,19 +2,21 @@ import { Keyboard } from '../../components/Keyboard';
 import { ClueList } from '../../components/ClueList';
 import { Cell } from '../../components/Cell';
 import { replaceCharAt } from '../../utils/utils';
-import { GRID_CONTENTS_LS_KEY, OPEN_CELL, CLOSED_CELL, PUZZLE_ID_LS_KEY } from '../../constants/constants.js';
+import { GRID_CONTENTS_LS_KEY, PUZZLE_ID_LS_KEY } from '../../constants/constants.js';
 import styles from '../../styles/crossword/Grid.module.css';
 import btnStyles from '../../styles/Button.module.css'
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Row, Col, Modal, Button, Alert } from 'react-bootstrap';
-import { Grid } from '../../../../crosswords/static/js/crossword_grid.js';
 import { axiosReq, axiosRes } from '../../api/axiosDefaults.js';
 import { OPEN, CLOSED } from '../../../../crosswords/static/js/crossword_grid.js';
 import { createCellReferences, createClueReferences } from '../../utils/crossword_utils.js';
+import { Grid } from '../../utils/crossword_grid.js';
 
 const MAX_DIMENSION = 25;
 
 export const CrosswordEditor = ({ data }) => {
+
+    console.log(data);
 
     const [currentCell, setCurrentCell] = useState(0);
     const [currentClue, setCurrentClue] = useState(0);
@@ -66,12 +68,15 @@ export const CrosswordEditor = ({ data }) => {
     const [successAlertText, setSuccessAlertText] = useState("");
     const [alertVariant, setAlertVariant] = useState('success');
 
+    const [complete, setComplete] = useState(false);
+    const [reviewed, setReviewed] = useState(false);
+    const [released, setReleased] = useState(false);
+
     // A reference to the internal Grid state object.
     const gridRef = useRef(null);
 
     // Create and index the clues on load.
     useEffect(() => {
-        console.log(data);
         const gridAsJSON = {
             cells: data.puzzle.grid.cells,
             width: data.puzzle.grid.width,
@@ -91,6 +96,10 @@ export const CrosswordEditor = ({ data }) => {
         const clueReferences = createClueReferences(gridRef.current);
         setClueReferences(clueReferences);
 
+        setComplete(data.puzzle.complete);
+        setReviewed(data.puzzle.reviewed);
+        setReleased(data.puzzle.released);
+
     }, [data]);
 
     const saveCrossword = async () => {
@@ -103,6 +112,9 @@ export const CrosswordEditor = ({ data }) => {
         formData.append('puzzle_id', data.puzzle.id);
         formData.append('clues', JSON.stringify(list));
         formData.append('grid', gridString);
+        formData.append('complete', complete);
+        formData.append('reviewed', reviewed);
+        formData.append('released', released);
 
         const url = '/crossword_builder/save_puzzle/';
         try {
@@ -110,7 +122,7 @@ export const CrosswordEditor = ({ data }) => {
             setAlertVariant('success');
             setSuccessAlertText('Crossword saved')
             setShowSuccessAlert(true);
-            //setTimeout(() => setShowSuccessAlert(false), 1000);
+            setTimeout(() => setShowSuccessAlert(false), 1000);
         } catch (err) {
             console.log(err);
         }
@@ -268,13 +280,13 @@ export const CrosswordEditor = ({ data }) => {
             // Case 1 - if the cell is the last in the clue, then its
             // value should be deleted and then the cell pointer moved back.
             if (currentCellIsLastInClue()) {
-                const newGridContents = replaceCharAt(gridContents, currentCell, OPEN_CELL);
+                const newGridContents = replaceCharAt(gridContents, currentCell, "#");
                 updateGridContents(newGridContents);
                 retreatCurrentCell();
             } else {
                 // Case 2 - the cell pointer should be moved back and then the value deleted.
                 retreatCurrentCell();
-                const newGridContents = replaceCharAt(gridContents, currentCell, OPEN_CELL);
+                const newGridContents = replaceCharAt(gridContents, currentCell, "#");
                 updateGridContents(newGridContents);
             }
         }
@@ -426,10 +438,10 @@ export const CrosswordEditor = ({ data }) => {
         const highlighted = clueReferences[pointer].includes(currentClue);
         const selected = pointer === currentCell;
         let letter;
-        if (char === CLOSED_CELL) {
+        if (char === "-") {
             closedCellCount += 1;
         }
-        if (char === CLOSED_CELL || char === OPEN_CELL) {
+        if (char === "-" || char === "#") {
             letter = '';
         } else {
             letter = char;
@@ -438,7 +450,7 @@ export const CrosswordEditor = ({ data }) => {
 
         return (
             <Cell key={`cell-${pointer}`}
-                inUse={char !== CLOSED_CELL}
+                inUse={char !== "-"}
                 isEditing={isEditingGrid}
                 index={pointer}
                 letter={letter}
@@ -548,6 +560,47 @@ export const CrosswordEditor = ({ data }) => {
                         <i className="fa-solid fa-cloud-arrow-up mr-3"></i>
                         Save Crossword
                     </button>
+                    <div className="d-flex flex-row">
+                        <div className="m-2">
+                            <label 
+                                htmlFor="complete-check"
+                                className="mr-1"
+                            >Complete</label>
+                            <input
+                                type="checkbox"
+                                id="complete-check"
+                                checked={complete}
+                                value="Complete"
+                                onChange={() => setComplete(!complete)}
+                            />
+                        </div>
+                        <div className="m-2">
+                            <label 
+                                htmlFor="reviewed-check"
+                                className="mr-1"
+                            >Reviewed</label>
+                            <input
+                                type="checkbox"
+                                id="reviewed-check"
+                                checked={reviewed}
+                                value="Reviewed"
+                                onChange={() => setReviewed(!reviewed)}
+                            />
+                        </div>
+                        <div className="m-2">
+                            <label 
+                                htmlFor="released-check"
+                                className="mr-1"
+                            >Released</label>
+                            <input
+                                type="checkbox"
+                                id="released-check"
+                                checked={released}
+                                value="Released"
+                                onChange={() => setReleased(!released)}
+                            />
+                        </div>
+                    </div>
                 </Col>
             </Row>
 
@@ -557,15 +610,6 @@ export const CrosswordEditor = ({ data }) => {
                     onClueClick={onClueClick}
                 ></ClueList>
             </Row>
-
-            {/* {showKeyboard &&
-                <Keyboard
-                    clickHandler={handleKeyPress}
-                    indicatorLetter={indicatorLetter}
-                    keyboardTripswitch={keyboardTripswitch}
-                    clueString={currentClue ? data.clues[currentClue].clue : ''}>
-                </Keyboard>
-            } */}
 
             <Modal
                 show={showCandidatesModal}
@@ -625,12 +669,12 @@ export const CrosswordEditor = ({ data }) => {
             </Modal>
 
             {showSuccessAlert && (
-            <Alert 
-                variant={alertVariant}
-                className={styles.Alert}
-            >
-                {successAlertText}
-            </Alert>
+                <Alert
+                    variant={alertVariant}
+                    className={styles.Alert}
+                >
+                    {successAlertText}
+                </Alert>
             )}
         </div>
     );

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/crossword/CrosswordThumbnail.module.css';
-import { CLOSED_CELL } from '../constants/constants';
 
 export const CrosswordThumbnail = ({ puzzle }) => {
 
@@ -24,12 +23,13 @@ export const CrosswordThumbnail = ({ puzzle }) => {
     }, [puzzle])
 
     const cells = gridContents.map((char, index) => {
-        const cellClass = char === CLOSED_CELL ? styles.EmptyCell : ''
+        const cellClass = char === "-" ? styles.EmptyCell : ''
+        const displayChar = char === '#' ? '' : char
         return (
             <span
                 key={index}
                 className={`${styles.MiniCell} ${cellClass}`}
-            >{char}</span>
+            >{displayChar}</span>
         )
     });
 
@@ -39,13 +39,16 @@ export const CrosswordThumbnail = ({ puzzle }) => {
     }
     const componentWidth = grid.width * 15;
     return (
-        <div 
+        <div
             className={styles.Container}
             style={{ width: componentWidth }}
         >
-            <h6 
+            <span
                 className={styles.PuzzleId}
-            ># {id}</h6>
+            ># {id}</span>
+            {!puzzle.complete && (
+                <i className="fa-solid fa-trash mr-3 ml-2"></i>
+            )}
             <div
                 className={styles.MiniGrid}
                 style={gridStyle}

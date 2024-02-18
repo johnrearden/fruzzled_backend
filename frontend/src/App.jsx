@@ -61,6 +61,9 @@ function App() {
                     <Route
                         path="/edit_crossword/:id"
                         element={ <CrosswordEditLoader />} />
+                    <Route 
+                        path="/create_crossword"
+                        element={ <CreateNewCrossword /> }/>
                     <Route
                         path="/"
                         element={ <Home /> } />
