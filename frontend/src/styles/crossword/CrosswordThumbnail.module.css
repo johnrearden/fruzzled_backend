@@ -39,3 +39,13 @@
     text-align: center;
     color: var(--fg-color);
 }
+
+.TrashIcon {
+    font-size: 1rem;
+    color: var(--thrd-color);
+}
+
+.TrashIconLive {
+    font-size: 1rem;
+    color: var(--common-warm);
+}

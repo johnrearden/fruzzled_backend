@@ -4,20 +4,31 @@ import { axiosReq } from '../../api/axiosDefaults';
 import { Col, Container, Row, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import btnStyles from '../../styles/Button.module.css';
+import { Toggle } from '../../components/Toggle';
+
 
 export const CrosswordDashboard = () => {
+
     const [puzzleList, setPuzzleList] = useState([]);
-    const [filters, setFilters] = useState([]);
+    const [filterComplete, setFilterComplete] = useState(false);
+    const [filterReviewed, setFilterReviewed] = useState(false);
+    const [filterReleased, setFilterReleased] = useState(false);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const handlePuzzleChange = async () => {
             try {
-                const filterStrings = filters.map(filter => {
-                    const str = `${filter}=True`;
-                    return str;
-                })
-                const suffix = filterStrings.join('&');
+                const filters = [];
+                if (filterComplete) {
+                    filters.push('complete=True');
+                }
+                if (filterReleased) {
+                    filters.push('released=True');
+                }
+                if (filterReviewed) {
+                    filters.push('reviewed=True');
+                }
+                const suffix = filters.join('&');
                 const url = `/crossword_builder/puzzles/?${suffix}`;
                 const { data } = await axiosReq.get(url);
                 setPuzzleList(data.results);
@@ -27,38 +38,54 @@ export const CrosswordDashboard = () => {
             }
         }
         handlePuzzleChange();
-    }, [filters]);
+    }, [filterComplete, filterReleased, filterReviewed]);
 
-    const handleFilterChange = values => {
+    const handleCompleteToggle = (val) => {
         setLoading(true);
-        setFilters(values);
+        setFilterComplete(val);
+    }
+
+    const handleReviewedToggle = (val) => {
+        setLoading(true);
+        setFilterReviewed(val);
+    }
+
+    const handleReleasedToggle = (val) => {
+        setLoading(true);
+        setFilterReleased(val);
     }
 
     const sideBar = (
-        <ToggleButtonGroup
-            vertical
-            type="checkbox"
-            value={filters}
-            onChange={handleFilterChange}
-        >
-            <ToggleButton value="complete">Completed</ToggleButton>
-            <ToggleButton value="reviewed">Reviewed</ToggleButton>
-            <ToggleButton value="released">Released</ToggleButton>
-        </ToggleButtonGroup>
+        <>
+            <Toggle
+                initial={filterComplete}
+                label="Complete"
+                handleChange={(on) => handleCompleteToggle(on)}
+            />
+            <Toggle
+                initial={filterReviewed}
+                label="Reviewed"
+                handleChange={(on) => handleReviewedToggle(on)}
+            />
+            <Toggle
+                initial={filterReleased}
+                label="Released"
+                handleChange={(on) => handleReleasedToggle(on)}
+            />
+        </>
+
     )
 
     const thumbnails = puzzleList.map((puzzle, index) => (
         <Col
             key={index}
             xs={12} md={6} lg={4}
-            className="d-flex justify-content-center mt-3">
-            <Link to={`/edit_crossword/${puzzle.id}`}>
-                <CrosswordThumbnail puzzle={puzzle} />
-            </Link>
+            className="d-flex justify-content-center mt-3"
+        >
+            <CrosswordThumbnail puzzle={puzzle} />
+
         </Col>
     ));
-
-    console.log(filters);
 
     return (
         <Container>

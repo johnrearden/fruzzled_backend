@@ -1,0 +1,41 @@
+.Surround {
+    
+    background-color: var(--thrd-color);
+    width: 50px;
+    height: 26px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.Switch {
+    background-color: var(--bg-color);
+    width: 25px;
+    height: 20px;
+    border-radius: 10px;
+    margin: 0 4px;
+    transition: 0.2s all;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.SurroundOn {
+    background-color: var(--common-warm);
+    color: var(--common-warm);
+}
+
+.Label {
+    font-size: 0.7rem;
+}
+
+.Icon {
+    color: var(--thrd-color);
+    font-size: 12px;
+}
+
+.IconOn {
+    color: var(--common-warm);
+}

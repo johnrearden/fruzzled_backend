@@ -150,14 +150,14 @@ class GetGrid(APIView):
         return Response(serializer.data)
 
 
-class DeletePuzzle(UserPassesTestMixin, APIView):
+class DeletePuzzle(APIView):
+
+    permission_classes = [permissions.IsAdminUser]
+
     def post(self, request):
         id = request.data['puzzle_id']
         CrosswordPuzzle.objects.get(pk=id).delete()
         return JsonResponse({'message': 'fine'})
-
-    def test_func(self):
-        return self.request.user.is_staff
 
 
 class SavePuzzle(APIView):
@@ -165,6 +165,7 @@ class SavePuzzle(APIView):
     permission_classes = [permissions.IsAdminUser]
 
     def post(self, request, *args, **kwargs):
+        allow_complete = True
         clues_data = json.loads(request.data['clues'])
 
         if request.data['puzzle_id']:
