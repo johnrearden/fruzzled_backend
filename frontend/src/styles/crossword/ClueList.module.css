@@ -8,3 +8,7 @@
 .clue_text {
     width: 100%;
 }
+
+.Highlighted {
+    color :var(--common-warm);
+}

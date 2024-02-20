@@ -7,14 +7,16 @@ export const ClueList = (props) => {
     const cluesDown = [];
 
     props.clues.forEach((item, index) => {
+        let highlightedClass = index === props.currentClue 
+            ? styles.Highlighted : ''
         const listItem = (
             <li key={index}>
                 <Row onClick={() => props.onClueClick(index)}>
-                    <Col xs='1' className=''>
+                    <Col xs='1' className={highlightedClass}>
                         <span>{item.clue_number}</span>
                     </Col>
                     <Col>
-                        <span className={styles.clue_text}>
+                        <span className={`${styles.clue_text} ${highlightedClass}`}>
                             {item.clue}&nbsp;{item.word_lengths}
                         </span>
                     </Col>

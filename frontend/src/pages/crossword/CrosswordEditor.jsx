@@ -596,6 +596,7 @@ export const CrosswordEditor = ({ data }) => {
                 <ClueList
                     clues={clues}
                     onClueClick={onClueClick}
+                    currentClue={currentClue}
                 ></ClueList>
             </Row>
 
