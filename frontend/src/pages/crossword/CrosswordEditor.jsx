@@ -11,12 +11,12 @@ import { axiosReq, axiosRes } from '../../api/axiosDefaults.js';
 import { OPEN, CLOSED } from '../../../../crosswords/static/js/crossword_grid.js';
 import { createCellReferences, createClueReferences } from '../../utils/crossword_utils.js';
 import { Grid } from '../../utils/crossword_grid.js';
+import { Toggle } from '../../components/Toggle.jsx';
+import { Link } from 'react-router-dom';
 
 const MAX_DIMENSION = 25;
 
 export const CrosswordEditor = ({ data }) => {
-
-    console.log(data);
 
     const [currentCell, setCurrentCell] = useState(0);
     const [currentClue, setCurrentClue] = useState(0);
@@ -298,7 +298,7 @@ export const CrosswordEditor = ({ data }) => {
      * closed
      */
     useEffect(() => {
-        if (onMobile) {
+        if (onMobile || showClueTextModal) {
             return;
         }
         const handleTyping = (event) => {
@@ -435,7 +435,7 @@ export const CrosswordEditor = ({ data }) => {
     let filledCellCount = 0;
 
     const cells = [...gridContents].map((char, pointer) => {
-        const highlighted = clueReferences[pointer].includes(currentClue);
+        const highlighted = clueReferences[pointer]?.includes(currentClue);
         const selected = pointer === currentCell;
         let letter;
         if (char === "-") {
@@ -562,45 +562,33 @@ export const CrosswordEditor = ({ data }) => {
                     </button>
                     <div className="d-flex flex-row">
                         <div className="m-2">
-                            <label 
-                                htmlFor="complete-check"
-                                className="mr-1"
-                            >Complete</label>
-                            <input
-                                type="checkbox"
-                                id="complete-check"
-                                checked={complete}
-                                value="Complete"
-                                onChange={() => setComplete(!complete)}
+                            <Toggle
+                                label="Complete"
+                                initial={complete}
+                                handleChange={() => setComplete(!complete)}
                             />
                         </div>
                         <div className="m-2">
-                            <label 
-                                htmlFor="reviewed-check"
-                                className="mr-1"
-                            >Reviewed</label>
-                            <input
-                                type="checkbox"
-                                id="reviewed-check"
-                                checked={reviewed}
-                                value="Reviewed"
-                                onChange={() => setReviewed(!reviewed)}
+                            <Toggle
+                                label="Reviewed"
+                                initial={reviewed}
+                                handleChange={() => setReviewed(!reviewed)}
                             />
                         </div>
                         <div className="m-2">
-                            <label 
-                                htmlFor="released-check"
-                                className="mr-1"
-                            >Released</label>
-                            <input
-                                type="checkbox"
-                                id="released-check"
-                                checked={released}
-                                value="Released"
-                                onChange={() => setReleased(!released)}
+                            <Toggle
+                                label="Released"
+                                initial={released}
+                                handleChange={() => setReleased(!released)}
                             />
                         </div>
                     </div>
+                    <Link to="/crossword_dashboard">
+                        <button className={btnStyles.Button}>
+                            <i className="fa-solid fa-arrow-left mr-2"></i>
+                            Dashboard
+                        </button>
+                    </Link>
                 </Col>
             </Row>
 

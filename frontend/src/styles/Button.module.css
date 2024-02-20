@@ -11,7 +11,12 @@
 }
 
 .Button:disabled {
-    opacity: 0.4;
+    opacity: 0.3;
+}
+
+.Button:disabled:hover {
+    cursor: auto;
+    background: linear-gradient(var(--brgt-color), var(--button-color));
 }
 
 .MinWidth {

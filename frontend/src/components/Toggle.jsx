@@ -28,13 +28,15 @@ export const Toggle = ({ initial, label, iconClass, handleChange }) => {
     )
 
     return (
-        <div>
+        <div 
+            onClick={handleClick}
+            className="d-flex flex-column justify-content-center align-items-center"
+        >
             <span className={styles.Label}>{label}</span>
             <div className={surroundClass}>
                 <div
                     className={styles.Switch}
                     style={onStyle}
-                    onClick={handleClick}
                 >
                     {icon}
                 </div>

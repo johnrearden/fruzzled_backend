@@ -23,6 +23,16 @@ class PuzzleList(generics.ListCreateAPIView):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['complete', 'reviewed', 'released',]
 
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, args, kwargs)
+        total_complete = CrosswordPuzzle.objects.filter(complete=True).count()
+        total_reviewed = CrosswordPuzzle.objects.filter(reviewed=True).count()
+        total_released = CrosswordPuzzle.objects.filter(released=True).count()
+        response.data['total_complete'] = total_complete
+        response.data['total_reviewed'] = total_reviewed
+        response.data['total_released'] = total_released
+        return response
+
 
 class BuilderHome(View):
     def get(self, request):
