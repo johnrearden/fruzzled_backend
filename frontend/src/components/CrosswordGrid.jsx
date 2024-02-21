@@ -21,13 +21,13 @@ export const CrosswordGrid = ({ data }) => {
     let cellRefs = [];
 
     const [currentCell, setCurrentCell] = useState(data.clues[0].start_col + data.clues[0].start_row * data.puzzle.grid.width);
-    useEffect(() => {
-        if (cellRefs[currentCell]?.current) {
-            console.log('currentCell:', currentCell);
-            cellRefs[currentCell].current.focus();
-            cellRefs[currentCell].current.select();
-        }
-    }, [currentCell])
+    // useEffect(() => {
+    //     if (cellRefs[currentCell]?.current) {
+    //         console.log('currentCell:', currentCell);
+    //         cellRefs[currentCell].current.focus();
+    //         cellRefs[currentCell].current.select();
+    //     }
+    // }, [currentCell])
     const [currentClue, setCurrentClue] = useState(0);
     const [showCellCorrectness, setShowCellCorrectness] = useState(false);
     const [indicatorLetter, setIndicatorLetter] = useState('');
@@ -153,9 +153,9 @@ export const CrosswordGrid = ({ data }) => {
             }
         };
         if (onMobile) {
-            console.log('currentClue === ', currentClue);
             if (currentClue) {
-                cellRefs[currentClue].current.blur();
+                cellRefs[0].current.blur();
+                dummyRef.current.focus();
             }
             setShowInputModal(true);
         }
@@ -331,13 +331,12 @@ export const CrosswordGrid = ({ data }) => {
         }
     }
 
-    console.log('currentCell:', currentCell);
-    console.log('currentClue:', currentClue);
-
     return (
         <>
             <div className={styles.container}>
-                
+                <span>currentCell : {currentCell}</span>
+                <hr></hr>
+                <span>currentClue : {currentClue}</span>
                 <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
                 <h5 
                     className="text-center"
@@ -385,7 +384,11 @@ export const CrosswordGrid = ({ data }) => {
                 </Row>
             </div>
             {currentClue && (
-                <Modal show={showInputModal} onHide={() => setShowInputModal(false)}>
+                <Modal show={showInputModal} onHide={() => {
+                    setShowInputModal(false);
+                    dummyRef.current.focus();
+                }
+                }>
                 <Modal.Header closeButton>
                     <Modal.Title>Enter your text</Modal.Title>
                 </Modal.Header>
