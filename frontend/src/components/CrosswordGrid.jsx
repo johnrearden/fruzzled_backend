@@ -153,6 +153,10 @@ export const CrosswordGrid = ({ data }) => {
             }
         };
         if (onMobile) {
+            console.log('currentClue === ', currentClue);
+            if (currentClue) {
+                cellRefs[currentClue].current.blur();
+            }
             setShowInputModal(true);
         }
     }
