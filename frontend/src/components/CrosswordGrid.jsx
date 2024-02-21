@@ -55,6 +55,8 @@ export const CrosswordGrid = ({ data }) => {
 
     const [lastChar, setLastChar] = useState("");
 
+    const dummyRef = useRef();
+
     /**
      * An array, with an element for each clue, which stores a list of the cells
      * occupied by that clue on the grid. 
@@ -238,7 +240,10 @@ export const CrosswordGrid = ({ data }) => {
         setGridContents(gridCopy);
         setShowInputModal(false);
         if (onMobile) {
-            cellReferences[currentCell].current.blur();
+            cellRefs[currentCell].current.blur();
+            dummyRef.current.focus();
+            dummyRef.current.blur();
+            
         }
     }
 
@@ -325,11 +330,12 @@ export const CrosswordGrid = ({ data }) => {
     return (
         <>
             <div className={styles.container}>
-                <span>Mobile : {onMobile}
                 
-                </span>
                 <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
-                <h5 className="text-center">Crossword {data.puzzle.id}</h5>
+                <h5 
+                    className="text-center"
+                    ref={dummyRef}
+                >Crossword {data.puzzle.id}</h5>
                 <Row className="mt-2">
                     <Col xs={12} md={8} className='d-flex justify-content-center'>
                         <div
