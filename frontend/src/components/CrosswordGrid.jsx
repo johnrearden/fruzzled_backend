@@ -8,8 +8,9 @@ import { GRID_CONTENTS_LS_KEY, PUZZLE_ID_LS_KEY } from '../constants/constants.j
 import styles from '../styles/crossword/Grid.module.css';
 import btnStyles from '../styles/Button.module.css'
 import { useEffect, useState, useCallback, useRef, createRef } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Modal, Button } from 'react-bootstrap';
 import { CellInput } from './CellInput.jsx';
+import { MobileWordInput } from './MobileWordInput.jsx';
 
 const MAX_DIMENSION = 32;
 
@@ -30,6 +31,7 @@ export const CrosswordGrid = ({ data }) => {
     const [showCellCorrectness, setShowCellCorrectness] = useState(false);
     const [indicatorLetter, setIndicatorLetter] = useState('');
     const [onMobile, setOnMobile] = useState(false);
+    const [showInputModal, setShowInputModal] = useState(false);
 
     // This flag is toggled each time a key is pressed, otherwise repeated presses of the 
     // same key would not result in an rerender of the Keyboard as the indicator letter 
@@ -147,6 +149,9 @@ export const CrosswordGrid = ({ data }) => {
                 setCurrentClue(clueReferences[cellIndex][0]);
             }
         };
+        if (onMobile) {
+            setShowInputModal(true);
+        }
     }
 
     const getNextCell = (position) => {
@@ -219,6 +224,19 @@ export const CrosswordGrid = ({ data }) => {
      */
     const onDoneClick = () => {
         setShowCellCorrectness((prev) => !prev);
+    }
+
+    const onMobileWordInputClose = (characters) => {
+        let gridCopy = gridContents.slice();
+        characters.forEach((char, index) => {
+            gridCopy = replaceCharAt(
+                gridCopy,
+                cellReferences[currentClue][index],
+                char
+            );
+        });
+        setGridContents(gridCopy);
+        setShowInputModal(false);
     }
 
     // Rendering process begins here
@@ -302,50 +320,74 @@ export const CrosswordGrid = ({ data }) => {
     const showKeyboard = onMobile;
 
     return (
-        <div className={styles.container}>
-            <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
-            <h5 className="text-center">Crossword {data.puzzle.id}</h5>
-            <Row className="mt-2">
-                <Col xs={12} md={8} className='d-flex justify-content-center'>
-                    <div
-                        id="gridDiv"
-                        style={myStyle}
-                        className={styles.grid_background}
+        <>
+            <div className={styles.container}>
+                <span>Mobile : {onMobile}</span>
+                <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
+                <h5 className="text-center">Crossword {data.puzzle.id}</h5>
+                <Row className="mt-2">
+                    <Col xs={12} md={8} className='d-flex justify-content-center'>
+                        <div
+                            id="gridDiv"
+                            style={myStyle}
+                            className={styles.grid_background}
+                        >
+                            {cells}
+                        </div>
+
+                    </Col>
+                    <Col xs={12} md={4}
+                        className="d-flex flex-column justify-content-center align-items-center"
                     >
-                        {cells}
-                    </div>
+                        <p
+                            className={styles.current_clue_display}
+                        >
+                            {currentClue != null ? data.clues[currentClue].clue : ''}
+                        </p>
+                        <hr></hr>
+                        <CompletenessDisplay
+                            completenessPercentage={calculatedPercentComplete}
+                            shorthand={false}
+                        />
+                        <button
+                            className={`${btnStyles.Button} mt-2`}
+                            onClick={onDoneClick}>
+                            Check
+                        </button>
 
-                </Col>
-                <Col xs={12} md={4}
-                    className="d-flex flex-column justify-content-center align-items-center"
-                >
-                    <textarea
-                        rows="4"
-                        readOnly
-                        className={styles.current_clue_display}
-                        value={currentClue != null ? data.clues[currentClue].clue : ''}>
-                    </textarea>
-                    <hr></hr>
-                    <CompletenessDisplay
-                        completenessPercentage={calculatedPercentComplete}
-                        shorthand={false}
+                    </Col>
+                </Row>
+
+                <Row className='mt-4'>
+                    <ClueList
+                        clues={data.clues}
+                        onClueClick={onClueClick}
+                        currentClue={currentClue}
+                    ></ClueList>
+                </Row>
+            </div>
+            <Modal show={showInputModal} onHide={() => setShowInputModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Enter your text</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>
+                        {data.clues[currentClue].clue}
+                    </p>
+                    <MobileWordInput 
+                        letters={
+                            cellReferences[currentClue].map(index => {
+                                const char = gridContents.charAt(index);
+                                return char;
+                            })
+                        }
+                        selectedIndex={cellReferences[currentClue].indexOf(currentCell)}
+                        cellsWidthRatio={cellsWidthRatio}
+                        MAX_DIMENSION={MAX_DIMENSION}
+                        onEditComplete={onMobileWordInputClose}
                     />
-                    <button
-                        className={`${btnStyles.Button} mt-2`}
-                        onClick={onDoneClick}>
-                        Check
-                    </button>
-
-                </Col>
-            </Row>
-
-            <Row className='mt-4'>
-                <ClueList
-                    clues={data.clues}
-                    onClueClick={onClueClick}
-                    currentClue={currentClue}
-                ></ClueList>
-            </Row>
-        </div>
+                </Modal.Body>
+            </Modal>
+        </>
     );
 }

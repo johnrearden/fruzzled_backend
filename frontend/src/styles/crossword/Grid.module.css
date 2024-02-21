@@ -13,11 +13,13 @@
 }
 
 .current_clue_display {
-    background-color: var(--fg-color);
+    background-color: var(--bg-color);
+    font-size: 1.1rem;
     width: 100%;
     max-width: 500px;
-    color: var(--bg-color);
-    border: 1px solid #00000025;
+    color: var(--fg-color);
+    border: 1px solid var(--thrd-color);
+    border-radius: 5px;
     padding: 0.4rem;
     user-select: none;
     text-align: center;
