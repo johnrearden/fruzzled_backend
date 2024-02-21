@@ -237,6 +237,9 @@ export const CrosswordGrid = ({ data }) => {
         });
         setGridContents(gridCopy);
         setShowInputModal(false);
+        if (onMobile) {
+            cellReferences[currentCell].current.blur();
+        }
     }
 
     // Rendering process begins here
@@ -322,7 +325,9 @@ export const CrosswordGrid = ({ data }) => {
     return (
         <>
             <div className={styles.container}>
-                <span>Mobile : {onMobile}</span>
+                <span>Mobile : {onMobile}
+                
+                </span>
                 <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
                 <h5 className="text-center">Crossword {data.puzzle.id}</h5>
                 <Row className="mt-2">
