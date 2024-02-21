@@ -7,8 +7,8 @@ import { replaceCharAt } from '../utils/utils';
 import { GRID_CONTENTS_LS_KEY, PUZZLE_ID_LS_KEY } from '../constants/constants.js';
 import styles from '../styles/crossword/Grid.module.css';
 import btnStyles from '../styles/Button.module.css'
-import { useEffect, useState, useCallback, useRef, createRef } from 'react';
-import { Row, Col, Modal, Button } from 'react-bootstrap';
+import { useEffect, useState, useRef, createRef } from 'react';
+import { Row, Col, Modal} from 'react-bootstrap';
 import { CellInput } from './CellInput.jsx';
 import { MobileWordInput } from './MobileWordInput.jsx';
 
@@ -22,7 +22,8 @@ export const CrosswordGrid = ({ data }) => {
 
     const [currentCell, setCurrentCell] = useState(data.clues[0].start_col + data.clues[0].start_row * data.puzzle.grid.width);
     useEffect(() => {
-        if (cellRefs[currentCell].current) {
+        if (cellRefs[currentCell]?.current) {
+            console.log('currentCell:', currentCell);
             cellRefs[currentCell].current.focus();
             cellRefs[currentCell].current.select();
         }
@@ -241,9 +242,9 @@ export const CrosswordGrid = ({ data }) => {
         setShowInputModal(false);
         if (onMobile) {
             cellRefs[currentCell].current.blur();
+            setCurrentCell(null);
+            setCurrentClue(null);
             dummyRef.current.focus();
-            dummyRef.current.blur();
-            
         }
     }
 
@@ -325,7 +326,9 @@ export const CrosswordGrid = ({ data }) => {
             setOnMobile(mobile);
         }
     }
-    const showKeyboard = onMobile;
+
+    console.log('currentCell:', currentCell);
+    console.log('currentClue:', currentClue);
 
     return (
         <>
@@ -377,13 +380,14 @@ export const CrosswordGrid = ({ data }) => {
                     ></ClueList>
                 </Row>
             </div>
-            <Modal show={showInputModal} onHide={() => setShowInputModal(false)}>
+            {currentClue && (
+                <Modal show={showInputModal} onHide={() => setShowInputModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Enter your text</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p>
-                        {data.clues[currentClue].clue}
+                        {data.clues[currentClue]?.clue}
                     </p>
                     <MobileWordInput 
                         letters={
@@ -399,6 +403,8 @@ export const CrosswordGrid = ({ data }) => {
                     />
                 </Modal.Body>
             </Modal>
+            )}
+            
         </>
     );
 }

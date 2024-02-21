@@ -38,6 +38,9 @@ export const MobileWordInput = ({
                 setCurrentIndex(index - 1);
             }
         }
+        if (event.key === "Enter") {
+            onEditComplete(characters);
+        }
     }
 
     const onCellInput = (index, event) => {
