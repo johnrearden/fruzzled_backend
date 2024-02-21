@@ -59,7 +59,6 @@ export const CrosswordDashboard = () => {
                 setHasNext(!!data.next);
                 setHasPrevious(!!data.previous);
                 setLoading(false);
-                console.log(data);
             } catch (err) {
                 console.log(err);
             }

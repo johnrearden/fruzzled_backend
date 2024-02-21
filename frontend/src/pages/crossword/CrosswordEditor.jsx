@@ -279,7 +279,6 @@ export const CrosswordEditor = ({ data }) => {
                     cell.value = character;
                 } 
             }
-            console.log(model.clues);
             setClues(model.clues);
             updateGridContents(newGridContents);
             advanceCurrentCell();

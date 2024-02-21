@@ -26,15 +26,12 @@ export const CrosswordThumbnail = ({ puzzle }) => {
     }
 
     const handleDelete = async () => {
-        console.log('handleDelete');
         if (deleteAllowed) {
-            console.log('deleteAllowed');   
             const url = '/crossword_builder/delete_puzzle/';
             const formData = new FormData();
             formData.append('puzzle_id', id);
             try {
                 await axiosReq.post(url, formData);
-                console.log('deleted');
                 navigate(0);
             } catch (err) {
                 console.log(err);

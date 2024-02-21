@@ -192,7 +192,6 @@ export const CrosswordGrid = ({ data }) => {
             let gridCopy = gridContents.slice();
             gridCopy = replaceCharAt(gridCopy, index, char);
             setGridContents(gridCopy);
-            console.log(index);
             setCurrentCell(getNextCell(index));
         }
         setLastChar(event.target.value);
