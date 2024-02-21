@@ -25,9 +25,11 @@ class PuzzleList(generics.ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, args, kwargs)
+        total = CrosswordPuzzle.objects.count()
         total_complete = CrosswordPuzzle.objects.filter(complete=True).count()
         total_reviewed = CrosswordPuzzle.objects.filter(reviewed=True).count()
         total_released = CrosswordPuzzle.objects.filter(released=True).count()
+        response.data['total_count'] = total
         response.data['total_complete'] = total_complete
         response.data['total_reviewed'] = total_reviewed
         response.data['total_released'] = total_released

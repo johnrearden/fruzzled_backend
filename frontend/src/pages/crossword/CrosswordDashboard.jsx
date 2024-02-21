@@ -12,6 +12,7 @@ export const CrosswordDashboard = () => {
     const [puzzleList, setPuzzleList] = useState([]);
 
     const [count, setCount] = useState(0);
+    const [totalResults, setTotalResults] = useState(0);
     const [completeCount, setCompleteCount] = useState(0);
     const [reviewedCount, setReviewedCount] = useState(0);
     const [releasedCount, setReleasedCount] = useState(0);
@@ -50,7 +51,8 @@ export const CrosswordDashboard = () => {
                 const url = `/crossword_builder/puzzles/?${suffix}`;
                 const { data } = await axiosReq.get(url);
                 setPuzzleList(data.results);
-                setCount(data.count);
+                setCount(data.total_count);
+                setTotalResults(data.count);
                 setCompleteCount(data.total_complete);
                 setReviewedCount(data.total_reviewed);
                 setReleasedCount(data.total_released);
@@ -164,7 +166,7 @@ export const CrosswordDashboard = () => {
                 >
                     <i className="fa-solid fa-angles-left"></i> Previous
                 </button>
-                <span>Page {page} of {Math.ceil(count / 6)}</span>
+                <span>Page {page} of {Math.ceil(totalResults / 6)}</span>
                 <button 
                     className={`${btnStyles.Button} ml-3`}
                     onClick={handleNextClick}

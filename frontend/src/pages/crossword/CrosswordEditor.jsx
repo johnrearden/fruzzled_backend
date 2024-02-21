@@ -18,8 +18,6 @@ const MAX_DIMENSION = 25;
 
 export const CrosswordEditor = ({ data }) => {
 
-    console.log(data);
-
     const [currentCell, setCurrentCell] = useState(0);
     const [currentClue, setCurrentClue] = useState(0);
     const [indicatorLetter, setIndicatorLetter] = useState('');
@@ -515,7 +513,8 @@ export const CrosswordEditor = ({ data }) => {
     return (
         <div className={styles.container}>
             <Row className="mt-2">
-                <Col className='d-flex justify-content-center'>
+                <Col className='d-flex flex-column justify-content-center align-items-center'>
+                    <h6 class="text-center"># {data.puzzle.id}</h6>
                     <div
                         id="gridDiv"
                         style={myStyle}
