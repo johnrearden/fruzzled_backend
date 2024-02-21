@@ -32,12 +32,18 @@ export const CrosswordDashboard = () => {
                 const filters = [];
                 if (filterComplete) {
                     filters.push('complete=True');
+                } else {
+                    filters.push('complete=False');
                 }
                 if (filterReleased) {
                     filters.push('released=True');
+                } else {
+                    filters.push('released=False');
                 }
                 if (filterReviewed) {
                     filters.push('reviewed=True');
+                } else {
+                    filters.push('reviewed=False');
                 }
                 filters.push(`page=${page}`)
                 const suffix = filters.join('&');
@@ -51,6 +57,7 @@ export const CrosswordDashboard = () => {
                 setHasNext(!!data.next);
                 setHasPrevious(!!data.previous);
                 setLoading(false);
+                console.log(data);
             } catch (err) {
                 console.log(err);
             }

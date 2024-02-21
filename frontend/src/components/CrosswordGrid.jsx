@@ -344,6 +344,7 @@ export const CrosswordGrid = ({ data }) => {
                 <ClueList
                     clues={data.clues}
                     onClueClick={onClueClick}
+                    currentClue={currentClue}
                 ></ClueList>
             </Row>
         </div>

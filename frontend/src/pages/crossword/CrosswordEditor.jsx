@@ -18,6 +18,8 @@ const MAX_DIMENSION = 25;
 
 export const CrosswordEditor = ({ data }) => {
 
+    console.log(data);
+
     const [currentCell, setCurrentCell] = useState(0);
     const [currentClue, setCurrentClue] = useState(0);
     const [indicatorLetter, setIndicatorLetter] = useState('');
@@ -273,6 +275,14 @@ export const CrosswordEditor = ({ data }) => {
         if (keyIsLetter || keyIsSpace) {
             const character = String.fromCharCode(keyCode);
             const newGridContents = replaceCharAt(gridContents, currentCell, character);
+            const model = gridRef.current;
+            for (let cell of model.clues[currentClue].cellList) {
+                if (cell.index === currentCell) {
+                    cell.value = character;
+                } 
+            }
+            console.log(model.clues);
+            setClues(model.clues);
             updateGridContents(newGridContents);
             advanceCurrentCell();
             setIndicatorLetter(character);
