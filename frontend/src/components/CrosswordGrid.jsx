@@ -21,13 +21,6 @@ export const CrosswordGrid = ({ data }) => {
     let cellRefs = [];
 
     const [currentCell, setCurrentCell] = useState(data.clues[0].start_col + data.clues[0].start_row * data.puzzle.grid.width);
-    useEffect(() => {
-        if (cellRefs[currentCell]?.current) {
-            console.log('currentCell:', currentCell);
-            cellRefs[currentCell].current.focus();
-            cellRefs[currentCell].current.select();
-        }
-    }, [currentCell])
     const [currentClue, setCurrentClue] = useState(0);
     const [showCellCorrectness, setShowCellCorrectness] = useState(false);
     const [indicatorLetter, setIndicatorLetter] = useState('');
@@ -55,8 +48,6 @@ export const CrosswordGrid = ({ data }) => {
     }, [data.puzzle.grid.cells, data.puzzle.id]);
 
     const [lastChar, setLastChar] = useState("");
-
-    const dummyRef = useRef();
 
     /**
      * An array, with an element for each clue, which stores a list of the cells
@@ -153,10 +144,6 @@ export const CrosswordGrid = ({ data }) => {
             }
         };
         if (onMobile) {
-            if (currentClue) {
-                cellRefs[0].current.blur();
-                dummyRef.current.focus();
-            }
             setShowInputModal(true);
         }
     }
@@ -283,12 +270,6 @@ export const CrosswordGrid = ({ data }) => {
         });
         setGridContents(gridCopy);
         setShowInputModal(false);
-        if (onMobile) {
-            cellRefs[currentCell].current.blur();
-            setCurrentCell(null);
-            setCurrentClue(null);
-            dummyRef.current.focus();
-        }
     }
 
     // Rendering process begins here
@@ -366,7 +347,6 @@ export const CrosswordGrid = ({ data }) => {
                 <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
                 <h5 
                     className="text-center"
-                    ref={dummyRef}
                 >Crossword {data.puzzle.id}</h5>
                 <Row className="mt-2">
                     <Col xs={12} md={8} className='d-flex justify-content-center'>
@@ -412,7 +392,6 @@ export const CrosswordGrid = ({ data }) => {
             {currentClue && (
                 <Modal show={showInputModal} onHide={() => {
                     setShowInputModal(false);
-                    dummyRef.current.focus();
                 }
                 }>
                 <Modal.Header closeButton>
