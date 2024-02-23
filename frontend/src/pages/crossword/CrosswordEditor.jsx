@@ -477,7 +477,6 @@ export const CrosswordEditor = ({ data }) => {
             setOnMobile(mobile);
         }
     }
-    const showKeyboard = onMobile;
 
     const candidateButtons = candidates.map((candidate, index) => (
         <button
