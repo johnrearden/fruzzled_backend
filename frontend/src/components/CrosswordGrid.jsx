@@ -8,7 +8,7 @@ import { GRID_CONTENTS_LS_KEY, PUZZLE_ID_LS_KEY } from '../constants/constants.j
 import styles from '../styles/crossword/Grid.module.css';
 import btnStyles from '../styles/Button.module.css'
 import { useEffect, useState, useRef, createRef, useCallback } from 'react';
-import { Row, Col, Modal} from 'react-bootstrap';
+import { Row, Col, Modal } from 'react-bootstrap';
 import { CellInput } from './CellInput.jsx';
 import { MobileWordInput } from './MobileWordInput.jsx';
 
@@ -121,6 +121,7 @@ export const CrosswordGrid = ({ data }) => {
             result += 1;
             const orthogonalClueIndex = result >= clueReferences[cellIndex].length ? 0 : result;
             setCurrentClue(clueReferences[cellIndex][orthogonalClueIndex]);
+            console.log('setting orthogonal', clueReferences[cellIndex][orthogonalClueIndex])
         } else {
             const clue = data.clues[clueReferences[cellIndex][0]];
             if (clue.orientation === "AC" && clueReferences[cellIndex].length > 1) {
@@ -136,14 +137,19 @@ export const CrosswordGrid = ({ data }) => {
                 }
                 if (clueAlreadyFilled) {
                     setCurrentClue(clueReferences[cellIndex][1]);
+                    console.log('clue already filled', clueReferences[cellIndex][1])
                 } else {
                     setCurrentClue(clueReferences[cellIndex][0]);
+                    console.log('clue not filled', clueReferences[cellIndex][0])
                 }
             } else {
                 setCurrentClue(clueReferences[cellIndex][0]);
+                console.log('orientation irrelevant', clueReferences[cellIndex][0])
             }
         };
         if (onMobile) {
+            console.log('showing')
+            console.log('showInputModal', showInputModal)
             setShowInputModal(true);
         }
     }
@@ -343,9 +349,11 @@ export const CrosswordGrid = ({ data }) => {
 
     return (
         <>
+            <span>Current clue : {currentClue}!</span>
+
             <div className={styles.container}>
                 <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
-                <h5 
+                <h5
                     className="text-center"
                 >Crossword {data.puzzle.id}</h5>
                 <Row className="mt-2">
@@ -389,34 +397,41 @@ export const CrosswordGrid = ({ data }) => {
                     ></ClueList>
                 </Row>
             </div>
-            {currentClue && (
-                <Modal show={showInputModal} onHide={() => {
-                    setShowInputModal(false);
-                }
-                }>
-                <Modal.Header closeButton>
-                    <Modal.Title>Enter your text</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p>
-                        {data.clues[currentClue]?.clue}
-                    </p>
-                    <MobileWordInput 
-                        letters={
-                            cellReferences[currentClue].map(index => {
-                                const char = gridContents.charAt(index);
-                                return char;
-                            })
-                        }
-                        selectedIndex={cellReferences[currentClue].indexOf(currentCell)}
-                        cellsWidthRatio={cellsWidthRatio}
-                        MAX_DIMENSION={MAX_DIMENSION}
-                        onEditComplete={onMobileWordInputClose}
-                    />
-                </Modal.Body>
-            </Modal>
+            {currentClue !== null && (
+                <Modal
+                    show={showInputModal}
+                    onHide={() => setShowInputModal(false)}
+                >
+                    <Modal.Dialog
+                        style={{backgroundColor: "red"}}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Enter your text</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body
+                            style={{backgroundColor: "blue"}}
+                        >
+                            <p>
+                                {data.clues[currentClue]?.clue}
+                            </p>
+                            <MobileWordInput
+                                letters={
+                                    cellReferences[currentClue].map(index => {
+                                        const char = gridContents.charAt(index);
+                                        return char;
+                                    })
+                                }
+                                selectedIndex={cellReferences[currentClue].indexOf(currentCell)}
+                                cellsWidthRatio={cellsWidthRatio}
+                                MAX_DIMENSION={MAX_DIMENSION}
+                                onEditComplete={onMobileWordInputClose}
+                            />
+                        </Modal.Body>
+                    </Modal.Dialog>
+
+                </Modal>
             )}
-            
+
         </>
     );
 }

@@ -86,6 +86,8 @@ export const MobileWordInput = ({
         )
     });
 
+    console.log('rendering')
+
     return (
         <div className="d-flex flex-column justify-content-center align-items-center">
             <div>
