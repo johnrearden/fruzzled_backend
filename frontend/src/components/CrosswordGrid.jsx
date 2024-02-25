@@ -402,33 +402,26 @@ export const CrosswordGrid = ({ data }) => {
                     show={showInputModal}
                     onHide={() => setShowInputModal(false)}
                 >
-                    <Modal.Dialog
-                        style={{backgroundColor: "red"}}
-                    >
-                        <Modal.Header closeButton>
-                            <Modal.Title>Enter your text</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body
-                            style={{backgroundColor: "blue"}}
-                        >
-                            <p>
-                                {data.clues[currentClue]?.clue}
-                            </p>
-                            <MobileWordInput
-                                letters={
-                                    cellReferences[currentClue].map(index => {
-                                        const char = gridContents.charAt(index);
-                                        return char;
-                                    })
-                                }
-                                selectedIndex={cellReferences[currentClue].indexOf(currentCell)}
-                                cellsWidthRatio={cellsWidthRatio}
-                                MAX_DIMENSION={MAX_DIMENSION}
-                                onEditComplete={onMobileWordInputClose}
-                            />
-                        </Modal.Body>
-                    </Modal.Dialog>
-
+                    <Modal.Header closeButton>
+                        <Modal.Title>Enter your text</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <p>
+                            {data.clues[currentClue]?.clue}
+                        </p>
+                        <MobileWordInput
+                            letters={
+                                cellReferences[currentClue].map(index => {
+                                    const char = gridContents.charAt(index);
+                                    return char;
+                                })
+                            }
+                            selectedIndex={cellReferences[currentClue].indexOf(currentCell)}
+                            cellsWidthRatio={cellsWidthRatio}
+                            MAX_DIMENSION={MAX_DIMENSION}
+                            onEditComplete={onMobileWordInputClose}
+                        />
+                    </Modal.Body>
                 </Modal>
             )}
 
