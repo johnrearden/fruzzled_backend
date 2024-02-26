@@ -555,7 +555,7 @@ export const CrosswordEditor = ({ data }) => {
         </div>
     ));
 
-    const currentWord = gridRef.current.clues[currentClue];
+    const currentWord = gridRef.current.clues[currentClue].getCurrentSolution();
 
     return (
         <div className={styles.container}>
