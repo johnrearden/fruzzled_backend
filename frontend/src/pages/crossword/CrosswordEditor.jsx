@@ -411,14 +411,15 @@ export const CrosswordEditor = ({ data }) => {
     }
 
     const onMobileWordInputClose = (characters) => {
+        console.log(characters);
+        const clue = clues[currentClue];
         let gridCopy = gridContents.slice();
-        characters.forEach((char, index) => {
-            gridCopy = replaceCharAt(
-                gridCopy,
-                cellReferences[currentClue][index],
-                char
-            );
-        });
+        clue.cellList.map((cell, index) => {
+            const newChar = characters[index];
+            cell.value = newChar;
+            gridCopy = replaceCharAt(gridCopy, cell.index, newChar);
+        })
+        
         setGridContents(gridCopy);
         setShowInputModal(false);
     }
