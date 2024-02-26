@@ -13,6 +13,7 @@ import { createCellReferences, createClueReferences } from '../../utils/crosswor
 import { Grid } from '../../utils/crossword_grid.js';
 import { Toggle } from '../../components/Toggle.jsx';
 import { Link } from 'react-router-dom';
+import { MobileWordInput } from '../../components/MobileWordInput.jsx';
 
 const MAX_DIMENSION = 25;
 
@@ -24,6 +25,8 @@ export const CrosswordEditor = ({ data }) => {
     const [onMobile, setOnMobile] = useState(false);
     const [isEditingGrid, setIsEditingGrid] = useState(false);
     const [clues, setClues] = useState([]);
+
+    const [showInputModal, setShowInputModal] = useState(false);
 
     // This flag is toggled each time a key is pressed, otherwise repeated presses of the 
     // same key would not result in an rerender of the Keyboard as the indicator letter 
@@ -182,6 +185,11 @@ export const CrosswordEditor = ({ data }) => {
                 setCurrentClue(clueReferences[cellIndex][0]);
             }
         };
+        if (onMobile) {
+            console.log('showing')
+            console.log('showInputModal', showInputModal)
+            setShowInputModal(true);
+        }
     }
 
     /**
@@ -277,7 +285,7 @@ export const CrosswordEditor = ({ data }) => {
             for (let cell of model.clues[currentClue].cellList) {
                 if (cell.index === currentCell) {
                     cell.value = character;
-                } 
+                }
             }
             setClues(model.clues);
             updateGridContents(newGridContents);
@@ -401,6 +409,19 @@ export const CrosswordEditor = ({ data }) => {
         setCurrentClueModalText(newClueText);
     }
 
+    const onMobileWordInputClose = (characters) => {
+        let gridCopy = gridContents.slice();
+        characters.forEach((char, index) => {
+            gridCopy = replaceCharAt(
+                gridCopy,
+                cellReferences[currentClue][index],
+                char
+            );
+        });
+        setGridContents(gridCopy);
+        setShowInputModal(false);
+    }
+
     const clearCells = () => {
         const clue = gridRef.current.clues[currentClue];
         let gridCopy = gridContents.slice();
@@ -481,7 +502,7 @@ export const CrosswordEditor = ({ data }) => {
     const candidateButtons = candidates.map((candidate, index) => {
         const orthogs = clues[currentClue].orthogs;
         const spans = candidate.split('').map((char, idx) => {
-            let style = {fontFamily: 'monospace'};
+            let style = { fontFamily: 'monospace' };
             if (orthogs[idx] === "S") {
                 style = {
                     borderTop: '1px solid black',
@@ -504,12 +525,13 @@ export const CrosswordEditor = ({ data }) => {
             )
         });
         return (
-        <button
-            key={index}
-            onClick={() => handleCandidateSelect(candidate)}
-            className="m-1"
-        >{spans}</button>
-    )});
+            <button
+                key={index}
+                onClick={() => handleCandidateSelect(candidate)}
+                className="m-1"
+            >{spans}</button>
+        )
+    });
 
     const dbDefinitionSpans = dbDefinitions.map((def, index) => (
         <div
@@ -533,6 +555,8 @@ export const CrosswordEditor = ({ data }) => {
     ));
 
     const currentWord = gridRef.current.clues[currentClue];
+
+    console.log(showInputModal);
 
     return (
         <div className={styles.container}>
@@ -697,6 +721,34 @@ export const CrosswordEditor = ({ data }) => {
                 >
                     {successAlertText}
                 </Alert>
+            )}
+
+            {currentClue !== null && (
+                <Modal
+                    show={showInputModal}
+                    onHide={() => setShowInputModal(false)}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Enter your text</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <p>
+                            {data.clues[currentClue]?.clue}
+                        </p>
+                        <MobileWordInput
+                            letters={
+                                cellReferences[currentClue].map(index => {
+                                    const char = gridContents.charAt(index);
+                                    return char;
+                                })
+                            }
+                            selectedIndex={cellReferences[currentClue].indexOf(currentCell)}
+                            cellsWidthRatio={cellsWidthRatio}
+                            MAX_DIMENSION={MAX_DIMENSION}
+                            onEditComplete={onMobileWordInputClose}
+                        />
+                    </Modal.Body>
+                </Modal>
             )}
         </div>
     );

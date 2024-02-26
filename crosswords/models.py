@@ -95,3 +95,9 @@ class CrosswordClue(models.Model):
 
     def __str__(self):
         return f'{self.solution}" : {self.clue} ({self.word_lengths})'
+
+
+try:
+    value = int(user_quantity_input)
+except ValueError:
+    print('Error message ......')
