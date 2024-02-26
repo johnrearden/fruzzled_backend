@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CrosswordThumbnail } from '../../components/CrosswordThumbnail';
 import { axiosReq } from '../../api/axiosDefaults';
-import { Col, Container, Row, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import btnStyles from '../../styles/Button.module.css';
 import { Toggle } from '../../components/Toggle';
@@ -96,17 +96,17 @@ export const CrosswordDashboard = () => {
     const sideBar = (
         <>
             <Toggle
-                initial={filterComplete}
+                toggledOn={filterComplete}
                 label="Complete"
                 handleChange={(on) => handleCompleteToggle(on)}
             />
             <Toggle
-                initial={filterReviewed}
+                toggledOn={filterReviewed}
                 label="Reviewed"
                 handleChange={(on) => handleReviewedToggle(on)}
             />
             <Toggle
-                initial={filterReleased}
+                toggledOn={filterReleased}
                 label="Released"
                 handleChange={(on) => handleReleasedToggle(on)}
             />

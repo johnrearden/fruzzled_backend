@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import styles from '../styles/Toggle.module.css';
 
-export const Toggle = ({ initial, label, iconClass, handleChange }) => {
+export const Toggle = ({ toggledOn, label, iconClass, handleChange }) => {
 
-    const [on, setOn] = useState(initial);
+    const [on, setOn] = useState(toggledOn);
     useEffect(() => {
-        setOn(initial);
-    }, [initial]);
+        setOn(toggledOn);
+    }, [toggledOn]);
 
     const handleClick = () => {
         const nextValue = !on;
@@ -30,7 +30,7 @@ export const Toggle = ({ initial, label, iconClass, handleChange }) => {
     return (
         <div 
             onClick={handleClick}
-            className="d-flex flex-column justify-content-center align-items-center"
+            className="d-flex flex-column justify-content-center align-items-center m-1"
         >
             <span className={styles.Label}>{label}</span>
             <div className={surroundClass}>

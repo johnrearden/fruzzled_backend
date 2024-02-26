@@ -100,7 +100,7 @@ export const CrosswordThumbnail = ({ puzzle }) => {
                 {!puzzle.complete && (
                     <div style={{ display: 'inline-block' }}>
                         <Toggle
-                            initial={deleteToggleOn}
+                            toggledOn={deleteToggleOn}
                             iconClass="fa-solid fa-trash"
                             handleChange={(val) => handleDeleteToggle(val)}
                         />

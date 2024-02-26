@@ -27,6 +27,7 @@ export const CrosswordEditor = ({ data }) => {
     const [clues, setClues] = useState([]);
 
     const [showInputModal, setShowInputModal] = useState(false);
+    const [allowMobileInput, setAllowMobileInput] = useState(false);
 
     // This flag is toggled each time a key is pressed, otherwise repeated presses of the 
     // same key would not result in an rerender of the Keyboard as the indicator letter 
@@ -556,8 +557,6 @@ export const CrosswordEditor = ({ data }) => {
 
     const currentWord = gridRef.current.clues[currentClue];
 
-    console.log(showInputModal);
-
     return (
         <div className={styles.container}>
             <Row className="mt-2">
@@ -572,15 +571,19 @@ export const CrosswordEditor = ({ data }) => {
                     </div>
                 </Col>
                 <Col className="d-flex flex-column align-items-center">
-                    <div>
-                        <label htmlFor="grid-checkbox">Edit Grid</label>
-                        <input
-                            id="grid-checkbox"
-                            type="checkbox"
-                            checked={isEditingGrid}
-                            className="ml-3"
-                            onChange={() => setIsEditingGrid(!isEditingGrid)}
+                    <div className="d-flex flex-row">
+                        <Toggle
+                            toggledOn={isEditingGrid}
+                            label="Edit grid"
+                            handleChange={() => setIsEditingGrid(!isEditingGrid)}
                         />
+                        {onMobile && (
+                            <Toggle
+                                toggledOn={allowMobileInput}
+                                label="Input"
+                                handleChange={() => setAllowMobileInput(!allowMobileInput)}
+                            />
+                        )}
                     </div>
                     <button
                         onClick={getPotentials}
@@ -621,21 +624,21 @@ export const CrosswordEditor = ({ data }) => {
                         <div className="m-2">
                             <Toggle
                                 label="Complete"
-                                initial={complete}
+                                toggledOn={complete}
                                 handleChange={() => setComplete(!complete)}
                             />
                         </div>
                         <div className="m-2">
                             <Toggle
                                 label="Reviewed"
-                                initial={reviewed}
+                                toggledOn={reviewed}
                                 handleChange={() => setReviewed(!reviewed)}
                             />
                         </div>
                         <div className="m-2">
                             <Toggle
                                 label="Released"
-                                initial={released}
+                                toggledOn={released}
                                 handleChange={() => setReleased(!released)}
                             />
                         </div>
@@ -714,42 +717,46 @@ export const CrosswordEditor = ({ data }) => {
                 </Modal.Footer>
             </Modal>
 
-            {showSuccessAlert && (
-                <Alert
-                    variant={alertVariant}
-                    className={styles.Alert}
-                >
-                    {successAlertText}
-                </Alert>
-            )}
+            {
+                showSuccessAlert && (
+                    <Alert
+                        variant={alertVariant}
+                        className={styles.Alert}
+                    >
+                        {successAlertText}
+                    </Alert>
+                )
+            }
 
-            {currentClue !== null && (
-                <Modal
-                    show={showInputModal}
-                    onHide={() => setShowInputModal(false)}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Enter your text</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <p>
-                            {data.clues[currentClue]?.clue}
-                        </p>
-                        <MobileWordInput
-                            letters={
-                                cellReferences[currentClue].map(index => {
-                                    const char = gridContents.charAt(index);
-                                    return char;
-                                })
-                            }
-                            selectedIndex={cellReferences[currentClue].indexOf(currentCell)}
-                            cellsWidthRatio={cellsWidthRatio}
-                            MAX_DIMENSION={MAX_DIMENSION}
-                            onEditComplete={onMobileWordInputClose}
-                        />
-                    </Modal.Body>
-                </Modal>
-            )}
-        </div>
+            {
+                currentClue !== null && allowMobileInput && (
+                    <Modal
+                        show={showInputModal}
+                        onHide={() => setShowInputModal(false)}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Enter your text</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p>
+                                {data.clues[currentClue]?.clue}
+                            </p>
+                            <MobileWordInput
+                                letters={
+                                    cellReferences[currentClue].map(index => {
+                                        const char = gridContents.charAt(index);
+                                        return char;
+                                    })
+                                }
+                                selectedIndex={cellReferences[currentClue].indexOf(currentCell)}
+                                cellsWidthRatio={cellsWidthRatio}
+                                MAX_DIMENSION={MAX_DIMENSION}
+                                onEditComplete={onMobileWordInputClose}
+                            />
+                        </Modal.Body>
+                    </Modal>
+                )
+            }
+        </div >
     );
 }
