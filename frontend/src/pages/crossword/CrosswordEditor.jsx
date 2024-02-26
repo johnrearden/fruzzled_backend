@@ -106,7 +106,7 @@ export const CrosswordEditor = ({ data }) => {
 
     }, [data]);
 
-    const saveCrossword = async () => {
+    const saveCrossword = async (confirm) => {
         const list = [];
         for (let clue of clues) {
             list.push(clue.convertToObject());
@@ -123,10 +123,13 @@ export const CrosswordEditor = ({ data }) => {
         const url = '/crossword_builder/save_puzzle/';
         try {
             const { data } = await axiosReq.post(url, formData);
-            setAlertVariant('success');
-            setSuccessAlertText('Crossword saved')
-            setShowSuccessAlert(true);
-            setTimeout(() => setShowSuccessAlert(false), 1000);
+            if (confirm) {
+                setAlertVariant('success');
+                setSuccessAlertText('Crossword saved')
+                setShowSuccessAlert(true);
+                setTimeout(() => setShowSuccessAlert(false), 1000);
+            }
+
         } catch (err) {
             console.log(err);
         }
@@ -237,7 +240,7 @@ export const CrosswordEditor = ({ data }) => {
                     break;
                 }
                 case 's': {
-                    saveCrossword();
+                    saveCrossword(true);
                     break;
                 }
             }
@@ -395,12 +398,14 @@ export const CrosswordEditor = ({ data }) => {
         })
         setGridContents(gridContentsCopy);
         setShowCandidatesModal(false);
+        saveCrossword(false);
     }
 
     const handleDefinitionSelection = (definition) => {
         gridRef.current.clues[currentClue].clue = definition;
         setClues(gridRef.current.clues);
         setShowCluesModal(false);
+        saveCrossword(false);
     }
 
     const onClueTextAreaChange = (event) => {
@@ -408,6 +413,7 @@ export const CrosswordEditor = ({ data }) => {
         gridRef.current.clues[currentClue].clue = newClueText;
         setClues(gridRef.current.clues);
         setCurrentClueModalText(newClueText);
+        saveCrossword(false);
     }
 
     const onMobileWordInputClose = (characters) => {
@@ -419,9 +425,10 @@ export const CrosswordEditor = ({ data }) => {
             cell.value = newChar;
             gridCopy = replaceCharAt(gridCopy, cell.index, newChar);
         })
-        
+
         setGridContents(gridCopy);
         setShowInputModal(false);
+        saveCrossword(false);
     }
 
     const clearCells = () => {
@@ -615,7 +622,7 @@ export const CrosswordEditor = ({ data }) => {
                         <i className="fa-solid fa-pen-to-square mr-3"></i>
                         Edit Clue Text</button>
                     <button
-                        onClick={saveCrossword}
+                        onClick={() => saveCrossword(true)}
                         className={`${btnStyles.Button} mt-1`}
                     >
                         <i className="fa-solid fa-cloud-arrow-up mr-3"></i>
@@ -746,7 +753,7 @@ export const CrosswordEditor = ({ data }) => {
                                 letters={
                                     cellReferences[currentClue].map(index => {
                                         const char = gridContents.charAt(index);
-                                        return char;
+                                        return char.toUpperCase();
                                     })
                                 }
                                 selectedIndex={cellReferences[currentClue].indexOf(currentCell)}
