@@ -478,12 +478,38 @@ export const CrosswordEditor = ({ data }) => {
         }
     }
 
-    const candidateButtons = candidates.map((candidate, index) => (
+    const candidateButtons = candidates.map((candidate, index) => {
+        const orthogs = clues[currentClue].orthogs;
+        const spans = candidate.split('').map((char, idx) => {
+            let style = {fontFamily: 'monospace'};
+            if (orthogs[idx] === "S") {
+                style = {
+                    borderTop: '1px solid black',
+                    fontFamily: 'monospace'
+                };
+            } else if (orthogs[idx] === "E") {
+                style = {
+                    borderBottom: '1px solid black',
+                    fontFamily: 'monospace'
+                }
+            } else if (orthogs[idx] === "M") {
+                style = {
+                    borderTop: '1px solid black',
+                    borderBottom: '1px solid black',
+                    fontFamily: 'monospace'
+                }
+            }
+            return (
+                <span key={idx} style={style}>{char}</span>
+            )
+        });
+        return (
         <button
             key={index}
             onClick={() => handleCandidateSelect(candidate)}
-        >{candidate}</button>
-    ));
+            className="m-1"
+        >{spans}</button>
+    )});
 
     const dbDefinitionSpans = dbDefinitions.map((def, index) => (
         <div
@@ -506,13 +532,13 @@ export const CrosswordEditor = ({ data }) => {
         </div>
     ));
 
-    const currentWord = gridRef.current.clues[currentClue].getCurrentSolution();
+    const currentWord = gridRef.current.clues[currentClue];
 
     return (
         <div className={styles.container}>
             <Row className="mt-2">
                 <Col className='d-flex flex-column justify-content-center align-items-center'>
-                    <h6 class="text-center"># {data.puzzle.id}</h6>
+                    <h6 className="text-center"># {data.puzzle.id}</h6>
                     <div
                         id="gridDiv"
                         style={myStyle}
