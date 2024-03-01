@@ -18,6 +18,10 @@
     object-fit: contain;
 }
 
+h1, h2, h3, h4, h5, h6, button {
+    user-select: none;
+}
+
 * {
     box-sizing: border-box;
     transition: .1s all;

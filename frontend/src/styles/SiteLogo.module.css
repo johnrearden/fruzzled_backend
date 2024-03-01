@@ -1,5 +1,6 @@
 .fancy_text {
     display: grid;
+    user-select: none;
     --base-font-size: 150px;
     position: relative;
     font-size: var(--base-font-size);

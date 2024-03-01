@@ -593,41 +593,63 @@ export const CrosswordEditor = ({ data }) => {
                             />
                         )}
                     </div>
-                    <button
-                        onClick={getPotentials}
-                        className={`${btnStyles.Button} mt-3`}
-                    >
-                        <i className="fa-solid fa-puzzle-piece mr-3"></i>
-                        Get Words</button>
-                    <button
-                        onClick={getDefinitions}
-                        className={`${btnStyles.Button} mt-1`}
-                    >
-                        <i className="fa-solid fa-circle-question mr-3"></i>
-                        Get Definitions
-                    </button>
-                    <button
-                        onClick={clearCells}
-                        className={`${btnStyles.Button} mt-1`}
-                    >
-                        <i className="fa-solid fa-trash mr-3"></i>
-                        Clear Word</button>
-                    <button
-                        onClick={() => {
-                            setCurrentClueModalText(clues[currentClue].clue);
-                            setShowClueTextModal(true);
-                        }}
-                        className={`${btnStyles.Button} mt-1`}
-                    >
-                        <i className="fa-solid fa-pen-to-square mr-3"></i>
-                        Edit Clue Text</button>
-                    <button
-                        onClick={() => saveCrossword(true)}
-                        className={`${btnStyles.Button} mt-1`}
-                    >
-                        <i className="fa-solid fa-cloud-arrow-up mr-3"></i>
-                        Save Crossword
-                    </button>
+                    <Row>
+                        <button
+                            onClick={getPotentials}
+                            className={`${btnStyles.Button} mt-1`}
+                        >
+                            <i className="fa-solid fa-puzzle-piece mr-3"></i>
+                            Words</button>
+                        <button
+                            onClick={getDefinitions}
+                            className={`${btnStyles.Button} mt-1`}
+                        >
+                            <i className="fa-solid fa-circle-question mr-3"></i>
+                            Definitions
+                        </button>
+                    </Row>
+                    <Row>
+                        <button
+                            onClick={clearCells}
+                            className={`${btnStyles.Button} mt-1`}
+                        >
+                            <i className="fa-solid fa-trash mr-3"></i>
+                            Clear</button>
+                        <button
+                            onClick={() => {
+                                setCurrentClueModalText(clues[currentClue].clue);
+                                setShowClueTextModal(true);
+                            }}
+                            className={`${btnStyles.Button} mt-1`}
+                        >
+                            <i className="fa-solid fa-pen-to-square mr-3"></i>
+                            Edit Clue</button>
+                    </Row>
+                    <Row>
+                        <button
+                            onClick={() => saveCrossword(true)}
+                            className={`${btnStyles.Button} mt-1`}
+                        >
+                            <i className="fa-solid fa-cloud-arrow-up mr-3"></i>
+                            Save
+                        </button>
+                        <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={`https://wikipedia.org/wiki/${currentWord.toLowerCase()}`}
+                        >
+                            <button
+                                className={`${btnStyles.Button} mt-1`}
+                            >
+                                <i className="fa-brands fa-wikipedia-w mr-3"></i>
+                                Wiki
+                            </button>
+                        </a>
+
+                    </Row>
+
+
+
                     <div className="d-flex flex-row">
                         <div className="m-2">
                             <Toggle

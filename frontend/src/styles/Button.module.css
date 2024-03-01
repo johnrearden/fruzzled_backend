@@ -8,6 +8,7 @@
     border: none;
     margin:  2px 5px;
     box-shadow: 1px 1px 2px 1px var(--shadow-color);
+    transition: all 0.2s;
 }
 
 .Button:disabled {
@@ -26,7 +27,7 @@
 .Button:hover {
     cursor: pointer;
     /* border: 2px solid var(--fg-color); */
-    background: linear-gradient(var(--brgt-color), var(--scnd-color));
+    background: linear-gradient(var(--brgt-color), var(--common-warm));
 }
 
 .Button i {
