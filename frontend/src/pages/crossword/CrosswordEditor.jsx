@@ -373,7 +373,12 @@ export const CrosswordEditor = ({ data }) => {
             const url = `/crossword_builder/get_definition/${query}/`;
             const { data } = await axiosRes.get(url);
             setDBDefinitions(data.results);
+        }
+        catch (err) {
+            console.log(err);
+        }
 
+        try {
             const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${query}`;
             const response = await fetch(apiUrl);
             const obj = await response.json();
@@ -390,10 +395,10 @@ export const CrosswordEditor = ({ data }) => {
             } else {
                 setAPIDefinitions([]);
             }
-            setShowCluesModal(true);
         } catch (err) {
             console.log(err);
         }
+        setShowCluesModal(true);
     }
 
     const handleCandidateSelect = (candidate) => {
