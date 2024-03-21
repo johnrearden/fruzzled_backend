@@ -12,6 +12,7 @@ from .serializers import GridSerializer, CrosswordPuzzleSerializer, \
                          CrosswordClueSerializer
 from .utils import get_cell_concentration
 from django_filters.rest_framework import DjangoFilterBackend
+from random import choice
 import json
 
 
@@ -298,6 +299,53 @@ class GetPuzzle(APIView):
             'total_clues': len(clues)
         }
         return Response({'puzzle': data})
+
+
+class GetUnseenPuzzle(APIView):
+
+    def get(self, request):
+        puzzles = CrosswordPuzzle.objects.filter(released=True)
+        if puzzles:
+            query = request.GET['seen_crosswords'] if request.GET else None
+            seen_crosswords = query.split(',') if query else []
+            choices = puzzles.exclude(id__in=seen_crosswords)
+
+            if choices:
+                crossword = choice(choices)
+            elif seen_crosswords:
+                crossword = puzzles.filter(id=seen_crosswords[0]).first()
+            else:
+                crossword = choice(puzzles)
+            
+            puzzle_serializer = CrosswordPuzzleSerializer(crossword)
+            clues = CrosswordClue.objects.filter(puzzle=crossword)
+            if not clues:
+                clue_count = 0
+                solution_count = 0
+            else:
+                clue_count = 0
+                solution_count = 0
+                for clue in clues:
+                    if len(clue.clue) > 0:
+                        clue_count += 1
+                    if '#' not in clue.solution:
+                        solution_count += 1
+            clue_serialzer = CrosswordClueSerializer(clues, many=True)
+            
+            data = {
+                'puzzle': puzzle_serializer.data,
+                'clues': clue_serialzer.data,
+                'cell_concentration': get_cell_concentration(crossword),
+                'clues_present': clue_count,
+                'solutions_present': solution_count,
+                'total_clues': len(clues)
+            }
+            return Response({'puzzle': data})
+        else:
+            return Response(
+                status=status.HTTP_404_NOT_FOUND,
+                data={'message': ('No puzzles found')}
+            )
 
 
 class MarkPuzzleReviewed(UserPassesTestMixin, APIView):

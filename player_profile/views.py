@@ -22,8 +22,8 @@ class CreatePlayerProfile(APIView):
             response.set_cookie(
                 key=settings.PLAYER_PROFILE_COOKIE,
                 value=instance.uuid,
-                # secure=False,
-                # samesite='None'
+                secure=True,
+                samesite='None',
                 )
             response.data = serializer.data
             return response

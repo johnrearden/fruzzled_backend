@@ -9,12 +9,15 @@ import styles from '../styles/crossword/Grid.module.css';
 import btnStyles from '../styles/Button.module.css'
 import { useEffect, useState, useRef, createRef, useCallback } from 'react';
 import { Row, Col, Modal } from 'react-bootstrap';
-import { CellInput } from './CellInput.jsx';
 import { MobileWordInput } from './MobileWordInput.jsx';
+import { usePuzzleHistoryContext } from '../contexts/PuzzleHistoryContext';
+
 
 const MAX_DIMENSION = 32;
 
 export const CrosswordGrid = ({ data }) => {
+
+    const { savePuzzleToHistory, getPuzzleHistory } = usePuzzleHistoryContext();
 
     // An array to hold references to the underlying html inputs, to allow
     // the next/previous input to be focused on input value change.
@@ -261,8 +264,9 @@ export const CrosswordGrid = ({ data }) => {
      * Toggles the red and green styling to indicate if a letter(cell) is
      * correct or not
      */
-    const onDoneClick = () => {
-        setShowCellCorrectness((prev) => !prev);
+    const onFinished = () => {
+        savePuzzleToHistory(data.puzzle.id, 'crossword', 0);
+        //setShowCellCorrectness((prev) => !prev);
     }
 
     const onMobileWordInputClose = (characters) => {
@@ -375,17 +379,14 @@ export const CrosswordGrid = ({ data }) => {
                         >
                             {currentClue != null ? data.clues[currentClue].clue : ''}
                         </p>
-                        <hr></hr>
                         <CompletenessDisplay
                             completenessPercentage={calculatedPercentComplete}
                             shorthand={false}
                         />
                         <button
-                            className={`${btnStyles.Button} mt-2`}
-                            onClick={onDoneClick}>
-                            Check
-                        </button>
-
+                            className={`${btnStyles.Button} mt-4`}
+                            onClick={onFinished}
+                        >I'm done!</button>
                     </Col>
                 </Row>
 

@@ -4,8 +4,6 @@ export const PuzzleHistoryContext = createContext();
 
 export const usePuzzleHistoryContext = () => useContext(PuzzleHistoryContext);
 
-export const MAX_PUZZLE_HISTORY_COUNT = 20;
-
 export const PuzzleHistoryProvider = ({ children }) => {
 
     // A fallback in-memory store for the puzzle histories.
@@ -26,13 +24,11 @@ export const PuzzleHistoryProvider = ({ children }) => {
             }
             list.push(id);
 
-            list = list.slice(-MAX_PUZZLE_HISTORY_COUNT);
             const newValue = JSON.stringify(list);
             localStorage.setItem(key, newValue);
         } catch (err) {
             let list = puzzleHistory[key];
             list.push(id);
-            list = list.slice(-MAX_PUZZLE_HISTORY_COUNT);
             setPuzzleHistory(prev => ({
                 ...prev,
                 key: list

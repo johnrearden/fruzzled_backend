@@ -114,6 +114,10 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     os.environ.get('CLIENT_ORIGIN'),
 ]
+
+if 'DEBUG' in os.environ:
+    CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'fruzzled_backend.urls'
