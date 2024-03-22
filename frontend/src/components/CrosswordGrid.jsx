@@ -50,8 +50,6 @@ export const CrosswordGrid = ({ data }) => {
         }
     }, [data.puzzle.grid.cells, data.puzzle.id]);
 
-    const [lastChar, setLastChar] = useState("");
-
     /**
      * An array, with an element for each clue, which stores a list of the cells
      * occupied by that clue on the grid. 
@@ -181,6 +179,7 @@ export const CrosswordGrid = ({ data }) => {
      */
     const handleKeyPress = useCallback((keyCode) => {
 
+
         if (currentClue == null) return;
 
         setKeyboardTripswitch(prev => !prev);
@@ -240,9 +239,59 @@ export const CrosswordGrid = ({ data }) => {
                 const newGridContents = replaceCharAt(gridContents, currentCell, '#');
                 updateGridContents(newGridContents);
             }
+        } else if (keyCode === 37) { // left arrow key
+            const height = data.puzzle.grid.height;
+            const currentRowLeftmost = Math.floor(currentCell / height) * height;
+            let pointer = currentCell;
+            while (--pointer >= currentRowLeftmost) {
+                if (gridContents.charAt(pointer) !== '-') {
+                    onCellClick(pointer);
+                    break;
+                }
+            }
+        } else if (keyCode === 39) { // right arrow key
+            const h = data.puzzle.grid.height;
+            const w = data.puzzle.grid.width;
+            const currentRowRightmost = Math.floor(currentCell / h) * h + w;
+            let pointer = currentCell;
+            while(++pointer < currentRowRightmost) {
+                if (gridContents.charAt(pointer) !== '-') {
+                    onCellClick(pointer);
+                    break;
+                }
+            }
+        } else if (keyCode === 38) { // up arrow key
+            const w = data.puzzle.grid.width;
+            const currentColTop = currentCell % w;
+            let pointer = currentCell;
+            while(true) {
+                pointer -= w;
+                if (pointer < currentColTop) {
+                    return;
+                }
+                if (gridContents.charAt(pointer) !== '-') {
+                    onCellClick(pointer);
+                    break;
+                }
+            }
+        } else if (keyCode === 40) { // down arrow key
+            const w = data.puzzle.grid.width;
+            const h = data.puzzle.grid.height;
+            const currentColBottom = currentCell % w + ((h - 1) * w);
+            let pointer = currentCell;
+            while (true) {
+                pointer += w;
+                if (pointer > currentColBottom) {
+                    return;
+                }
+                if (gridContents.charAt(pointer) !== '-') {
+                    onCellClick(pointer);
+                    break;
+                }
+            }
         }
     }, [cellReferences, clueReferences, currentCell, currentClue, data.puzzle.id, gridContents]);
-
+    console.log('currentCell:', currentCell);
 
     /**
      * Add key listener to window on page load, and remove it when page is 
