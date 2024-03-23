@@ -28,8 +28,8 @@
     opacity: 0;
 }
 
-.correct_cell {
-    color: #00ff00;
+.missing_cell {
+    color: #02aa02;
 }
 
 .incorrect_cell {
