@@ -171,7 +171,9 @@ export const CrosswordGrid = ({ data }) => {
      * method of mutating state array using map function in React.
      * @param {Integer} keyCode 
      */
-    const handleKeyPress = useCallback((keyCode) => {
+    const handleKeyPress = useCallback((event, keyCode) => {
+
+        event.preventDefault();
 
         if (currentClue == null) return;
 
@@ -247,7 +249,7 @@ export const CrosswordGrid = ({ data }) => {
             const w = data.puzzle.grid.width;
             const currentRowRightmost = Math.floor(currentCell / h) * h + w;
             let pointer = currentCell;
-            while(++pointer < currentRowRightmost) {
+            while (++pointer < currentRowRightmost) {
                 if (gridContents.charAt(pointer) !== '-') {
                     onCellClick(pointer);
                     break;
@@ -257,7 +259,7 @@ export const CrosswordGrid = ({ data }) => {
             const w = data.puzzle.grid.width;
             const currentColTop = currentCell % w;
             let pointer = currentCell;
-            while(true) {
+            while (true) {
                 pointer -= w;
                 if (pointer < currentColTop) {
                     return;
@@ -296,7 +298,7 @@ export const CrosswordGrid = ({ data }) => {
             return;
         }
         const handleTyping = (event) => {
-            handleKeyPress(event.keyCode);
+            handleKeyPress(event, event.keyCode);
         }
         window.addEventListener('keyup', handleTyping);
         return () => window.removeEventListener('keyup', handleTyping);
@@ -309,7 +311,7 @@ export const CrosswordGrid = ({ data }) => {
      */
     const onFinished = () => {
         savePuzzleToHistory(data.puzzle.id, 'crossword', 0);
-        //setShowCellCorrectness((prev) => !prev);
+        setShowCellCorrectness((prev) => !prev);
     }
 
     const onMobileWordInputClose = (characters) => {
@@ -342,7 +344,9 @@ export const CrosswordGrid = ({ data }) => {
 
         // If the showCellCorrectness flag is true, check if the letter in this
         // cell is correct. If flag is false, the unused value can be false.
+        const missing = char === '#' || char === ' ' || char === '';
         let correct = false;
+        let correctChar = '';
         if (showCellCorrectness && char != '-') {
             const clueIndex = clueReferences[pointer][0];
             const clue = data.clues[clueIndex];
@@ -353,20 +357,22 @@ export const CrosswordGrid = ({ data }) => {
             } else {
                 letterIndex = (pointer - clueStartIndex) / data.puzzle.grid.width;
             }
-            const correctChar = clue.solution[letterIndex];
+            correctChar = clue.solution[letterIndex];
             correct = char.toLowerCase() == correctChar.toLowerCase();
         }
 
         let letter;
         if (char === "-") {
             closedCellCount += 1;
-        }
-        if (char === "-" || char === "#") {
             letter = '';
         } else {
             letter = char;
-            filledCellCount += 1;
+            if (!missing) {
+                filledCellCount += 1;
+            }
         }
+
+        
 
         return (
             <Cell key={`cell-${pointer}`}
@@ -374,11 +380,15 @@ export const CrosswordGrid = ({ data }) => {
                 isEditing={false}
                 index={pointer}
                 letter={letter}
+                correctLetter={correctChar}
                 clickHandler={onCellClick}
                 cellsWidthRatio={cellsWidthRatio}
                 maxDimension={MAX_DIMENSION}
                 selected={selected}
                 highlighted={highlighted}
+                showCorrectness={showCellCorrectness}
+                correct={correct}
+                missing={missing}
                 semantic={true}
             ></Cell>
         )
@@ -386,6 +396,7 @@ export const CrosswordGrid = ({ data }) => {
 
     const openCellCount = gridContents.length - closedCellCount;
     const calculatedPercentComplete = Math.floor(filledCellCount / openCellCount * 100);
+    console.log(openCellCount, closedCellCount, filledCellCount);
 
     if (typeof (window) !== "undefined" && typeof (window) !== null) {
         const mobile = window.matchMedia("(any-pointer:coarse)").matches;
@@ -397,12 +408,9 @@ export const CrosswordGrid = ({ data }) => {
     return (
         <>
             <div className={styles.container}>
-                <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
-                <h5
-                    className="text-center"
-                >Crossword {data.puzzle.id}</h5>
+
                 <Row className="mt-2">
-                    <Col xs={12} md={8} className='d-flex justify-content-center'>
+                    <Col xs={12} md={8} lg={6} className='d-flex justify-content-center'>
                         <div
                             id="gridDiv"
                             style={myStyle}
@@ -410,25 +418,42 @@ export const CrosswordGrid = ({ data }) => {
                         >
                             {cells}
                         </div>
-
                     </Col>
-                    
-                    <Col xs={12} md={4}
-                        className="d-flex flex-column justify-content-center align-items-center"
+
+                    <Col xs={12} md={4} lg={6}
+                        className="d-flex flex-column align-items-center mt-5"
                     >
-                        <p
-                            className={styles.current_clue_display}
-                        >
-                            {currentClue != null ? data.clues[currentClue].clue : ''}
-                        </p>
+                        <h5
+                            className="text-center"
+                        ># {data.puzzle.id}</h5>
+
+                        <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
+
                         <CompletenessDisplay
                             completenessPercentage={calculatedPercentComplete}
                             shorthand={false}
                         />
+
                         <button
                             className={`${btnStyles.Button} mt-4`}
                             onClick={onFinished}
                         >I'm done!</button>
+
+                        <p
+                            className={`${styles.current_clue_display} mt-5`}
+                        >
+                            {currentClue != null ? data.clues[currentClue].clue : ''}
+                        </p>
+
+                        {!onMobile && (
+                            <p>
+                                Use arrow keys
+                                <i className={`${styles.ArrowIcon} fa-solid fa-arrows-up-down-left-right`}></i>
+                                and return
+
+                            </p>
+                        )}
+
                     </Col>
                 </Row>
 

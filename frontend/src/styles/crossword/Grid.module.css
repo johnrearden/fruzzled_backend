@@ -13,7 +13,7 @@
 }
 
 .current_clue_display {
-    background-color: var(--bg-color);
+    background-color: var(--thrd-color);
     font-size: 1.1rem;
     width: 100%;
     max-width: 500px;
@@ -62,5 +62,10 @@
     font-family: monospace;
     width: 1.3rem;
     height: 1.3rem;
+}
+
+.ArrowIcon {
+    font-size: 0.8rem;
+    margin: 0 10px;
 }
 

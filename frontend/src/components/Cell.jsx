@@ -29,7 +29,7 @@ export const Cell = (props) => {
                 className={ styles.cell_value }
                 style={ cellStyle }
             >
-                {props.letter}
+                {props.missing ? props.correctLetter : props.letter}
             </span>
         </div>
     ) 
