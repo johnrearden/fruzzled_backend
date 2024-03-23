@@ -7,7 +7,7 @@ export const ClueList = (props) => {
     const cluesDown = [];
 
     props.clues.forEach((item, index) => {
-        let highlightedClass = index === props.currentClue 
+        let highlightedClass = index === props.currentClue
             ? styles.Highlighted : ''
         const listItem = (
             <li key={index}>
@@ -34,17 +34,23 @@ export const ClueList = (props) => {
 
     return (
         <>
-            <Col xs={12} md={6} className='border'>
-                <h3 className='text-center'>Across</h3>
-                <ul className={styles.clue_list}>
-                    {cluesAcross}
-                </ul>
+            <Col xs={12} md={6}>
+                <div className={styles.Border}>
+                    <h3 className='text-center'>Across</h3>
+                    <ul className={styles.clue_list}>
+                        {cluesAcross}
+                    </ul>
+                </div>
+
             </Col>
-            <Col xs={12} md={6} className='border'>
-                <h3 className='text-center'>Down</h3>
-                <ul className={styles.clue_list}>
-                    {cluesDown}
-                </ul>
+            <Col xs={12} md={6}>
+                <div className={styles.Border}>
+                    <h3 className='text-center'>Down</h3>
+                    <ul className={styles.clue_list}>
+                        {cluesDown}
+                    </ul>
+                </div>
+
             </Col>
         </>
     )

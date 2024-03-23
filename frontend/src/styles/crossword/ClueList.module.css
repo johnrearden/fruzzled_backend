@@ -12,3 +12,9 @@
 .Highlighted {
     color :var(--common-warm);
 }
+
+.Border {
+    border: 1px solid var(--thrd-color);
+    border-radius: 5px;
+    padding: 10px
+}

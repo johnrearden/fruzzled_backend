@@ -122,7 +122,6 @@ export const CrosswordGrid = ({ data }) => {
             result += 1;
             const orthogonalClueIndex = result >= clueReferences[cellIndex].length ? 0 : result;
             setCurrentClue(clueReferences[cellIndex][orthogonalClueIndex]);
-            console.log('setting orthogonal', clueReferences[cellIndex][orthogonalClueIndex])
         } else {
             const clue = data.clues[clueReferences[cellIndex][0]];
             if (clue.orientation === "AC" && clueReferences[cellIndex].length > 1) {
@@ -138,19 +137,14 @@ export const CrosswordGrid = ({ data }) => {
                 }
                 if (clueAlreadyFilled) {
                     setCurrentClue(clueReferences[cellIndex][1]);
-                    console.log('clue already filled', clueReferences[cellIndex][1])
                 } else {
                     setCurrentClue(clueReferences[cellIndex][0]);
-                    console.log('clue not filled', clueReferences[cellIndex][0])
                 }
             } else {
                 setCurrentClue(clueReferences[cellIndex][0]);
-                console.log('orientation irrelevant', clueReferences[cellIndex][0])
             }
         };
         if (onMobile) {
-            console.log('showing')
-            console.log('showInputModal', showInputModal)
             setShowInputModal(true);
         }
     }
@@ -178,7 +172,6 @@ export const CrosswordGrid = ({ data }) => {
      * @param {Integer} keyCode 
      */
     const handleKeyPress = useCallback((keyCode) => {
-
 
         if (currentClue == null) return;
 
@@ -289,9 +282,10 @@ export const CrosswordGrid = ({ data }) => {
                     break;
                 }
             }
+        } else if (keyCode === 13) {
+            onCellClick(currentCell);
         }
     }, [cellReferences, clueReferences, currentCell, currentClue, data.puzzle.id, gridContents]);
-    console.log('currentCell:', currentCell);
 
     /**
      * Add key listener to window on page load, and remove it when page is 
@@ -402,8 +396,6 @@ export const CrosswordGrid = ({ data }) => {
 
     return (
         <>
-            <span>Current clue : {currentClue}!</span>
-
             <div className={styles.container}>
                 <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
                 <h5
@@ -420,6 +412,7 @@ export const CrosswordGrid = ({ data }) => {
                         </div>
 
                     </Col>
+                    
                     <Col xs={12} md={4}
                         className="d-flex flex-column justify-content-center align-items-center"
                     >
