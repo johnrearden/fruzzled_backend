@@ -396,7 +396,6 @@ export const CrosswordGrid = ({ data }) => {
 
     const openCellCount = gridContents.length - closedCellCount;
     const calculatedPercentComplete = Math.floor(filledCellCount / openCellCount * 100);
-    console.log(openCellCount, closedCellCount, filledCellCount);
 
     if (typeof (window) !== "undefined" && typeof (window) !== null) {
         const mobile = window.matchMedia("(any-pointer:coarse)").matches;
