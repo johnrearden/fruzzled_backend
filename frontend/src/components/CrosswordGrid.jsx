@@ -1,5 +1,3 @@
-import { Keyboard } from './Keyboard';
-import { Controls } from './Controls.jsx';
 import { ClueList } from '../components/ClueList';
 import { Cell } from './Cell';
 import { CompletenessDisplay } from './CompletenessDisplay';
@@ -386,7 +384,7 @@ export const CrosswordGrid = ({ data }) => {
         setUserHasFinished(true);
     }
 
-    const onMobileWordInputClose = (characters) => {
+    const onMobileWordInputClose = (characters, shouldClose) => {
         let gridCopy = gridContents.slice();
         characters.forEach((char, index) => {
             gridCopy = replaceCharAt(
@@ -396,8 +394,10 @@ export const CrosswordGrid = ({ data }) => {
             );
         });
         setGridContents(gridCopy);
-        setShowInputModal(false);
-    }
+        if (shouldClose) {
+            setShowInputModal(false);
+        }
+    };
 
     /**
      * Unfortunate initial design decision. This component needs to know the time, to 
@@ -600,7 +600,7 @@ export const CrosswordGrid = ({ data }) => {
                             selectedIndex={cellReferences[currentClue].indexOf(currentCell)}
                             cellsWidthRatio={cellsWidthRatio}
                             MAX_DIMENSION={MAX_DIMENSION}
-                            onEditComplete={onMobileWordInputClose}
+                            onEdit={onMobileWordInputClose}
                         />
                     </Modal.Body>
                 </Modal>

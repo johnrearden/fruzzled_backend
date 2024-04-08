@@ -1,11 +1,11 @@
-import React, { createRef, useEffect, useRef, useState } from 'react';
+import React, { createRef, memo, useEffect, useRef, useState } from 'react';
 import { CellInput } from './CellInput';
 import btnStyles from '../styles/Button.module.css';
 
 export const MobileWordInput = ({
     letters,
     selectedIndex,
-    onEditComplete,
+    onEdit,
     cellsWidthRatio,
     MAX_DIMENSION,
 }) => {
@@ -39,7 +39,7 @@ export const MobileWordInput = ({
             }
         }
         if (event.key === "Enter") {
-            onEditComplete(characters);
+            onEdit(characters, true);
         }
     }
 
@@ -53,6 +53,7 @@ export const MobileWordInput = ({
         if ((/[a-zA-Z]/).test(char)) {
             charsCopy[index] = char;
             setCharacters(charsCopy);
+            onEdit(charsCopy, false);
             if (index < characters.length - 1) {
                 cellRefs[index + 1].current.focus();
                 setCurrentIndex(index + 1);
@@ -86,8 +87,6 @@ export const MobileWordInput = ({
         )
     });
 
-    console.log('rendering')
-
     return (
         <div className="d-flex flex-column justify-content-center align-items-center">
             <div>
@@ -96,12 +95,11 @@ export const MobileWordInput = ({
             
             <div>
                 <button 
-                    onClick={() => onEditComplete(characters)}
+                    onClick={() => onEdit(characters, true)}
                     className={btnStyles.Button}
                 >Done</button>
             </div>
             
         </div>
     )
-
 }
