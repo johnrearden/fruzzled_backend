@@ -7,15 +7,29 @@ import { replaceCharAt } from '../utils/utils';
 import { GRID_CONTENTS_LS_KEY, PUZZLE_ID_LS_KEY } from '../constants/constants.js';
 import styles from '../styles/crossword/Grid.module.css';
 import btnStyles from '../styles/Button.module.css'
+import { useTheme } from '../contexts/ThemeContext';
+import themes from '../styles/Themes.module.css';
 import { useEffect, useState, useRef, createRef, useCallback } from 'react';
 import { Row, Col, Modal } from 'react-bootstrap';
 import { MobileWordInput } from './MobileWordInput.jsx';
 import { usePuzzleHistoryContext } from '../contexts/PuzzleHistoryContext';
+import { useProfile } from '../contexts/ProfileContext.jsx';
+import ProfileForm from './ProfileForm.jsx';
+import { CrosswordTimer } from './CrosswordTimer.jsx';
 
 
 const MAX_DIMENSION = 32;
 
 export const CrosswordGrid = ({ data }) => {
+
+    const theme = useTheme();
+    const themeStyles = theme === 'light' ? themes.lightTheme : themes.darkTheme;
+
+    const profile = useProfile();
+    const [showProfileModal, setShowProfileModal] = useState(false);
+
+    const [timeExpired, setTimeExpired] = useState(0);
+    const [percentageCorrect, setPercentageCorrect] = useState(0);
 
     const { savePuzzleToHistory, getPuzzleHistory } = usePuzzleHistoryContext();
 
@@ -25,7 +39,7 @@ export const CrosswordGrid = ({ data }) => {
 
     const [currentCell, setCurrentCell] = useState(data.clues[0].start_col + data.clues[0].start_row * data.puzzle.grid.width);
     const [currentClue, setCurrentClue] = useState(0);
-    const [showCellCorrectness, setShowCellCorrectness] = useState(false);
+    const [userHasFinished, setUserHasFinished] = useState(false);
     const [indicatorLetter, setIndicatorLetter] = useState('');
     const [onMobile, setOnMobile] = useState(false);
     const [showInputModal, setShowInputModal] = useState(false);
@@ -51,6 +65,23 @@ export const CrosswordGrid = ({ data }) => {
             setGridContents(storedGridContents);
         }
     }, [data.puzzle.grid.cells, data.puzzle.id]);
+
+    /**
+     * Calculate and update the percentageCorrect state each time the grid changes
+     */
+    useEffect(() => {
+        if (correctCellChars.length) {
+            let totalCorrect = 0;
+            correctCellChars.forEach((char, index) => {
+                if (char !== '-') {
+                    if (char.toLowerCase() === gridContents.charAt(index).toLowerCase()) {
+                        totalCorrect++;
+                    }
+                }
+            })
+            setPercentageCorrect(Math.round(totalCorrect / gridContents.length * 100))
+        }
+    }, [gridContents])
 
     /**
      * An array, with an element for each clue, which stores a list of the cells
@@ -341,9 +372,18 @@ export const CrosswordGrid = ({ data }) => {
      */
     const onFinished = () => {
         savePuzzleToHistory(data.puzzle.id, 'crossword', 0);
-        console.log(data.clues)
-        console.log(data.puzzle.grid)
-        setShowCellCorrectness((prev) => !prev);
+        if (!profile) {
+            setShowProfileModal(true);
+        } else {
+            setUserHasFinished(true);
+        }
+
+    }
+
+    const profileModalCallback = () => {
+        console.log('profileModalCallback invoked');
+        setShowProfileModal(false);
+        setUserHasFinished(true);
     }
 
     const onMobileWordInputClose = (characters) => {
@@ -357,6 +397,15 @@ export const CrosswordGrid = ({ data }) => {
         });
         setGridContents(gridCopy);
         setShowInputModal(false);
+    }
+
+    /**
+     * Unfortunate initial design decision. This component needs to know the time, to 
+     * display it to the user on finish and to submit it to the backend. Originally put the
+     * time state in the CrosswordTimer 
+     */
+    const crosswordTimerCallback = (time) => {
+        setTimeExpired(time);
     }
 
     // Rendering process begins here
@@ -379,23 +428,20 @@ export const CrosswordGrid = ({ data }) => {
         const missing = char === '#' || char === ' ' || char === '';
         let correct = false;
         let correctChar = '';
-        if (showCellCorrectness && char != '-') {
+        if (userHasFinished && char != '-') {
             correctChar = correctCellChars[pointer];
             correct = char.toLowerCase() == correctChar.toLowerCase();
         }
-
         let letter;
         if (char === "-") {
             closedCellCount += 1;
             letter = '';
         } else {
-            letter = char;
+            letter = userHasFinished ? correctCellChars[pointer] : char;
             if (!missing) {
                 filledCellCount += 1;
             }
         }
-
-        
 
         return (
             <Cell key={`cell-${pointer}`}
@@ -409,7 +455,7 @@ export const CrosswordGrid = ({ data }) => {
                 maxDimension={MAX_DIMENSION}
                 selected={selected}
                 highlighted={highlighted}
-                showCorrectness={showCellCorrectness}
+                showCorrectness={userHasFinished}
                 correct={correct}
                 missing={missing}
                 semantic={true}
@@ -430,6 +476,29 @@ export const CrosswordGrid = ({ data }) => {
     return (
         <>
             <div className={styles.container}>
+                <Row className={styles.InfoOnTop}>
+                    <Col className="d-flex justify-content-center align-items-center">
+                        <span
+                            className={`${styles.CrosswordNumber} mr-5`}
+                        ># {data.puzzle.id}</span>
+                        <CrosswordTimer
+                            puzzleId={data.puzzle.grid.id}
+                            running={!userHasFinished}
+                            callback={crosswordTimerCallback}
+                        />
+                    </Col>
+                </Row>
+
+                <Row className={styles.InfoOnTop}>
+                    <div className="d-flex justify-content-center">
+                        <div className="mt-md-3 mt-2 w-50">
+                            <CompletenessDisplay
+                                completenessPercentage={calculatedPercentComplete}
+                                shorthand={false}
+                            />
+                        </div>
+                    </div>
+                </Row>
 
                 <Row className="mt-2">
                     <Col xs={12} md={8} lg={6} className='d-flex justify-content-center'>
@@ -443,29 +512,41 @@ export const CrosswordGrid = ({ data }) => {
                     </Col>
 
                     <Col xs={12} md={4} lg={6}
-                        className="d-flex flex-column align-items-center mt-5"
+                        className="d-flex flex-column align-items-center mt-md-5"
                     >
-                        <h5
-                            className="text-center"
-                        ># {data.puzzle.id}</h5>
 
-                        <Controls puzzleId={data.puzzle.id} showTimer={true}></Controls>
+                        <div className={styles.InfoToSide}>
+                            <span
+                                className={`${styles.CrosswordNumber} mr-5`}
+                            ># {data.puzzle.id}</span>
+                            <CrosswordTimer
+                                puzzleId={data.puzzle.grid.id}
+                                running={!userHasFinished}
+                                callback={crosswordTimerCallback}
+                            />
+                        </div>
 
-                        <CompletenessDisplay
-                            completenessPercentage={calculatedPercentComplete}
-                            shorthand={false}
-                        />
+                        <div className={`${styles.InfoToSide} mt-3 w-50`}>
+                            <CompletenessDisplay
+                                completenessPercentage={calculatedPercentComplete}
+                                shorthand={false}
+                            />
+                        </div>
 
-                        <button
-                            className={`${btnStyles.Button} mt-4`}
-                            onClick={onFinished}
-                        >I'm done!</button>
 
-                        <p
-                            className={`${styles.current_clue_display} mt-5`}
-                        >
-                            {currentClue != null ? data.clues[currentClue].clue : ''}
-                        </p>
+                        {!userHasFinished && (
+                            <>
+                                <p
+                                    className={`${styles.current_clue_display} mt-md-5 mt-2`}
+                                >
+                                    {currentClue != null ? data.clues[currentClue].clue : ''}
+                                </p>
+                                <button
+                                    className={`${btnStyles.Button} mt-md-4 mt-2`}
+                                    onClick={onFinished}
+                                >I'm done!</button>
+                            </>
+                        )}
 
                         {!onMobile && (
                             <p>
@@ -476,17 +557,27 @@ export const CrosswordGrid = ({ data }) => {
                             </p>
                         )}
 
+
                     </Col>
                 </Row>
 
-                <Row className='mt-4'>
-                    <ClueList
-                        clues={data.clues}
-                        onClueClick={onClueClick}
-                        currentClue={currentClue}
-                    ></ClueList>
-                </Row>
+                {!userHasFinished && (
+                    <Row className='mt-4'>
+                        <ClueList
+                            clues={data.clues}
+                            onClueClick={onClueClick}
+                            currentClue={currentClue}
+                        ></ClueList>
+                    </Row>
+                )}
             </div>
+
+            {userHasFinished && (
+                <div className={`${styles.UserFinishedMessage} text-center mt-5`}>
+                    You got {percentageCorrect}% of the crossword correct in {timeExpired} seconds!
+                </div>
+            )}
+
             {currentClue !== null && (
                 <Modal
                     show={showInputModal}
@@ -514,6 +605,18 @@ export const CrosswordGrid = ({ data }) => {
                     </Modal.Body>
                 </Modal>
             )}
+
+            <Modal
+                show={showProfileModal}
+                onHide={() => setShowProfileModal(false)}
+                contentClassName={`${styles.ProfileModal} ${themeStyles}`}
+                centered
+                data-cy="profile_modal"
+            >
+                <Modal.Body>
+                    <ProfileForm callback={profileModalCallback} />
+                </Modal.Body>
+            </Modal>
 
         </>
     );

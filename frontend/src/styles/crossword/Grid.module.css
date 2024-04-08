@@ -69,3 +69,55 @@
     margin: 0 10px;
 }
 
+.CrosswordNumber {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.InfoOnTop {
+    display: none;
+}
+
+.InfoToSide {
+    display: block;
+}
+
+.UserFinishedMessage {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: yellowgreen;
+    animation: slideIn 0.7s;
+    animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+
+    80% {
+        transform: translateX(10%);
+    }
+
+    90% {
+        transform: translateX(-5%);
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@media screen and (max-width: 768px) {
+
+    .InfoOnTop {
+        display: block;
+    }
+
+    .InfoToSide {
+        display: none;
+    }
+}

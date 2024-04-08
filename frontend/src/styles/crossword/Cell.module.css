@@ -29,12 +29,13 @@
 }
 
 .missing_cell {
-    color: #02aa02;
+    background-color: #bbbbbb;
+    color: black;
 }
 
 .incorrect_cell {
     color: #ff0000;
-    background-color: white;
+    background-color: #bbbbbb;
 }
 
 .semantic {

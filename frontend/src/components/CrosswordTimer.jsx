@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react';
 import { CROSSWORD_TIMER_LS_KEY, PUZZLE_ID_LS_KEY } from '../constants/constants';
 import styles from '../styles/crossword/CrosswordTimer.module.css';
+import { useInterval } from '../utils/utils';
 
-export const CrosswordTimer = (props) => {
+export const CrosswordTimer = ({ puzzleId, running, callback }) => {
     const [seconds, setSeconds] = useState(0);
 
     /**
      * Create a timer interval to update the seconds state variable every second.
      * Return a callback to remove it when page is closed.
      */
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setSeconds(seconds => seconds + 1);
-        }, 1000);
 
-        return () => clearInterval(interval);
-    }, []);
+    useInterval(() => {
+        if (running) {
+            callback(seconds + 1);
+            setSeconds(seconds => seconds + 1);
+        }
+    }, 1000);
 
     /**
      * If we are continuing with an existing puzzle on page load (puzzleIds are equal),
@@ -25,13 +26,13 @@ export const CrosswordTimer = (props) => {
     useEffect(() => {
         const storedTime = parseInt(window.localStorage.getItem(CROSSWORD_TIMER_LS_KEY));
         const storedPuzzleId = window.localStorage.getItem(PUZZLE_ID_LS_KEY);
-        if (storedTime && props.puzzleId == storedPuzzleId) {
+        if (storedTime && puzzleId == storedPuzzleId) {
             const timeDelta = Math.floor(Date.now() / 1000) - storedTime;
             setSeconds(timeDelta);
         } else {
             window.localStorage.setItem(CROSSWORD_TIMER_LS_KEY, Math.floor(Date.now() / 1000));
         }
-    }, [props.puzzleId]);
+    }, [puzzleId]);
 
     let secs = seconds;
     const hours = Math.floor(secs / 3600);
