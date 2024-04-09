@@ -1,7 +1,7 @@
 import { ClueList } from '../components/ClueList';
 import { Cell } from './Cell';
 import { CompletenessDisplay } from './CompletenessDisplay';
-import { replaceCharAt } from '../utils/utils';
+import { getVerboseTimeString, replaceCharAt } from '../utils/utils';
 import { GRID_CONTENTS_LS_KEY, PUZZLE_ID_LS_KEY } from '../constants/constants.js';
 import styles from '../styles/crossword/Grid.module.css';
 import btnStyles from '../styles/Button.module.css'
@@ -472,7 +472,7 @@ export const CrosswordGrid = ({ data }) => {
         }
     }
 
-    console.log(data.clues[currentClue]);
+    console.log(getVerboseTimeString(86462));
 
     return (
         <>
@@ -575,7 +575,8 @@ export const CrosswordGrid = ({ data }) => {
 
             {userHasFinished && (
                 <div className={`${styles.UserFinishedMessage} text-center mt-5`}>
-                    You got {percentageCorrect}% of the crossword correct in {timeExpired} seconds!
+                    You got {percentageCorrect}% of the crossword correct in&nbsp;
+                    {getVerboseTimeString(timeExpired)}!
                 </div>
             )}
 
@@ -595,7 +596,6 @@ export const CrosswordGrid = ({ data }) => {
                     </Modal.Header>
                     <Modal.Body>
                         <p>
-
                             {data.clues[currentClue]?.clue}
                         </p>
                         <MobileWordInput

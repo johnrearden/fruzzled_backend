@@ -99,7 +99,7 @@
 .UserFinishedMessage {
     font-size: 1.2rem;
     font-weight: bold;
-    color: yellowgreen;
+    color: var(--fg-color);
     animation: slideIn 0.7s;
     animation-timing-function: ease-in;
     animation-fill-mode: forwards;

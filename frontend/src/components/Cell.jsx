@@ -31,6 +31,12 @@ export const Cell = (props) => {
             className={ classString }
             onClick={ (event) => props.clickHandler(props.index, event) }
         >
+            {props.showCorrectness && props.correct && (
+                <div className={styles.GreenTriangle}></div>
+            )}
+            {/* {props.showCorrectness && !props.correct && (
+                <div className={styles.RedTriangle}></div>
+            )} */}
             <span 
                 className={ styles.cell_value }
                 style={ cellStyle }

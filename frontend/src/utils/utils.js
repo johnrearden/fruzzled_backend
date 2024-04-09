@@ -240,3 +240,39 @@ export const useInterval = (callback, delay) => {
         } 
     }, [delay]);
 }
+
+export const getVerboseTimeString = (time) => {
+
+    const strings = [];
+
+    let secs = time >= 0 ? Math.floor(time) : 0;
+    const days = Math.floor(secs / 86400);
+    const dayString = days ? `${days} day${days > 1 ? 's' : ''}` : '';
+    if (dayString) {
+        strings.push(dayString);
+    }
+    secs = secs - days * 86400;
+
+    const hours = Math.floor(secs / 3600);
+    const hourString = hours ? `${hours} hr${hours > 1 ? 's' : ''}` : '';
+    if (hourString) {
+        strings.push(hourString);
+    }
+    secs = secs - hours * 3600;
+
+    const minutes = Math.floor(secs / 60);
+    const minuteString = minutes ? `${minutes} min${minutes > 1 ? 's' : ''}` : '';
+    if (minuteString) {
+        strings.push(minuteString);
+    }
+    secs = secs - minutes * 60;
+
+    const secondString = secs ? `${secs} sec${secs > 1 ? 's' : ''}` : '';
+    if (secondString) {
+        strings.push(secondString);
+    }    
+
+
+
+    return strings.slice(0, 3).join(', ');
+}
