@@ -32,7 +32,6 @@ class PuzzleInstanceSerializer(serializers.ModelSerializer):
 
     duration = serializers.SerializerMethodField()
     def get_duration(self, obj):
-        print(f'Time taken : {int(obj.time_taken.total_seconds() * 1000)}')
         return int(obj.time_taken.total_seconds() * 1000)
 
     class Meta:

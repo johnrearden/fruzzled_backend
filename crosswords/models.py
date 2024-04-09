@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
+from sudoku.models import PlayerProfile
+
 
 class Orientation(models.TextChoices):
     ACROSS = 'AC', _('Across')
@@ -46,10 +48,47 @@ class CrosswordPuzzle(models.Model):
     complete = models.BooleanField(default=False)
     reviewed = models.BooleanField(default=False)
     released = models.BooleanField(default=False)
+    instances_created = models.IntegerField(default=0)
 
     def __str__(self):
         return (f'Puzzle ({self.id}) by {self.creator} ({self.created_on}'
                 f') ({self.grid.width}x{self.grid.height})')
+
+
+class CrosswordInstance(models.Model):
+    crossword_puzzle = models.ForeignKey(
+        CrosswordPuzzle,
+        on_delete=models.CASCADE,
+        related_name='instances'
+    )
+    owner = models.ForeignKey(
+        PlayerProfile,
+        on_delete=models.CASCADE,
+        related_name="crossword_instances",
+        blank=True) 
+    started_on = models.DateTimeField()
+    completed_at = models.DateTimeField()
+    time_taken = models.DurationField()
+    percent_complete = models.FloatField()
+    percent_correct = models.FloatField()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["time_taken"])
+        ]
+
+    def __str__(self):
+        return f'{self.owner.nickname}\'s crossword puzzle ({self.id})'
+
+    def save(self, *args, **kwargs):
+        timedelta = self.completed_at - self.started_on
+        self.time_taken = timedelta
+        super().save(*args, **kwargs)
+
+        # Update the Puzzle model
+        puzzle = CrosswordPuzzle.objects.get(id=self.crossword_puzzle.id)
+        puzzle.instances_completed += 1
+        puzzle.save()
 
 
 class DictionaryWord(models.Model):

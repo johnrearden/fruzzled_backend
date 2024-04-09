@@ -19,4 +19,7 @@ urlpatterns = [
          name='mark_puzzle_reviewed'),
     path('mark_puzzle_released/', views.MarkPuzzleReleased.as_view(),
          name='mark_puzzle_released'),
+    path('create_crossword_instance',
+         views.CreateCrosswordInstance.as_view(),
+         name='create_crossword_instance')
 ]

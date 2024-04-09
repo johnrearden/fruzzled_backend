@@ -26,7 +26,7 @@ export const CrosswordGrid = ({ data }) => {
     const profile = useProfile();
     const [showProfileModal, setShowProfileModal] = useState(false);
 
-    const [timeExpired, setTimeExpired] = useState(0);
+    const timeExpiredRef = useRef(0);
     const [percentageCorrect, setPercentageCorrect] = useState(0);
 
     const { savePuzzleToHistory, getPuzzleHistory } = usePuzzleHistoryContext();
@@ -404,7 +404,7 @@ export const CrosswordGrid = ({ data }) => {
      * time state in the CrosswordTimer 
      */
     const crosswordTimerCallback = (time) => {
-        setTimeExpired(time);
+        timeExpiredRef.current = time;
     }
 
     // Rendering process begins here
@@ -472,7 +472,7 @@ export const CrosswordGrid = ({ data }) => {
         }
     }
 
-    console.log(getVerboseTimeString(86462));
+    console.log(data);
 
     return (
         <>
@@ -576,7 +576,7 @@ export const CrosswordGrid = ({ data }) => {
             {userHasFinished && (
                 <div className={`${styles.UserFinishedMessage} text-center mt-5`}>
                     You got {percentageCorrect}% of the crossword correct in&nbsp;
-                    {getVerboseTimeString(timeExpired)}!
+                    {getVerboseTimeString(timeExpiredRef.current)}!
                 </div>
             )}
 

@@ -9,7 +9,8 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from .models import DictionaryWord, DictionaryDefinition, Grid
 from .models import CrosswordPuzzle, CrosswordClue, PuzzleType
 from .serializers import GridSerializer, CrosswordPuzzleSerializer, \
-                         CrosswordClueSerializer
+                         CrosswordClueSerializer, CrosswordInstanceSerializer
+from fruzzled_backend.permissions import HasPlayerProfileCookie
 from .utils import get_cell_concentration
 from django_filters.rest_framework import DjangoFilterBackend
 from random import choice
@@ -393,3 +394,17 @@ class MarkPuzzleReleased(UserPassesTestMixin, APIView):
 
     def test_func(self):
         return self.request.user.is_staff
+
+
+class CreateCrosswordInstance(generics.CreateAPIView):
+    serializer_class = CrosswordInstanceSerializer
+    permissions_classes = [HasPlayerProfileCookie]
+    authentication_classes = []
+
+    def perform_create(self, serializer):
+        request = self.request
+        profile_cookie = request.COOKIES.get(settings.PLAYER_PROFILE_COOKIE,'')
+        profile = PlayerProfile.objects.filter(uuid=profile_cookie).first()
+        serializer.save(owner=profile)
+
+

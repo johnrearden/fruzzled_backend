@@ -43,8 +43,7 @@ class CreatePuzzleInstance(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         request = self.request
-        profile_cookie = request.COOKIES.get(settings.PLAYER_PROFILE_COOKIE, '')
-        print(f'profile_cookie : {profile_cookie}')
+        profile_cookie = request.COOKIES.get(settings.PLAYER_PROFILE_COOKIE,'')
         profile = PlayerProfile.objects.filter(uuid=profile_cookie).first()
         serializer.save(owner=profile)
 

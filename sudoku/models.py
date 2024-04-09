@@ -47,7 +47,7 @@ class PuzzleInstance(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.owner.nickname}\'s puzzle ({self.id})'
+        return f'{self.owner.nickname}\'s sudoku puzzle ({self.id})'
 
     def save(self, *args, **kwargs):
         timedelta = self.completed_at - self.started_on
