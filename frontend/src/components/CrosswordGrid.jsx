@@ -31,10 +31,6 @@ export const CrosswordGrid = ({ data }) => {
 
     const { savePuzzleToHistory, getPuzzleHistory } = usePuzzleHistoryContext();
 
-    // An array to hold references to the underlying html inputs, to allow
-    // the next/previous input to be focused on input value change.
-    let cellRefs = [];
-
     const [currentCell, setCurrentCell] = useState(data.clues[0].start_col + data.clues[0].start_row * data.puzzle.grid.width);
     const [currentClue, setCurrentClue] = useState(0);
     const [userHasFinished, setUserHasFinished] = useState(false);
@@ -220,8 +216,11 @@ export const CrosswordGrid = ({ data }) => {
         const cellIndex = startCol + startRow * data.puzzle.grid.width;
         setCurrentCell(cellIndex);
         setCurrentClue(clueIndex);
-        cellRefs[cellIndex].current.select();
-        window.scrollTo(0, 0);
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behaviour: 'smooth'
+        });
     }
 
     /**
