@@ -472,6 +472,8 @@ export const CrosswordGrid = ({ data }) => {
         }
     }
 
+    console.log(data.clues[currentClue]);
+
     return (
         <>
             <div className={styles.container}>
@@ -581,12 +583,19 @@ export const CrosswordGrid = ({ data }) => {
                 <Modal
                     show={showInputModal}
                     onHide={() => setShowInputModal(false)}
+                    contentClassName={`${styles.ProfileModal} ${themeStyles}`}
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title>Enter your text</Modal.Title>
+                        <Modal.Title>
+
+                            {`${data.clues[currentClue].clue_number}
+                            
+                            ${data.clues[currentClue].orientation === "DN" ? "Down" : "Across"}`}
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <p>
+
                             {data.clues[currentClue]?.clue}
                         </p>
                         <MobileWordInput
@@ -601,6 +610,19 @@ export const CrosswordGrid = ({ data }) => {
                             MAX_DIMENSION={MAX_DIMENSION}
                             onEdit={onMobileWordInputClose}
                         />
+                        <div className="text-center">
+                            {clueReferences[currentCell].length > 1 && (
+                                <button
+                                    className={`${btnStyles.Button} mt-3 text-center`}
+                                    onClick={() => onCellClick(currentCell)}
+                                >
+                                    <i className="fa-solid fa-shuffle mr-3"></i>
+                                    Intersecting Clue
+                                </button>
+                            )}
+                        </div>
+
+
                     </Modal.Body>
                 </Modal>
             )}

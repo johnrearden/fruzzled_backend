@@ -3,7 +3,7 @@
     border: 1px solid black;
     position: relative;
     user-select: none;
-    background-color: white;
+    background-color: #cccccc;
     transition: 0.5s all;
 }
 
@@ -19,6 +19,7 @@
 .cellInput {
     text-align: center;
     font-weight: bold;
+    background-color: #cccccc;
 }
 
 .cellInput:focus, .cellInput::selection {

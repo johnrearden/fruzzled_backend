@@ -93,11 +93,13 @@ export const MobileWordInput = ({
                 {cells} 
             </div>
             
-            <div>
+            <div className="mt-2">
                 <button 
                     onClick={() => onEdit(characters, true)}
                     className={btnStyles.Button}
-                >Done</button>
+                >
+                    <i className="fa-solid fa-check"></i>
+                </button>
             </div>
             
         </div>

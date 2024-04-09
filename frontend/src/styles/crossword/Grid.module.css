@@ -82,6 +82,20 @@
     display: block;
 }
 
+.ProfileModal {
+    color: var(--fg-color);
+    background-color: var(--thrd-color) !important;
+}
+
+.Input {
+    background: var(--fg-color);
+    border: 1px solid var(--bg-color);
+    box-sizing: border-box;
+    border-radius: 4px;
+    color: var(--bg-color);
+    text-align: center;
+}
+
 .UserFinishedMessage {
     font-size: 1.2rem;
     font-weight: bold;

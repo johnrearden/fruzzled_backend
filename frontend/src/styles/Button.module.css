@@ -39,12 +39,12 @@
     border: none;
 }
 
-.Button:active {
+/* .Button:active {
     background-color: var(--brgt-color);
     border: none;
-}
+} */
 
-.Button:focus, .Button:selected {
+.Button:focus {
     background-color: var(--brgt-color);
     border: none;
 }
