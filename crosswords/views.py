@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count
+from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics
@@ -8,6 +9,7 @@ from django.views import View
 from django.contrib.auth.mixins import UserPassesTestMixin
 from .models import DictionaryWord, DictionaryDefinition, Grid
 from .models import CrosswordPuzzle, CrosswordClue, PuzzleType
+from player_profile.models import PlayerProfile
 from .serializers import GridSerializer, CrosswordPuzzleSerializer, \
                          CrosswordClueSerializer, CrosswordInstanceSerializer
 from fruzzled_backend.permissions import HasPlayerProfileCookie
@@ -18,8 +20,15 @@ import json
 
 
 class PuzzleList(generics.ListCreateAPIView):
+    """
+    Returns a response with all crossword puzzles matching the filter
+    criteria, plus a summary of the total number of puzzles (unfiltered)
+    and the total number that match each filter criterion
+
+    Authenticated superusers only
+    """
     queryset = CrosswordPuzzle.objects.all().order_by('-created_on')
-    authentication_classes = []
+    permission_classes = [permissions.IsAdminUser]
     serializer_class = CrosswordPuzzleSerializer
 
     filter_backends = [DjangoFilterBackend]
@@ -38,75 +47,24 @@ class PuzzleList(generics.ListCreateAPIView):
         return response
 
 
-class BuilderHome(View):
-    def get(self, request):
-        all_puzzles = CrosswordPuzzle.objects.all()
-        puzzles = all_puzzles.order_by('-last_edited')[:10]
-        completed_count = all_puzzles.filter(complete=True).count()
-        reviewed_count = all_puzzles.filter(reviewed=True).count()
-        released_count = all_puzzles.filter(released=True).count()
-        total_count = len(all_puzzles)
-
-        puzzle_list = []
-        json_list = []
-        for puzzle in puzzles:
-            puzzle_serializer = CrosswordPuzzleSerializer(puzzle)
-            cell_concentration = get_cell_concentration(puzzle)
-
-            # Retrieve the clues for this crossword, and count the
-            # number of them that have a non-empty clue string. Also count the
-            # number of them that have a complete solution
-            clues = CrosswordClue.objects.filter(puzzle=puzzle)
-            clues_serializer = CrosswordClueSerializer(clues, many=True)
-            if not clues:
-                clue_count = 0
-                solution_count = 0
-            else:
-                clue_count = 0
-                solution_count = 0
-                for clue in clues:
-                    if len(clue.clue) > 0:
-                        clue_count += 1
-                    if '#' not in clue.solution:
-                        solution_count += 1
-            data = {
-                'puzzle': puzzle,
-                'clues': clues,
-                'cell_concentration': cell_concentration,
-                'clues_present': clue_count,
-                'solutions_present': solution_count,
-                'total_clues': len(clues),
-            }
-            json_data = {
-                'json_puzzle': puzzle_serializer.data,
-                'json_clues': clues_serializer.data,
-            }
-            puzzle_list.append(data)
-            json_list.append(json_data)
-        return render(
-            request,
-            'crosswords/builder_home.html',
-            {
-                'puzzles': puzzle_list,
-                'json_list': json_list,
-                'total_count': total_count,
-                'completed_count': completed_count,
-                'reviewed_count': reviewed_count,
-                'released_count': released_count,
-            })
-
-    def test_func(self):
-        return self.request.user.is_staff
-
-
 class GetMatchingWord(APIView):
+    """
+    Returns a response with a list of word matching the query string in length.
+    The request supplies a query string with a mix of letters and '_' wildcard
+    characters, and the response list consists of all DictionaryWord instances
+    that match that definition.
+
+    Authenticated superusers only
+    """
+
+    permission_classes = [permissions.IsAdminUser]
+
     def get(self, request, query):
         query = query.lower()
         known_chars = []
         for i, char in enumerate(query):
             if char != '_':
                 known_chars.append((i, char))
-        print(known_chars)
         length = len(query)
         result_list = []
         full_list = DictionaryWord.objects.filter(length=length) \
@@ -128,6 +86,15 @@ class GetMatchingWord(APIView):
 
 
 class GetDefinition(APIView):
+    """
+    Takes a query string representing a word, and returns a JsonResponse
+    containing all the definitions that match the string in the database
+
+    Authenticated superusers only
+    """
+
+    permission_classes = [permissions.IsAdminUser]
+
     def get(self, request, query):
         words = DictionaryWord.objects.filter(string=query.lower())
         def_list = []
@@ -138,43 +105,20 @@ class GetDefinition(APIView):
         return JsonResponse({'results': def_list})
 
 
-class PuzzleEditor(UserPassesTestMixin, View):
-    def get(self, request, puzzle_id):
-        
-        puzzle = get_object_or_404(CrosswordPuzzle, pk=puzzle_id)
-        clues = CrosswordClue.objects.filter(puzzle=puzzle)
-        puzzle_serializer = CrosswordPuzzleSerializer(puzzle)
-        clue_serialzer = CrosswordClueSerializer(clues, many=True)
-        data = {
-            'puzzle': puzzle_serializer.data,
-            'clues': clue_serialzer.data,
-        }
-        return render(request, 'crosswords/grid_editor.html', {'data': data})
-
-    def test_func(self):
-        
-        return self.request.user.is_staff
-
-
-class GetGrid(APIView):
-    def get(self, request):
-        grid = Grid.objects.all()[0]
-        serializer = GridSerializer(instance=grid)
-
-        return Response(serializer.data)
-
-
 class DeletePuzzle(APIView):
 
     permission_classes = [permissions.IsAdminUser]
 
-    def post(self, request):
+    def delete(self, request):
         id = request.data['puzzle_id']
         CrosswordPuzzle.objects.get(pk=id).delete()
         return JsonResponse({'message': 'fine'})
 
 
 class SavePuzzle(APIView):
+    """
+    Saves an existing puzzle
+    """
 
     permission_classes = [permissions.IsAdminUser]
 
@@ -240,9 +184,6 @@ class SavePuzzle(APIView):
         puzzle.save()
 
         return JsonResponse({'puzzle_id': puzzle.id})
-
-    def test_func(self):
-        return self.request.user.is_staff
 
 
 class CreateNewPuzzle(APIView):
@@ -347,53 +288,6 @@ class GetUnseenPuzzle(APIView):
                 status=status.HTTP_404_NOT_FOUND,
                 data={'message': ('No puzzles found')}
             )
-
-
-class MarkPuzzleReviewed(UserPassesTestMixin, APIView):
-    def post(self, request):
-        id = request.data['id']
-        print(request.data)
-        puzzle = CrosswordPuzzle.objects.get(pk=id)
-        if puzzle.complete:
-            puzzle.reviewed = True
-            puzzle.save()
-            print('puzzle marked as reviewed')
-            return Response(
-                {'message': 'Puzzle marked as reviewed'},
-                status=status.HTTP_200_OK)
-        else:
-            return Response(
-                {'message': 'Can\'t mark reviewed - puzzle is incomplete'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-    def test_func(self):
-        return self.request.user.is_staff
-
-
-class MarkPuzzleReleased(UserPassesTestMixin, APIView):
-    def post(self, request):
-        id = request.data['id']
-        puzzle = CrosswordPuzzle.objects.get(pk=id)
-        if not puzzle.complete:
-            return Response(
-                {'message': 'Can\'t mark released - puzzle is incomplete'},
-                status.HTTP_400_BAD_REQUEST,
-            )
-        elif not puzzle.reviewed:
-            return Response(
-                {'message': 'Can\'t mark released - not reviewed yet'},
-                status.HTTP_400_BAD_REQUEST,
-            )
-        else:
-            puzzle.released = True
-            puzzle.save()
-            return Response(
-                {'message': 'Puzzle marked as released'},
-                status=status.HTTP_200_OK)
-
-    def test_func(self):
-        return self.request.user.is_staff
 
 
 class CreateCrosswordInstance(generics.CreateAPIView):

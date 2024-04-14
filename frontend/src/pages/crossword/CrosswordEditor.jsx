@@ -8,7 +8,7 @@ import btnStyles from '../../styles/Button.module.css'
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Row, Col, Modal, Button, Alert } from 'react-bootstrap';
 import { axiosReq, axiosRes } from '../../api/axiosDefaults.js';
-import { OPEN, CLOSED } from '../../../../crosswords/static/js/crossword_grid.js';
+import { OPEN, CLOSED } from '../../utils/crossword_grid.js';
 import { createCellReferences, createClueReferences } from '../../utils/crossword_utils.js';
 import { Grid } from '../../utils/crossword_grid.js';
 import { Toggle } from '../../components/Toggle.jsx';

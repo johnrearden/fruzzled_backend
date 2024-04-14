@@ -20,12 +20,13 @@ if os.path.exists('env.py'):
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+# Are we running tests? If so, use SessionAuthentication
+RUNNING_TESTS = sys.argv.__contains__('test')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
         'rest_framework.authentication.SessionAuthentication'
-        if 'DEV' in os.environ
+        if 'DEV' in os.environ or RUNNING_TESTS
         else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
     )],
     'DEFAULT_RENDERER_CLASSES': [
@@ -144,7 +145,7 @@ WSGI_APPLICATION = 'fruzzled_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'USE_SERVER_POSTGRES' in os.environ:
+if 'USE_SERVER_POSTGRES' in os.environ and not RUNNING_TESTS:
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

@@ -49,9 +49,9 @@ function App() {
                     <Route 
                         path="/crossword" 
                         element={ <CrosswordLoader />} />
-                    <Route
+                    {/* <Route
                         path="/anagram"
-                        element={ <AnagramSeries />} />
+                        element={ <AnagramSeries />} /> */}
                     <Route
                         path="/anagram_creator"
                         element={ <AnagramCreator />} />

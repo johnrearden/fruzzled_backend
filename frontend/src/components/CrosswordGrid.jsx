@@ -14,7 +14,8 @@ import { usePuzzleHistoryContext } from '../contexts/PuzzleHistoryContext';
 import { useProfile } from '../contexts/ProfileContext.jsx';
 import ProfileForm from './ProfileForm.jsx';
 import { CrosswordTimer } from './CrosswordTimer.jsx';
-
+import { axiosReq } from '../api/axiosDefaults.js';
+import { useNavigate } from 'react-router-dom';
 
 const MAX_DIMENSION = 32;
 
@@ -23,11 +24,14 @@ export const CrosswordGrid = ({ data }) => {
     const theme = useTheme();
     const themeStyles = theme === 'light' ? themes.lightTheme : themes.darkTheme;
 
+    const navigate = useNavigate();
+
     const profile = useProfile();
     const [showProfileModal, setShowProfileModal] = useState(false);
 
     const timeExpiredRef = useRef(0);
     const [percentageCorrect, setPercentageCorrect] = useState(0);
+    const percentageCompleteRef = useRef(0);
 
     const { savePuzzleToHistory, getPuzzleHistory } = usePuzzleHistoryContext();
 
@@ -76,6 +80,29 @@ export const CrosswordGrid = ({ data }) => {
             setPercentageCorrect(Math.round(totalCorrect / gridContents.length * 100))
         }
     }, [gridContents])
+
+    /**
+     * Submit a completed puzzle instance to the backend
+     */
+    const submitCrosswordInstance = async () => {
+        const formData = new FormData();
+        formData.append("crossword_puzzle", data.puzzle.id);
+        formData.append("started_on", data.puzzle.start_time);
+        formData.append("completed_at", new Date().toISOString());
+        formData.append("percent_complete", percentageCompleteRef.current);
+        formData.append("percent_correct", percentageCorrect);
+
+        try {
+            const {data} = await axiosReq.post(
+                '/crossword_builder/create_crossword_instance/',
+                formData);
+                navigate('home');
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    console.log(data);
 
     /**
      * An array, with an element for each clue, which stores a list of the cells
@@ -373,6 +400,7 @@ export const CrosswordGrid = ({ data }) => {
             setShowProfileModal(true);
         } else {
             setUserHasFinished(true);
+            submitCrosswordInstance();
         }
 
     }
@@ -381,6 +409,7 @@ export const CrosswordGrid = ({ data }) => {
         console.log('profileModalCallback invoked');
         setShowProfileModal(false);
         setUserHasFinished(true);
+        submitCrosswordInstance();
     }
 
     const onMobileWordInputClose = (characters, shouldClose) => {
@@ -464,6 +493,7 @@ export const CrosswordGrid = ({ data }) => {
 
     const openCellCount = gridContents.length - closedCellCount;
     const calculatedPercentComplete = Math.floor(filledCellCount / openCellCount * 100);
+    percentageCompleteRef.current = calculatedPercentComplete;
 
     if (typeof (window) !== "undefined" && typeof (window) !== null) {
         const mobile = window.matchMedia("(any-pointer:coarse)").matches;
@@ -471,8 +501,6 @@ export const CrosswordGrid = ({ data }) => {
             setOnMobile(mobile);
         }
     }
-
-    console.log(data);
 
     return (
         <>

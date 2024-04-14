@@ -37,14 +37,14 @@ const Home = () => {
                     Crossword
                 </button>
             </Row>
-            <Row className={`${styles.fadeIn} justify-content-center mt-3`}>
+            {/* <Row className={`${styles.fadeIn} justify-content-center mt-3`}>
                 <button
                     className={`${btnStyles.Button} px-3 mx-3`}
                     onClick={() => navigate('/anagram')}
                 >
                     Anagram
                 </button>
-            </Row>
+            </Row> */}
 
         </>
     )

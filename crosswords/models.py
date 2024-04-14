@@ -49,6 +49,7 @@ class CrosswordPuzzle(models.Model):
     reviewed = models.BooleanField(default=False)
     released = models.BooleanField(default=False)
     instances_created = models.IntegerField(default=0)
+    instances_completed = models.IntegerField(default=0)
 
     def __str__(self):
         return (f'Puzzle ({self.id}) by {self.creator} ({self.created_on}'
@@ -68,7 +69,7 @@ class CrosswordInstance(models.Model):
         blank=True) 
     started_on = models.DateTimeField()
     completed_at = models.DateTimeField()
-    time_taken = models.DurationField()
+    time_taken = models.DurationField(null=True)
     percent_complete = models.FloatField()
     percent_correct = models.FloatField()
 
@@ -96,6 +97,11 @@ class DictionaryWord(models.Model):
     string = models.CharField(max_length=100)
     length = models.IntegerField()
     frequency = models.IntegerField()
+
+    class Meta: 
+        indexes = [
+            models.Index(fields=['length'])
+        ]
 
     def get_frequency(self):
         return self.frequency
