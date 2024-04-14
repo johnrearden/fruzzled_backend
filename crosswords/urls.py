@@ -10,7 +10,7 @@ urlpatterns = [
     path('get_unseen_puzzle/', views.GetUnseenPuzzle.as_view(), name='get_unseen_puzzle'),
     path('create_new_puzzle/', views.CreateNewPuzzle.as_view(),
          name='create_new_puzzle'),
-    path('delete_puzzle/', views.DeletePuzzle.as_view(), name='delete_puzzle'),
+    path('delete_puzzle/<int:id>/', views.DeletePuzzle.as_view(), name='delete_puzzle'),
     path('create_crossword_instance/',
          views.CreateCrosswordInstance.as_view(),
          name='create_crossword_instance')

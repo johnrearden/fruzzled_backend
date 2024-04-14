@@ -2,12 +2,13 @@ import json
 
 from django.test import TestCase
 from django.contrib.auth.models import User
+from rest_framework.test import APITestCase
 
 from crosswords.models import (CrosswordPuzzle, CrosswordInstance,
     DictionaryWord, DictionaryDefinition, Grid)
 
 
-class TestPuzzleListView(TestCase):
+class TestPuzzleListView(APITestCase):
 
     ROOT_URL = '/api/crossword_builder/'
 
@@ -67,7 +68,7 @@ class TestPuzzleListView(TestCase):
         self.assertEqual(response.data['total_released'], response_released_count)
 
 
-class TestGetMatchingWordView(TestCase):
+class TestGetMatchingWordView(APITestCase):
 
     ROOT_URL = '/api/crossword_builder/'
 
@@ -144,7 +145,7 @@ class TestGetMatchingWordView(TestCase):
         self.assertEqual(content['results'][0], 'behemoth')
 
 
-class TestGetDefinitionView(TestCase):
+class TestGetDefinitionView(APITestCase):
 
     ROOT_URL = '/api/crossword_builder/'
 
@@ -208,7 +209,7 @@ class TestGetDefinitionView(TestCase):
         self.assertEqual(len(response_string['results']), 0)
 
 
-class TestDeletePuzzleView(TestCase):
+class TestDeletePuzzleView(APITestCase):
 
     ROOT_URL = '/api/crossword_builder/'
 
@@ -244,24 +245,82 @@ class TestDeletePuzzleView(TestCase):
     def test_authenticated_superuser_can_delete_test_puzzle(self):
         self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
         response = self.client.delete(
-            f'{self.ROOT_URL}delete_puzzle/',
-            {'puzzle_id': self.test_puzzle.id})
+            f'{self.ROOT_URL}delete_puzzle/{self.test_puzzle.id}/')
         self.assertEqual(response.status_code, 200)
 
     def test_authenticated_standard_user_cant_delete_test_puzzle(self):
         self.client.login(username=self.STD_USER, password=self.STD_USER_PASSWORD)
-        response = self.client.post(
-            f'{self.ROOT_URL}delete_puzzle/',
-            {'puzzle_id': self.test_puzzle.id})
+        response = self.client.delete(
+            f'{self.ROOT_URL}delete_puzzle/{self.test_puzzle.id}/')
         self.assertEqual(response.status_code, 403)
 
     def test_unauthenticated_user_cant_delete_test_puzzle(self):
-        response = self.client.post(
-            f'{self.ROOT_URL}delete_puzzle/',
-            {'puzzle_id': self.test_puzzle.id})
+        response = self.client.delete(
+            f'{self.ROOT_URL}delete_puzzle/{self.test_puzzle.id}/')
         self.assertEqual(response.status_code, 403)
     
 
+class TestSavePuzzleView(APITestCase):
 
+    ROOT_URL = '/api/crossword_builder/'
+
+    def tearDown(self):
+        self.client.logout()
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.ADMIN_USERNAME = 'test_admin'
+        cls.ADMIN_PASSWORD = 'top_secret'
+        cls.STD_USER = 'joe_soap'
+        cls.STD_USER_PASSWORD = 'monkey123'
+        cls.admin_user = User.objects.create_superuser(
+            username=cls.ADMIN_USERNAME,
+            password=cls.ADMIN_PASSWORD,
+        )
+        cls.grid_string = '###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-'
+        cls.grid = Grid.objects.create(
+            creator=cls.admin_user,
+            width=14,
+            height=14,
+            cells=cls.grid_string
+        )
+        cls.test_puzzle = CrosswordPuzzle.objects.create(
+            grid=cls.grid,
+            creator=cls.admin_user,
+            puzzle_type="CSWD",
+        )
+        cls.clue_string = '[{"solution":"##############","clue":"No clue yet","clue_number":1,"orientation":"AC","start_row":0,"start_col":0,"word_lengths":"(14)"}]'
+        
+        cls.request_data = {
+            'puzzle_id': cls.test_puzzle.id,
+            'clues': cls.clue_string,
+            'grid': cls.grid_string,
+            'complete': 'false',
+            'reviewed': 'false',
+            'released': 'false'
+        }
+
+    def test_authenticated_superuser_can_save_puzzle(self):
+        self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
+        response = self.client.post(
+            f'{self.ROOT_URL}save_puzzle/',
+            self.request_data
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_authenticated_ordinary_user_cannot_save_puzzle(self):
+        self.client.login(username=self.STD_USER, password=self.STD_USER_PASSWORD)
+        response = self.client.post(
+            f'{self.ROOT_URL}save_puzzle/',
+            self.request_data
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_unauthenticated_user_cannot_save_puzzle(self):
+        response = self.client.post(
+            f'{self.ROOT_URL}save_puzzle/',
+            self.request_data
+        )
+        self.assertEqual(response.status_code, 403)
 
 

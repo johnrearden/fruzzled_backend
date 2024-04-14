@@ -107,17 +107,29 @@ class GetDefinition(APIView):
 
 class DeletePuzzle(APIView):
 
+    """
+    Handles a HTTP delete request, including an integer id parameter,
+    and deletes the corresponding CrosswordPuzzle
+
+    Authenticated superusers only
+    """
+
     permission_classes = [permissions.IsAdminUser]
 
-    def delete(self, request):
-        id = request.data['puzzle_id']
+    def delete(self, request, id):
         CrosswordPuzzle.objects.get(pk=id).delete()
         return JsonResponse({'message': 'fine'})
 
 
 class SavePuzzle(APIView):
     """
-    Saves an existing puzzle
+    Saves an existing puzzle. This operation is destructive - any previous 
+    clues associated with this puzzle are deleted before the clues included 
+    in the POST request are added. For an existing puzzle, the grid field can
+    be changed (cells can be opened/closed) but the original dimensions of 
+    the grid are preserved.
+
+    Authenticated superusers only
     """
 
     permission_classes = [permissions.IsAdminUser]
