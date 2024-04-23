@@ -25,7 +25,8 @@ RUNNING_TESTS = sys.argv.__contains__('test')
 
 ANONYMOUS_USER_THROTTLE_RATE = 10
 ANONYMOUS_USER_THROTTLE_PERIOD = 'minute'
-ANONYMOUS_USER_GET_UNSEEN_PUZZLE_THROTTLE_RATE = '2/minute'
+GET_UNSEEN_PUZZLE_THROTTLE_RATE = 2
+GET_UNSEEN_PUZZLE_THROTTLE_PERIOD = 'minute'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
         'rest_framework.authentication.SessionAuthentication'
@@ -48,9 +49,8 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': f'{ANONYMOUS_USER_THROTTLE_RATE}/{ANONYMOUS_USER_THROTTLE_PERIOD}',
         'user': '10000/day',
-        'get_unseen_puzzle': ANONYMOUS_USER_GET_UNSEEN_PUZZLE_THROTTLE_RATE
+        'get_unseen_puzzle': f'{GET_UNSEEN_PUZZLE_THROTTLE_RATE}/{GET_UNSEEN_PUZZLE_THROTTLE_PERIOD}',
     }
-
 }
 
 if 'DEV' not in os.environ:

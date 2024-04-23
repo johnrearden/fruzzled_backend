@@ -586,7 +586,7 @@ class TestGetUnseenPuzzleView(APITestCase):
         id_1 = self.test_puzzle_1.pk
         id_2 = self.test_puzzle_2.pk
         url = f'{self.ROOT_URL}get_unseen_puzzle/?seen_crosswords={id_2},{id_1}'
-        ANON_THROTTLE_RATE = settings.ANONYMOUS_USER_THROTTLE_RATE
+        ANON_THROTTLE_RATE = settings.GET_UNSEEN_PUZZLE_THROTTLE_RATE
         for _ in range(ANON_THROTTLE_RATE + 1):
             response = self.client.get(url)
         self.assertEqual(response.status_code, 429)
