@@ -1,7 +1,9 @@
 import json
 
-from django.test import TestCase
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from django.core.cache import cache
+from django.conf import settings
 from rest_framework.test import APITestCase
 
 from crosswords.models import (CrosswordPuzzle, CrosswordInstance,
@@ -35,6 +37,7 @@ class TestPuzzleListView(APITestCase):
 
     def tearDown(self):
         self.client.logout()
+        cache.clear()
     
     def test_authenticated_superuser_gets_puzzle_list(self):
         self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
@@ -94,6 +97,7 @@ class TestGetMatchingWordView(APITestCase):
 
     def tearDown(self):
         self.client.logout()
+        cache.clear()
 
     def test_authenticated_superuser_can_request(self):
         self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
@@ -169,12 +173,13 @@ class TestGetDefinitionView(APITestCase):
             frequency=1
         )
         cls.example_definition = DictionaryDefinition.objects.create(
-            word = cls.example_word_1,
-            definition = 'a large yoke'
+            word=cls.example_word_1,
+            definition='a large yoke'
         )
 
     def tearDown(self):
         self.client.logout()
+        cache.clear()
 
     def test_authenticated_superuser_can_request(self):
         self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
@@ -241,6 +246,7 @@ class TestDeletePuzzleView(APITestCase):
 
     def tearDown(self):
         self.client.logout()
+        cache.clear()
 
     def test_authenticated_superuser_can_delete_test_puzzle(self):
         self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
@@ -266,6 +272,7 @@ class TestSavePuzzleView(APITestCase):
 
     def tearDown(self):
         self.client.logout()
+        cache.clear()
 
     @classmethod
     def setUpTestData(cls):
@@ -276,6 +283,10 @@ class TestSavePuzzleView(APITestCase):
         cls.admin_user = User.objects.create_superuser(
             username=cls.ADMIN_USERNAME,
             password=cls.ADMIN_PASSWORD,
+        )
+        cls.standard_user = User.objects.create_user(
+            username=cls.STD_USER,
+            password=cls.STD_USER_PASSWORD
         )
         cls.grid_string = '###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-###############-#-#-#-#-#-#-'
         cls.grid = Grid.objects.create(
@@ -322,5 +333,262 @@ class TestSavePuzzleView(APITestCase):
             self.request_data
         )
         self.assertEqual(response.status_code, 403)
+
+    def test_puzzle_not_saved_as_complete_if_blank_cell_remains(self):
+        self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
+        id = self.test_puzzle.id
+        self.request_data['clues'] = self.request_data['clues'] \
+                                         .replace('No clue yet', 'non-default value')
+        response = self.client.post(
+            f'{self.ROOT_URL}save_puzzle/',
+            self.request_data
+        )
+        self.assertEqual(response.status_code, 200)
+        saved_puzzle = get_object_or_404(CrosswordPuzzle, pk=id)
+        self.assertFalse(saved_puzzle.complete)
+
+    def test_puzzle_not_saved_as_complete_if_any_clue_is_no_clue_yet(self):
+        self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
+        id = self.test_puzzle.id
+
+        # Ensure that the empty grid cells do not prevent 'complete' flag being set.
+        self.request_data['grid'] = self.request_data['grid'].replace('#', 'p')
+        response = self.client.post(
+            f'{self.ROOT_URL}save_puzzle/',
+            self.request_data
+        )
+        self.assertEqual(response.status_code, 200)
+        saved_puzzle = get_object_or_404(CrosswordPuzzle, pk=id)
+        self.assertFalse(saved_puzzle.complete)
+
+
+class TestCreateNewPuzzleView(APITestCase):
+
+    ROOT_URL = '/api/crossword_builder/'
+
+    def tearDown(self):
+        self.client.logout()
+        cache.clear()
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.ADMIN_USERNAME = 'test_admin'
+        cls.ADMIN_PASSWORD = 'top_secret'
+        cls.STD_USER = 'joe_soap'
+        cls.STD_USER_PASSWORD = 'monkey123'
+        cls.admin_user = User.objects.create_superuser(
+            username=cls.ADMIN_USERNAME,
+            password=cls.ADMIN_PASSWORD,
+        )
+        cls.standard_user = User.objects.create_user(
+            username=cls.STD_USER,
+            password=cls.STD_USER_PASSWORD
+        )
+        cls.grid_string = '#-#-'
+        cls.width = 2
+        cls.height = 2
+        cls.puzzle_type = 'CROSSWORD'
+
+    def test_authenticated_admin_user_can_create_puzzle(self):
+        self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
+        response = self.client.post(
+            self.ROOT_URL + 'create_new_puzzle/',
+            {
+                'puzzle_type': 'CROSSWORD',
+                'width': self.width,
+                'height': self.height,
+                'cells': self.grid_string,
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_authenticated_ordinary_user_cannot_create_puzzle(self):
+        self.client.login(username=self.STD_USER, password=self.STD_USER_PASSWORD)
+        response = self.client.post(
+            self.ROOT_URL + 'create_new_puzzle/',
+            {
+                'puzzle_type': 'CROSSWORD',
+                'width': self.width,
+                'height': self.height,
+                'cells': self.grid_string,
+            }
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_anonymous_user_cannot_create_puzzle(self):
+        response = self.client.post(
+            self.ROOT_URL + 'create_new_puzzle/',
+            {
+                'puzzle_type': 'CROSSWORD',
+                'width': self.width,
+                'height': self.height,
+                'cells': self.grid_string,
+            }
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_puzzle_not_created_with_non_matching_cell_string_length(self):
+        self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
+        response = self.client.post(
+            self.ROOT_URL + 'create_new_puzzle/',
+            {
+                'puzzle_type': 'CROSSWORD',
+                'width': self.width,
+                'height': self.height,
+                'cells': '#',
+            }
+        )
+        self.assertEqual(response.status_code, 400)
+
+    def test_puzzle_not_created_with_non_integer_width_or_height(self):
+        self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
+        response = self.client.post(
+            self.ROOT_URL + 'create_new_puzzle/',
+            {
+                'puzzle_type': 'CROSSWORD',
+                'width': 'p',
+                'height': self.height,
+                'cells': '####',
+            }
+        )
+        self.assertEqual(response.status_code, 400)
+
+
+class TestGetPuzzleView(APITestCase):
+
+    ROOT_URL = '/api/crossword_builder/'
+
+    def tearDown(self):
+        self.client.logout()
+        cache.clear()
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.ADMIN_USERNAME = 'test_admin'
+        cls.ADMIN_PASSWORD = 'top_secret'
+        cls.STD_USER = 'joe_soap'
+        cls.STD_USER_PASSWORD = 'monkey123'
+        cls.admin_user = User.objects.create_superuser(
+            username=cls.ADMIN_USERNAME,
+            password=cls.ADMIN_PASSWORD,
+        )
+        cls.standard_user = User.objects.create_user(
+            username=cls.STD_USER,
+            password=cls.STD_USER_PASSWORD
+        )
+        cls.grid_string = '####'
+        cls.grid = Grid.objects.create(
+            creator=cls.admin_user,
+            width=2,
+            height=2,
+            cells=cls.grid_string
+        )
+        cls.test_puzzle = CrosswordPuzzle.objects.create(
+            grid=cls.grid,
+            creator=cls.admin_user,
+            puzzle_type="CSWD",
+        )
+
+    def test_authenticated_admin_user_can_get_puzzle(self):
+        id = self.test_puzzle.pk
+        self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
+        response = self.client.get(f'{self.ROOT_URL}get_puzzle/{id}/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_authenticated_standard_user_cannot_get_puzzle(self):
+        id = self.test_puzzle.pk
+        self.client.login(username=self.STD_USER, password=self.STD_USER_PASSWORD)
+        response = self.client.get(f'{self.ROOT_URL}get_puzzle/{id}/')
+        self.assertEqual(response.status_code, 403)
+
+    def test_anonymous_user_cannot_get_puzzle(self):
+        id = self.test_puzzle.pk
+        response = self.client.get(f'{self.ROOT_URL}get_puzzle/{id}/')
+        self.assertEqual(response.status_code, 403)
+
+    def test_request_for_nonexistent_puzzle_returns_404(self):
+        id = 99999
+        self.client.login(username=self.ADMIN_USERNAME, password=self.ADMIN_PASSWORD)
+        response = self.client.get(f'{self.ROOT_URL}get_puzzle/{id}/')
+        self.assertEqual(response.status_code, 404)
+
+
+class TestGetUnseenPuzzleView(APITestCase):
+    ROOT_URL = '/api/crossword_builder/'
+
+    def tearDown(self):
+        self.client.logout()
+        cache.clear()
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.ADMIN_USERNAME = 'test_admin'
+        cls.ADMIN_PASSWORD = 'top_secret'
+        cls.STD_USER = 'joe_soap'
+        cls.STD_USER_PASSWORD = 'monkey123'
+        cls.admin_user = User.objects.create_superuser(
+            username=cls.ADMIN_USERNAME,
+            password=cls.ADMIN_PASSWORD,
+        )
+        cls.standard_user = User.objects.create_user(
+            username=cls.STD_USER,
+            password=cls.STD_USER_PASSWORD
+        )
+        cls.grid_string = '####'
+        cls.grid_1 = Grid.objects.create(
+            creator=cls.admin_user,
+            width=2,
+            height=2,
+            cells=cls.grid_string
+        )
+        cls.grid_2 = Grid.objects.create(
+            creator=cls.admin_user,
+            width=2,
+            height=2,
+            cells=cls.grid_string
+        )
+        cls.test_puzzle_1 = CrosswordPuzzle.objects.create(
+            grid=cls.grid_1,
+            creator=cls.admin_user,
+            puzzle_type="CSWD",
+            released=True
+        )
+        cls.test_puzzle_2 = CrosswordPuzzle.objects.create(
+            grid=cls.grid_2,
+            creator=cls.admin_user,
+            puzzle_type="CSWD",
+            released=True
+        )
+
+    def test_anonymous_user_can_get_puzzle(self):
+        response = self.client.get(f'{self.ROOT_URL}get_unseen_puzzle/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_request_with_seen_puzzle_id_does_not_return_that_puzzle_if_other_exists(self):
+        id_1 = self.test_puzzle_1.pk
+        id_2 = self.test_puzzle_2.pk
+        url = f'{self.ROOT_URL}get_unseen_puzzle/?seen_crosswords={id_1}'
+        response = self.client.get(url)
+        response_puzzle_id = response.data['puzzle']['puzzle']['id']
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_puzzle_id, id_2)
+
+    def test_request_with_seen_puzzle_ids_returns_first_puzzle_in_seen_crosswords_if_all_are_seen(self):
+        id_1 = self.test_puzzle_1.pk
+        id_2 = self.test_puzzle_2.pk
+        url = f'{self.ROOT_URL}get_unseen_puzzle/?seen_crosswords={id_2},{id_1}'
+        response = self.client.get(url)
+        response_puzzle_id = response.data['puzzle']['puzzle']['id']
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_puzzle_id, id_2)
+
+    def test_anonymous_user_requests_are_throttled_correctly(self):
+        id_1 = self.test_puzzle_1.pk
+        id_2 = self.test_puzzle_2.pk
+        url = f'{self.ROOT_URL}get_unseen_puzzle/?seen_crosswords={id_2},{id_1}'
+        ANON_THROTTLE_RATE = settings.ANONYMOUS_USER_THROTTLE_RATE
+        for _ in range(ANON_THROTTLE_RATE + 1):
+            response = self.client.get(url)
+        self.assertEqual(response.status_code, 429)
 
 

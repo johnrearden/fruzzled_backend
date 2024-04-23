@@ -117,8 +117,15 @@ class DeletePuzzle(APIView):
     permission_classes = [permissions.IsAdminUser]
 
     def delete(self, request, id):
-        CrosswordPuzzle.objects.get(pk=id).delete()
-        return JsonResponse({'message': 'fine'})
+        puzzle = CrosswordPuzzle.objects.get(pk=id)
+        if not puzzle.complete:
+            puzzle.delete()
+            return JsonResponse({'message': 'fine'})
+        else:
+            return JsonResponse(
+                {'message': 'Cannot delete completed crossword!'},
+                status=405,
+            )
 
 
 class SavePuzzle(APIView):
@@ -128,6 +135,13 @@ class SavePuzzle(APIView):
     in the POST request are added. For an existing puzzle, the grid field can
     be changed (cells can be opened/closed) but the original dimensions of 
     the grid are preserved.
+
+    The list of clues is included in the request as a JSON-encoded string.
+
+    The complete flag on the crossword will be set to False irrespective of the
+    request value, if any cell is still blank or if any clue has a string
+    of length 0. This a QA sanity check to avoid defective puzzles from making
+    it to review and release stage.
 
     Authenticated superusers only
     """
@@ -149,8 +163,8 @@ class SavePuzzle(APIView):
 
             # Remove any clues previously associated with this puzzle.
             CrosswordClue.objects.filter(puzzle=puzzle).delete()
-
         else:
+
             grid_data = request.data['grid']
 
             # Create a grid
@@ -182,7 +196,9 @@ class SavePuzzle(APIView):
                 start_row=item['start_row'],
                 start_col=item['start_col'],
             )
-            if len(new_clue.clue) == 0 or '#' in new_clue.solution:
+            if (len(new_clue.clue) == 0 
+                or new_clue.clue.lower() == 'no clue yet'
+                or '#' in new_clue.solution):
                 allow_complete = False
             
 
@@ -200,6 +216,16 @@ class SavePuzzle(APIView):
 
 class CreateNewPuzzle(APIView):
 
+    """
+    Creates a new Crossword or Crannagram puzzle (same model). The request
+    should contain a width, height, cell string and the puzzle type, 
+    CROSSWORD or CRANNAGRAM.
+
+    The view performs a validation check to ensure that the width multiplied by
+    the height equals the length of the cell string, and also checks that
+    the width and height can be parsed as ints.
+    """
+
     permission_classes = [permissions.IsAdminUser]
 
     def post(self, request):
@@ -207,11 +233,29 @@ class CreateNewPuzzle(APIView):
             puzzle_type = PuzzleType.CROSSWORD
         else:
             puzzle_type = PuzzleType.CRANAGRAM
+
+        try:
+            width = int(request.data['width'])
+            height = int(request.data['height'])
+        except ValueError:
+            return JsonResponse(
+                {'message': 'width and height should be integers'},
+                status=400
+            )
+        
+        cells = request.data['cells']
+
+        if width * height != len(cells):
+            return JsonResponse(
+                {'message': 'len(cells) does not match width * height'},
+                status=400
+            )
+        
         grid = Grid.objects.create(
             creator=request.user,
-            width=request.data['width'],
-            height=request.data['height'],
-            cells=request.data['cells'],
+            width=width,
+            height=height,
+            cells=cells,
         )
         puzzle = CrosswordPuzzle.objects.create(
             creator=request.user,
@@ -223,6 +267,9 @@ class CreateNewPuzzle(APIView):
 
 
 class GetPuzzle(APIView):
+
+    permission_classes = [permissions.IsAdminUser]
+
     def get(self, request, puzzle_id):
         puzzle = get_object_or_404(CrosswordPuzzle, pk=puzzle_id)
         cell_concentration = get_cell_concentration(puzzle)
@@ -256,6 +303,9 @@ class GetPuzzle(APIView):
 
 
 class GetUnseenPuzzle(APIView):
+
+    throttle_scope = 'get_unseen_puzzle'
+    THROTTLE_RATE = '2/minute'
 
     def get(self, request):
         puzzles = CrosswordPuzzle.objects.filter(released=True)

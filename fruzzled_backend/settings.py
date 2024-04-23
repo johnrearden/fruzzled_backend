@@ -23,6 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Are we running tests? If so, use SessionAuthentication
 RUNNING_TESTS = sys.argv.__contains__('test')
 
+ANONYMOUS_USER_THROTTLE_RATE = 10
+ANONYMOUS_USER_THROTTLE_PERIOD = 'minute'
+ANONYMOUS_USER_GET_UNSEEN_PUZZLE_THROTTLE_RATE = '2/minute'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
         'rest_framework.authentication.SessionAuthentication'
@@ -34,9 +37,20 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer'
     ],
     # 'DATETIME_FORMAT': '%d %b %Y',
-    "DEFAULT_PAGINATION_CLASS": 
+    "DEFAULT_PAGINATION_CLASS":
         'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 6,
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': f'{ANONYMOUS_USER_THROTTLE_RATE}/{ANONYMOUS_USER_THROTTLE_PERIOD}',
+        'user': '10000/day',
+        'get_unseen_puzzle': ANONYMOUS_USER_GET_UNSEEN_PUZZLE_THROTTLE_RATE
+    }
+
 }
 
 if 'DEV' not in os.environ:
