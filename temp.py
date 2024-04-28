@@ -9,7 +9,7 @@ def quicksort(array):
     left = 1
     right = len(array) - 1
 
-    while left < right:
+    while left <= right:
         if array[left] > pivot and array[right] < pivot:
             exchange_and_advance(array, left, right)
             continue
@@ -27,7 +27,6 @@ def quicksort(array):
 
     left_array = array[:left]
     right_array = array[left:]
-    print(left_array, right_array)
 
     left_array = quicksort(left_array)
     right_array = quicksort(right_array)
@@ -42,8 +41,19 @@ def exchange_and_advance(arr, left, right):
     return arr, left, right
 
 
-source = [x for x in range(10)]
-random.shuffle(source)
-print(source)
-result = quicksort(source)
-print(result)
+def confirm_sorted(arr):
+    for el, i in enumerate(arr):
+        if i < len(arr) - 1:
+            if arr[i] > arr[i+1]:
+                print(arr, i)
+                raise Exception('not sorted')
+
+
+for i in range(1000):
+    source = [x for x in range(1000)]
+    random.shuffle(source)
+    result = quicksort(source)
+    confirm_sorted(result)
+    print('\r', i, end='')
+
+
