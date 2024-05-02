@@ -96,13 +96,11 @@ export const CrosswordGrid = ({ data }) => {
             const {data} = await axiosReq.post(
                 '/crossword_builder/create_crossword_instance/',
                 formData);
-                navigate('home');
+                //navigate('/');
         } catch (err) {
             console.log(err);
         }
     }
-
-    console.log(data);
 
     /**
      * An array, with an element for each clue, which stores a list of the cells
