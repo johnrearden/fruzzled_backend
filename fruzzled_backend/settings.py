@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Are we running tests? If so, use SessionAuthentication
 RUNNING_TESTS = sys.argv.__contains__('test')
 
-ANONYMOUS_USER_THROTTLE_RATE = 100 if 'DEBUG' in os.environ else 10
+ANONYMOUS_USER_THROTTLE_RATE = 100
 ANONYMOUS_USER_THROTTLE_PERIOD = 'minute'
-GET_UNSEEN_PUZZLE_THROTTLE_RATE = 2
+GET_UNSEEN_PUZZLE_THROTTLE_RATE = 20
 GET_UNSEEN_PUZZLE_THROTTLE_PERIOD = 'minute'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
