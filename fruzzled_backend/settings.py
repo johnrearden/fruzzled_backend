@@ -50,6 +50,7 @@ REST_FRAMEWORK = {
         'anon': f'{ANONYMOUS_USER_THROTTLE_RATE}/{ANONYMOUS_USER_THROTTLE_PERIOD}',
         'user': '10000/day',
         'get_unseen_puzzle': f'{GET_UNSEEN_PUZZLE_THROTTLE_RATE}/{GET_UNSEEN_PUZZLE_THROTTLE_PERIOD}',
+        'dj_rest_auth': '10000/day'
     }
 }
 

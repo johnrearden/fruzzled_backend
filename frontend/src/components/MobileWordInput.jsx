@@ -18,12 +18,15 @@ export const MobileWordInput = ({
         setCharacters(letters);
         cellRefs[0].current.select();
         cellRefs[0].current.focus();
-    }, [letters, selectedIndex]);
+    }, [letters, currentIndex]);
 
     useEffect(() => {
         console.log('currentIndex:', currentIndex);
-        cellRefs[selectedIndex].current.focus();
-    }, [selectedIndex, characters]);
+        if (cellRefs[currentIndex]){
+            cellRefs[currentIndex].current.focus();
+        }
+        
+    }, [characters, currentIndex]);
 
     const onCellClick = (event) => {
 
@@ -45,6 +48,7 @@ export const MobileWordInput = ({
     }
 
     const onCellInput = (index, event) => {
+        console.log('onCellInput')
         const charsCopy = [...characters];
         const length = event.target.value?.length;
         let char = event.target.value?.toUpperCase();
@@ -52,10 +56,13 @@ export const MobileWordInput = ({
             char = char.split('').pop();
         }
         if ((/[a-zA-Z]/).test(char)) {
+            console.log('char is legal')
             charsCopy[index] = char;
             setCharacters(charsCopy);
             onEdit(charsCopy, false);
+            console.log(index, characters.length)
             if (index < characters.length - 1) {
+                console.log('incrementing')
                 cellRefs[index + 1].current.focus();
                 setCurrentIndex(index + 1);
             }
