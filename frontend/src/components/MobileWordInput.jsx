@@ -18,7 +18,7 @@ export const MobileWordInput = ({
         setCharacters(letters);
         cellRefs[0].current.select();
         cellRefs[0].current.focus();
-    }, [letters]);
+    }, [letters, selectedIndex]);
 
     useEffect(() => {
         console.log('currentIndex:', currentIndex);
