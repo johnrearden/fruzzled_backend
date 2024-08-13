@@ -22,7 +22,7 @@ export const CrosswordLoader = () => {
 
         }
         handleMount();
-    }, [])
+    }, [getPuzzleHistory])
 
     const component = loaded ? (
         <>

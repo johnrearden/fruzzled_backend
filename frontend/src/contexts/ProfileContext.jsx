@@ -17,7 +17,7 @@ export const ProfileProvider = ({ children }) => {
                 const {data} = await axiosRes.get('/player_profile/');
                 setProfile(data);
             } catch (err) {
-                console.log(err);
+                console.log(err.message);
             }
         }
         handleMount();

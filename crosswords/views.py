@@ -305,7 +305,7 @@ class GetPuzzle(APIView):
 class GetUnseenPuzzle(APIView):
 
     throttle_scope = 'get_unseen_puzzle'
-    THROTTLE_RATE = '2/minute'
+    THROTTLE_RATE = '20/minute'
 
     def get(self, request):
         puzzles = CrosswordPuzzle.objects.filter(released=True)

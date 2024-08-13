@@ -223,11 +223,15 @@ export const CrosswordGrid = ({ data }) => {
             } else {
                 setCurrentClue(clueReferences[cellIndex][0]);
             }
-        };
+        }
         if (onMobile) {
             setShowInputModal(true);
         }
     }
+
+    console.log('currentClue', currentClue);
+    console.log('currentCell', currentCell);
+    console.log('index of same', cellReferences[currentClue].indexOf(currentCell));
 
     /**
      * Handles clicks on clues in child component ClueList.

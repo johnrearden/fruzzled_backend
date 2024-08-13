@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Are we running tests? If so, use SessionAuthentication
 RUNNING_TESTS = sys.argv.__contains__('test')
 
-ANONYMOUS_USER_THROTTLE_RATE = 10
+ANONYMOUS_USER_THROTTLE_RATE = 100 if 'DEBUG' in os.environ else 10
 ANONYMOUS_USER_THROTTLE_PERIOD = 'minute'
 GET_UNSEEN_PUZZLE_THROTTLE_RATE = 2
 GET_UNSEEN_PUZZLE_THROTTLE_PERIOD = 'minute'
@@ -155,23 +155,23 @@ WSGI_APPLICATION = 'fruzzled_backend.wsgi.application'
 
 if 'USE_SERVER_POSTGRES' in os.environ and not RUNNING_TESTS:
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DATABASE_NAME'),
-        'USER': os.environ['DATABASE_USER'],
-        'PASSWORD': os.environ['DATABASE_PASSWORD'],
-        'HOST': 'localhost',
-        'PORT': 5432,
-        'ATOMIC_REQUESTS': True,
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('DATABASE_NAME'),
+            'USER': os.environ['DATABASE_USER'],
+            'PASSWORD': os.environ['DATABASE_PASSWORD'],
+            'HOST': 'localhost',
+            'PORT': 5432,
+            'ATOMIC_REQUESTS': True,
+        }
     }
-} 
 else:
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 # Database : Use local sqlite db if running tests.
 # if sys.argv.__contains__('test'):

@@ -21,8 +21,9 @@ export const MobileWordInput = ({
     }, [letters]);
 
     useEffect(() => {
-        cellRefs[currentIndex].current.focus();
-    }, [currentIndex, characters]);
+        console.log('currentIndex:', currentIndex);
+        cellRefs[selectedIndex].current.focus();
+    }, [selectedIndex, characters]);
 
     const onCellClick = (event) => {
 
