@@ -10,6 +10,7 @@
 }
 
 .underlayer {
+    display: inline;
     position: absolute;
     margin: auto;
     left: 0;
@@ -25,6 +26,7 @@
 }
 
 .overlayer {
+    display: inline;
     position: absolute;
     margin: auto;
     left: 0;

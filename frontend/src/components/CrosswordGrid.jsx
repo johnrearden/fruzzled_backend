@@ -570,7 +570,7 @@ export const CrosswordGrid = ({ data }) => {
                             
                         </div>
 
-                        <div className={`${styles.InfoToSide} mt-3 w-50`}>
+                        <div className={`${styles.InfoToSide} mt-3 w-75`}>
                             <CompletenessDisplay
                                 completenessPercentage={calculatedPercentComplete}
                                 shorthand={false}
