@@ -518,6 +518,9 @@ export const CrosswordGrid = ({ data }) => {
                             callback={crosswordTimerCallback}
                         />
                     </Col>
+                    <Col className="d-flex justify-content-center align-items-center">
+                    
+                    </Col>
                 </Row>
 
                 <Row className={styles.InfoOnTop}>
@@ -545,16 +548,26 @@ export const CrosswordGrid = ({ data }) => {
                     <Col xs={12} md={4} lg={6}
                         className="d-flex flex-column align-items-center mt-md-5"
                     >
-
+                        <Row className="w-100">
+                            <Col xs={6} className="d-flex align-items-center justify-content-end">
+                                <span
+                                    className={`${styles.CrosswordNumber} mr-2`}
+                                ># {data.puzzle.id}</span>
+                            </Col>
+                            <Col cs={6} className="d-flex align-items-center justify-content-start">
+                                <div className="ml-2">
+                                    <CrosswordTimer
+                                        puzzleId={data.puzzle.grid.id}
+                                        running={!userHasFinished}
+                                        callback={crosswordTimerCallback}
+                                    />
+                                </div>
+                                
+                            </Col>
+                        </Row>
                         <div className={styles.InfoToSide}>
-                            <span
-                                className={`${styles.CrosswordNumber} mr-5`}
-                            ># {data.puzzle.id}</span>
-                            <CrosswordTimer
-                                puzzleId={data.puzzle.grid.id}
-                                running={!userHasFinished}
-                                callback={crosswordTimerCallback}
-                            />
+                            
+                            
                         </div>
 
                         <div className={`${styles.InfoToSide} mt-3 w-50`}>
