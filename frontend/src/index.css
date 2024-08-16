@@ -10,6 +10,12 @@
     url("./fonts/Quicksand-VariableFont_wght.ttf");
 }
 
+@font-face {
+    font-family: 'Freckle Face';
+    src: local('Freckle Face'),
+    url("./fonts/FreckleFace-Regular.ttf");
+}
+
 
 
 body {
