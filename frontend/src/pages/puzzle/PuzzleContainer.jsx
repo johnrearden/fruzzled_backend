@@ -44,6 +44,7 @@ const PuzzleContainer = () => {
     });
     const [searchArray, setSearchArray] = useState(() => createSearchArray());
     const [completeness, setCompleteness] = useState(0);
+    const [initialKnownCount, setInitialKnownCount] = useState(0);
 
     // Digits already placed 9 times in the puzzle
     const [exhaustedDigits, setExhaustedDigits] = useState([]);
@@ -80,6 +81,8 @@ const PuzzleContainer = () => {
                 const url = `/get_random_puzzle/${difficulty}/${getQuery}`;
                 const { data } = await axiosReq.get(url);
                 setPuzzleData(data);
+                const initialKnownCount = data.grid.split('').filter(chr => chr !== '-');
+                setInitialKnownCount(initialKnownCount.length);
                 const searchArrays = getSearchArraysFromGrid(data.grid);
                 setSearchArray(searchArrays);
             } catch (err) {
@@ -208,8 +211,8 @@ const PuzzleContainer = () => {
     // Update completeness each time the grid changes
     useEffect(() => {
         if (puzzleData.grid != null) {
-            const emptyCells = puzzleData.grid.split('').filter(chr => chr !== '-');
-            const completeness = emptyCells.length / 81 * 100;
+            const knownCellCount = puzzleData.grid.split('').filter(chr => chr !== '-');
+            const completeness = (knownCellCount.length - initialKnownCount) / (81 - initialKnownCount) * 100;
             setCompleteness(completeness);
         }
         if (puzzleData.grid) {
