@@ -15,13 +15,13 @@ export const Cell = (props) => {
     let classString;
     if (props.showCorrectness) {
         let correctnessStyle = styles.semantic;
-        if (!props.correct) {
+        if (!props.correct && !props.selected && !props.highlighted) {
             correctnessStyle = styles.incorrect_cell;
         }
-        if (props.missing) {
+        if (props.missing && !props.selected && !props.highlighted) {
             correctnessStyle = styles.missing_cell;
         }
-        classString = `${styles.cell_div} ${correctnessStyle}`;
+        classString = `${styles.cell_div} ${styleHighlighted} ${styleSelected} ${correctnessStyle} `;
     } else {
         classString = `${styles.cell_div} ${styleHighlighted} ${styleSelected} ${styleSemantic}`;
     }

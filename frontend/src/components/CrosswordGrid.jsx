@@ -1,30 +1,31 @@
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { Row, Col, Modal } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+
 import { ClueList } from '../components/ClueList';
 import { Cell } from './Cell';
 import { CompletenessDisplay } from './CompletenessDisplay';
 import { getVerboseTimeString, replaceCharAt } from '../utils/utils';
 import { GRID_CONTENTS_LS_KEY, PUZZLE_ID_LS_KEY } from '../constants/constants.js';
-import styles from '../styles/crossword/Grid.module.css';
-import btnStyles from '../styles/Button.module.css'
 import { useTheme } from '../contexts/ThemeContext';
-import themes from '../styles/Themes.module.css';
-import { useEffect, useState, useRef, createRef, useCallback } from 'react';
-import { Row, Col, Modal } from 'react-bootstrap';
+import { useProfile } from '../contexts/ProfileContext.jsx';
 import { MobileWordInput } from './MobileWordInput.jsx';
 import { usePuzzleHistoryContext } from '../contexts/PuzzleHistoryContext';
-import { useProfile } from '../contexts/ProfileContext.jsx';
 import ProfileForm from './ProfileForm.jsx';
 import { CrosswordTimer } from './CrosswordTimer.jsx';
 import { axiosReq } from '../api/axiosDefaults.js';
-import { useNavigate } from 'react-router-dom';
+
+import styles from '../styles/crossword/Grid.module.css';
+import btnStyles from '../styles/Button.module.css'
+import themes from '../styles/Themes.module.css';
 
 const MAX_DIMENSION = 32;
 
-export const CrosswordGrid = ({ data }) => {
+export const CrosswordGrid = ({ data, loadNewCallback }) => {
 
     const theme = useTheme();
-    const themeStyles = theme === 'light' ? themes.lightTheme : themes.darkTheme;
-
     const navigate = useNavigate();
+    const themeStyles = theme === 'light' ? themes.lightTheme : themes.darkTheme;
 
     const profile = useProfile();
     const [showProfileModal, setShowProfileModal] = useState(false);
@@ -224,14 +225,12 @@ export const CrosswordGrid = ({ data }) => {
                 setCurrentClue(clueReferences[cellIndex][0]);
             }
         }
-        if (onMobile) {
+        if (onMobile && !userHasFinished) {
             setShowInputModal(true);
         }
     }
 
-    console.log('currentClue', currentClue);
-    console.log('currentCell', currentCell);
-    console.log('index of same', cellReferences[currentClue].indexOf(currentCell));
+    
 
     /**
      * Handles clicks on clues in child component ClueList.
@@ -404,7 +403,6 @@ export const CrosswordGrid = ({ data }) => {
             setUserHasFinished(true);
             submitCrosswordInstance();
         }
-
     }
 
     const profileModalCallback = () => {
@@ -548,27 +546,27 @@ export const CrosswordGrid = ({ data }) => {
                     <Col xs={12} md={4} lg={6}
                         className="d-flex flex-column align-items-center mt-md-5"
                     >
-                        <Row className="w-100">
-                            <Col xs={6} className="d-flex align-items-center justify-content-end">
-                                <span
-                                    className={`${styles.CrosswordNumber} mr-2`}
-                                ># {data.puzzle.id}</span>
-                            </Col>
-                            <Col cs={6} className="d-flex align-items-center justify-content-start">
-                                <div className="ml-2">
-                                    <CrosswordTimer
-                                        puzzleId={data.puzzle.grid.id}
-                                        running={!userHasFinished}
-                                        callback={crosswordTimerCallback}
-                                    />
-                                </div>
-                                
-                            </Col>
-                        </Row>
                         <div className={styles.InfoToSide}>
-                            
-                            
+                            <Row className="w-100">
+                                <Col xs={6} className="d-flex flex-row align-items-center justify-content-end">
+                                    <span
+                                        className={`${styles.CrosswordNumber} mr-2`}
+                                    >#{data.puzzle.id}</span>
+                                </Col>
+                                <Col xs={6} className="d-flex align-items-center justify-content-start">
+                                    <div className="ml-2">
+                                        <CrosswordTimer
+                                            puzzleId={data.puzzle.grid.id}
+                                            running={!userHasFinished}
+                                            callback={crosswordTimerCallback}
+                                        />
+                                    </div>
+                                    
+                                </Col>
+                            </Row>
                         </div>
+                        
+                        
 
                         <div className={`${styles.InfoToSide} mt-3 w-75`}>
                             <CompletenessDisplay
@@ -577,7 +575,7 @@ export const CrosswordGrid = ({ data }) => {
                             />
                         </div>
 
-
+        
                         {!userHasFinished && (
                             <>
                                 <p
@@ -592,8 +590,8 @@ export const CrosswordGrid = ({ data }) => {
                             </>
                         )}
 
-                        {!onMobile && (
-                            <p>
+                        {!onMobile && !userHasFinished && (
+                            <p className="mt-3">
                                 Use arrow keys
                                 <i className={`${styles.ArrowIcon} fa-solid fa-arrows-up-down-left-right`}></i>
                                 and return
@@ -601,27 +599,40 @@ export const CrosswordGrid = ({ data }) => {
                             </p>
                         )}
 
+                        {userHasFinished && (
+                            <>
+                                <div className={`${styles.UserFinishedMessage} text-center mt-3`}>
+                                    You got {percentageCorrect}% of the crossword correct in&nbsp;
+                                    {getVerboseTimeString(timeExpiredRef.current)}!
+                                </div>
+                                <div>
+                                    <button
+                                        className={`${btnStyles.Button} mt-md-4 mt-2`}
+                                        onClick={() => loadNewCallback()}
+                                    >Another, please!</button>
+                                </div>
+                                <div>
+                                    <button
+                                        className={`${btnStyles.Button} mt-md-4 mt-2`}
+                                        onClick={() => navigate('/')}
+                                    >Enough Crosswords</button>
+                                </div>
+                            </>
+                            
+                        )}
+
 
                     </Col>
                 </Row>
 
-                {!userHasFinished && (
-                    <Row className='mt-4'>
-                        <ClueList
-                            clues={data.clues}
-                            onClueClick={onClueClick}
-                            currentClue={currentClue}
-                        ></ClueList>
-                    </Row>
-                )}
+                <Row className='mt-4'>
+                    <ClueList
+                        clues={data.clues}
+                        onClueClick={onClueClick}
+                        currentClue={currentClue}
+                    ></ClueList>
+                </Row>
             </div>
-
-            {userHasFinished && (
-                <div className={`${styles.UserFinishedMessage} text-center mt-5`}>
-                    You got {percentageCorrect}% of the crossword correct in&nbsp;
-                    {getVerboseTimeString(timeExpiredRef.current)}!
-                </div>
-            )}
 
             {currentClue !== null && (
                 <Modal
