@@ -45,6 +45,7 @@ const PuzzleContainer = () => {
     const [searchArray, setSearchArray] = useState(() => createSearchArray());
     const [completeness, setCompleteness] = useState(0);
     const [initialKnownCount, setInitialKnownCount] = useState(0);
+    const [startTime, setStartTime] = useState(0);
 
     // Digits already placed 9 times in the puzzle
     const [exhaustedDigits, setExhaustedDigits] = useState([]);
@@ -85,6 +86,7 @@ const PuzzleContainer = () => {
                 setInitialKnownCount(initialKnownCount.length);
                 const searchArrays = getSearchArraysFromGrid(data.grid);
                 setSearchArray(searchArrays);
+                setStartTime(new Date());
             } catch (err) {
                 console.log(err);
                 navigate('/');
@@ -194,7 +196,7 @@ const PuzzleContainer = () => {
         const formData = new FormData();
         formData.append("puzzle", puzzleData.id);
         formData.append("grid", puzzleData.grid);
-        formData.append("started_on", puzzleData.start_time);
+        formData.append("started_on", startTime);
         formData.append("completed_at", new Date().toISOString());
         formData.append("completed", "true");
         try {
@@ -258,7 +260,7 @@ const PuzzleContainer = () => {
         <Container>
             <Row className="d-flex justify-content-center mt-3">
                 <p className="mr-5">{DIFFICULTY_LEVELS[difficulty].toUpperCase()}</p>
-                <Timer startTime={puzzleData.start_time}></Timer>
+                <Timer startTime={startTime}></Timer>
             </Row>
             <Row className="mt-2">
                 <Col xs={{ span: 8, offset: 2 }} sm={{ span: 6, offset: 3 }} md={{ span: 4, offset: 4 }}>
