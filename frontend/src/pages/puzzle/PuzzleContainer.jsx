@@ -196,7 +196,7 @@ const PuzzleContainer = () => {
         const formData = new FormData();
         formData.append("puzzle", puzzleData.id);
         formData.append("grid", puzzleData.grid);
-        formData.append("started_on", startTime);
+        formData.append("started_on", puzzleData.start_time);
         formData.append("completed_at", new Date().toISOString());
         formData.append("completed", "true");
         try {
