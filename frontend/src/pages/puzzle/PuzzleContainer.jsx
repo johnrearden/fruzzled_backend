@@ -348,6 +348,7 @@ const PuzzleContainer = () => {
                 handleCellSelection={handleCellSelection}
                 handleDigitChoice={handleDigitChoice}
                 exhaustedDigits={exhaustedDigits}
+                handleUndo={handleUndo}
             />
 
         </Container>

@@ -4,7 +4,8 @@
         selectedCellIndex,
         handleCellSelection,
         handleDigitChoice,
-        exhaustedDigits
+        exhaustedDigits,
+        handleUndo
     }) => {
 
         /**
@@ -53,6 +54,8 @@
                 if (!exhaustedDigits.includes(event.key)) {
                     handleDigitChoice(event.key);
                 }
+            } else if (event.key === 'Backspace') {
+                handleUndo();
             }
 
         }, [selectedCellIndex, handleCellSelection]);
