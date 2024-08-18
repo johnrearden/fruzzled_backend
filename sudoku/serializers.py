@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from .models import SudokuPuzzle, PuzzleInstance
-from player_profile.models import PlayerProfile
 from datetime import datetime
 
 
@@ -31,6 +30,7 @@ class PuzzleInstanceSerializer(serializers.ModelSerializer):
     owner_country = serializers.ReadOnlyField(source="owner.country")
 
     duration = serializers.SerializerMethodField()
+
     def get_duration(self, obj):
         return int(obj.time_taken.total_seconds() * 1000)
 
