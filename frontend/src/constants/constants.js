@@ -7,6 +7,8 @@ export const DIFFICULTY_LEVELS = [
 
 export const LCLSTRG_KEY = "puzzleData";
 
+export const LCLSTRG_UNDO_STACK_KEY = "undoStack";
+
 export const NICKNAME_AVAILABLE_THROTTLE_TIMEOUT = 200;
 
 export const GRID_CONTENTS_LS_KEY = 'gridContents';

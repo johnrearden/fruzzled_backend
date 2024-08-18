@@ -15,7 +15,7 @@ import { CompletenessDisplay } from '../../components/CompletenessDisplay';
 
 import { axiosReq } from '../../api/axiosDefaults';
 import { checkCellValidity, getExhaustedDigits, replaceCharAt } from '../../utils/utils';
-import { DIFFICULTY_LEVELS, LCLSTRG_KEY } from '../../constants/constants';
+import { DIFFICULTY_LEVELS, LCLSTRG_KEY, LCLSTRG_UNDO_STACK_KEY } from '../../constants/constants';
 
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
 import { usePuzzleHistoryContext } from '../../contexts/PuzzleHistoryContext';
@@ -71,6 +71,8 @@ const PuzzleContainer = () => {
         setShowNotes(!showNotes);
     }
 
+    console.log(undoStack);
+
     // Load data on mount.
     useEffect(() => {
         const handleMount = async () => {
@@ -95,9 +97,12 @@ const PuzzleContainer = () => {
         }
 
         const previousPuzzle = window.localStorage.getItem(LCLSTRG_KEY);
+        const previousUndoStack = window.localStorage.getItem(LCLSTRG_UNDO_STACK_KEY);
         if (previousPuzzle) {
             const puzzleData = JSON.parse(previousPuzzle);
             setPuzzleData(puzzleData);
+            const uStack = JSON.parse(previousUndoStack);
+            setUndoStack(uStack);
         } else {
             handleMount();
         }
@@ -134,6 +139,7 @@ const PuzzleContainer = () => {
                 grid: newGrid,
             }
             window.localStorage.setItem(LCLSTRG_KEY, JSON.stringify(newData));
+            window.localStorage.setItem(LCLSTRG_UNDO_STACK_KEY, JSON.stringify(undoStack));
             return newData;
         })
 
@@ -248,12 +254,12 @@ const PuzzleContainer = () => {
         solvePuzzle(puzzleData.grid, searchArray, callback);
     }, [puzzleData, searchArray]);
 
+
     const handleBruteForce = () => {
         bruteForce(puzzleData.grid.slice(), callback);
     }
 
     const handleRefreshNotes = () => {
-        console.log('asdfasdf')
         const refreshed = getSearchArraysFromGrid(puzzleData.grid);
         setSearchArray(refreshed);
     }
