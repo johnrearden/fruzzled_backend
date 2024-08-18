@@ -24,6 +24,7 @@ import { useProfile } from '../../contexts/ProfileContext';
 
 import { createSearchArray, getSearchArraysFromGrid, solvePuzzle } from '../../utils/solver';
 import { bruteForce } from '../../utils/strategies/bruteForce';
+import SudokuKeyboardHandler from '../../components/SudokuKeyboardHandler';
 
 
 const PuzzleContainer = () => {
@@ -147,6 +148,7 @@ const PuzzleContainer = () => {
 
     const handleCellSelection = (index) => {
         if (warningGroup.length === 0) {
+            console.log(`index === ${index}`)
             setSelectedCellIndex(index);
         }
     }
@@ -210,7 +212,7 @@ const PuzzleContainer = () => {
         }
     }
 
-    // Update completeness each time the grid changes
+    // Update completeness and exhaustedDigits each time the grid changes
     useEffect(() => {
         if (puzzleData.grid != null) {
             const knownCellCount = puzzleData.grid.split('').filter(chr => chr !== '-');
@@ -340,6 +342,13 @@ const PuzzleContainer = () => {
                     <ProfileForm callback={profileModalCallback} />
                 </Modal.Body>
             </Modal>
+
+            <SudokuKeyboardHandler 
+                selectedCellIndex={selectedCellIndex}
+                handleCellSelection={handleCellSelection}
+                handleDigitChoice={handleDigitChoice}
+                exhaustedDigits={exhaustedDigits}
+            />
 
         </Container>
     )
