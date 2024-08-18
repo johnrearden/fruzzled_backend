@@ -7,12 +7,26 @@ import NoteCell from './NoteCell'
 const Puzzle = ({ 
     grid, 
     searchArray,
+    setSearchArray,
     showNotes,
     selectedCell, 
     handleCellSelection, 
     warningGroup, 
     clashingCell,
     completed }) => {
+
+    const toggleNote = (cellIndex, noteDigit) => {
+        noteDigit = noteDigit.toString();
+        const copyArray = searchArray.map(arr => [...arr]);
+        if (copyArray[cellIndex].includes(noteDigit)) {
+            copyArray[cellIndex] = copyArray[cellIndex].filter(item => {
+                return item !== noteDigit;
+            });
+        } else {
+            copyArray[cellIndex].push(noteDigit);
+        }
+        setSearchArray(copyArray);
+    }
 
     const cells = grid?.split("").map((char, idx) => (
         char !== '-' ? (
@@ -27,7 +41,11 @@ const Puzzle = ({
                 handleSelection={handleCellSelection}/>
         ) : (
             showNotes ? (
-                <NoteCell searchArray={searchArray[idx]} key={idx}/>
+                <NoteCell 
+                    key={idx}
+                    index={idx}  
+                    searchArray={searchArray}
+                    toggleNote={toggleNote}/>
             ) :
             (
                 <PuzzleCell

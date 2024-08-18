@@ -22,7 +22,7 @@ import { usePuzzleHistoryContext } from '../../contexts/PuzzleHistoryContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useProfile } from '../../contexts/ProfileContext';
 
-import { createSearchArray, getSearchArraysFromGrid, solvePuzzle } from '../../utils/solver';
+import { createSearchArray, getSearchArraysFromGrid, getSearchArraysRemoveOnly, solvePuzzle } from '../../utils/solver';
 import { bruteForce } from '../../utils/strategies/bruteForce';
 import SudokuKeyboardHandler from '../../components/SudokuKeyboardHandler';
 
@@ -221,10 +221,10 @@ const PuzzleContainer = () => {
         }
         if (puzzleData.grid) {
             setExhaustedDigits(getExhaustedDigits(puzzleData.grid));
-            const srcArrs = getSearchArraysFromGrid(puzzleData.grid);
+            const srcArrs = getSearchArraysRemoveOnly(puzzleData.grid, searchArray);
             setSearchArray(srcArrs);
         }
-    }, [puzzleData, currentUser])
+    }, [puzzleData, currentUser]);
 
 
     // Submit the puzzle if completeness hits 100%
@@ -252,6 +252,12 @@ const PuzzleContainer = () => {
         bruteForce(puzzleData.grid.slice(), callback);
     }
 
+    const handleRefreshNotes = () => {
+        console.log('asdfasdf')
+        const refreshed = getSearchArraysFromGrid(puzzleData.grid);
+        setSearchArray(refreshed);
+    }
+
     // Set success message style
     const successStyle = 
         completeness === 100 
@@ -275,6 +281,7 @@ const PuzzleContainer = () => {
                 <Puzzle
                     grid={puzzleData?.grid}
                     searchArray={searchArray}
+                    setSearchArray={setSearchArray}
                     showNotes={showNotes}
                     selectedCell={selectedCellIndex}
                     handleCellSelection={handleCellSelection}
@@ -314,11 +321,24 @@ const PuzzleContainer = () => {
                     onClick={toggleNotes}>
                         Notes
                 </button>
+                { currentUser && (
+                    <button
+                        className={`${btnStyles.Button} mx-2`}
+                        onClick={handleBruteForce}>
+                        Brute Force
+                    </button>
+                )}
+                
                 <button
                     className={`${btnStyles.Button} mx-2`}
-                    onClick={handleBruteForce}>
-                    Brute Force
+                    onClick={handleRefreshNotes}
+                    disabled={!showNotes}
+                    >
+                    Refresh Notes
                 </button>
+                
+                
+                
                 { currentUser && (
                     <>
                         <Button

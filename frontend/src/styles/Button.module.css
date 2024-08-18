@@ -13,6 +13,7 @@
 
 .Button:disabled {
     opacity: 0.3;
+    user-select: none;
 }
 
 .Button:disabled:hover {

@@ -362,6 +362,43 @@ export const getSearchArraysFromGrid = (grid) => {
     return searchArray;
 }
 
+
+/**
+ * Works on a copy of the existing searchArray state variable, but doesn't recalculate
+ * the notes - just removes any notes that are no longer possible
+ * 
+ * @param {string} grid 
+ * @param {Array} existingSearchArray 
+ * @returns the modified array
+ */
+export const getSearchArraysRemoveOnly = (grid, searchArray) => {
+
+    const existingSearchArray = searchArray.map(arr => [...arr]);
+
+    for (let i = 0; i < 81; i++) {
+        if (grid.charAt(i) !== '-') {
+            existingSearchArray[i] = [];
+        }
+        if (existingSearchArray[i].length === 0) {
+            continue;
+        }
+        const row = getRow(i).filter((item) => item !== i);
+        const col = getColumn(i).filter((item) => item !== i);
+        const square = getSquare(i).filter((item) => item !== i);
+
+        // Get set of cellIndices in row/col/square combination
+        const concat = [...row, ...col, ...square];
+        const cellIndices = new Set(concat);
+        const existingDigits = new Set();
+        for (const index of cellIndices) {
+            const digit = grid.charAt(index);
+            existingDigits.add(digit);
+        }
+        existingSearchArray[i] = existingSearchArray[i].filter((item) => !existingDigits.has(item));
+    }
+    return existingSearchArray;
+}
+
 export const checkGridLegality = (grid, searchArrays) => {
     for (let i = 0; i < grid.length; i++) {
         if (grid.charAt(i) === '-' && searchArrays[i].length === 0) {
