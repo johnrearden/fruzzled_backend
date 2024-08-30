@@ -139,7 +139,7 @@ const PuzzleContainer = () => {
                 grid: newGrid,
             }
             window.localStorage.setItem(LCLSTRG_KEY, JSON.stringify(newData));
-            window.localStorage.setItem(LCLSTRG_UNDO_STACK_KEY, JSON.stringify(undoStack));
+            
             return newData;
         })
 
@@ -148,7 +148,8 @@ const PuzzleContainer = () => {
                 index: selectedCellIndex,
                 previousValue: currentSelectedCellValue
             }
-            return [...prev, undoItem];
+            const newStack = [...prev, undoItem];
+            return newStack;
         });
     }
 
@@ -177,11 +178,17 @@ const PuzzleContainer = () => {
         })
 
         setUndoStack(prev => {
-            prev.pop()
-            return prev;
+            const newStack = [...prev]
+            newStack.pop();
+            return newStack;
         });
         performValidityCheck(previousValue);
     }
+
+    useEffect(() => {
+        console.log('useEffect undoStack fired')
+        window.localStorage.setItem(LCLSTRG_UNDO_STACK_KEY, JSON.stringify(undoStack));
+    }, [undoStack]);
 
     const handleLeaderboardButtonClick = () => {
         console.log('handleLeaderboardButtonClick');
