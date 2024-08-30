@@ -185,6 +185,9 @@ const PuzzleContainer = () => {
         performValidityCheck(previousValue);
     }
 
+    /**
+     * Store undoStack in localStorage each time the array reference changes
+     */
     useEffect(() => {
         console.log('useEffect undoStack fired')
         window.localStorage.setItem(LCLSTRG_UNDO_STACK_KEY, JSON.stringify(undoStack));

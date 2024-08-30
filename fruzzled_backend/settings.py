@@ -25,7 +25,7 @@ RUNNING_TESTS = sys.argv.__contains__('test')
 
 ANONYMOUS_USER_THROTTLE_RATE = 100
 ANONYMOUS_USER_THROTTLE_PERIOD = 'minute'
-GET_UNSEEN_PUZZLE_THROTTLE_RATE = 20
+GET_UNSEEN_PUZZLE_THROTTLE_RATE = 2
 GET_UNSEEN_PUZZLE_THROTTLE_PERIOD = 'minute'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
@@ -45,14 +45,15 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',
         'rest_framework.throttling.ScopedRateThrottle',
-    ],
+    ] if 'SHOULD_THROTTLE' in os.environ else [],
     'DEFAULT_THROTTLE_RATES': {
         'anon': f'{ANONYMOUS_USER_THROTTLE_RATE}/{ANONYMOUS_USER_THROTTLE_PERIOD}',
         'user': '10000/day',
         'get_unseen_puzzle': f'{GET_UNSEEN_PUZZLE_THROTTLE_RATE}/{GET_UNSEEN_PUZZLE_THROTTLE_PERIOD}',
         'dj_rest_auth': '10000/day'
-    }
+    } if 'SHOULD_THROTTLE' in os.environ else {}
 }
+
 
 if 'DEV' not in os.environ:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
@@ -173,19 +174,6 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
-# Database : Use local sqlite db if running tests.
-# if sys.argv.__contains__('test'):
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.sqlite3',
-#             'NAME': BASE_DIR / 'db.sqlite3',
-#         }
-#     }
-# else:
-#     DATABASES = {
-#         'default': dj_database_url.parse(os.environ.get('DATABASE_URL')),
-#     }
 
 
 

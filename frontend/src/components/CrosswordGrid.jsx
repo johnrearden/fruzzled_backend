@@ -406,7 +406,6 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
     }
 
     const profileModalCallback = () => {
-        console.log('profileModalCallback invoked');
         setShowProfileModal(false);
         setUserHasFinished(true);
         submitCrosswordInstance();
@@ -501,6 +500,7 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
             setOnMobile(mobile);
         }
     }
+
 
     return (
         <>
