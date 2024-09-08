@@ -9,11 +9,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('csv_file', type=str, help='csv file to import')
-        parser.add_argument('difficulty', type=int, help='difficulty')
+        parser.add_argument('difficulty', type=str, help='difficulty')
 
     def handle(self, *args, **kwargs):
         csv_file = kwargs['csv_file']
-        difficulty = kwargs['difficulty']
+        difficulty = int(kwargs['difficulty'])
         creator = User.objects.get(username='admin')
         puzzles_created = 0
 
