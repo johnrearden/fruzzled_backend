@@ -9,9 +9,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('csv_file', type=str, help='csv file to import')
+        parser.add_argument('difficulty', type=int, help='difficulty')
 
     def handle(self, *args, **kwargs):
         csv_file = kwargs['csv_file']
+        difficulty = kwargs['difficulty']
         creator = User.objects.get(username='admin')
         puzzles_created = 0
 
@@ -21,7 +23,7 @@ class Command(BaseCommand):
                 SudokuPuzzle.objects.create(
                     grid=row[1],
                     created_by=creator,
-                    difficulty=3
+                    difficulty=difficulty
                 )
                 puzzles_created += 1
                 print(f'puzzles created : {puzzles_created}\r', end='')
