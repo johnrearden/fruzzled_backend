@@ -44,7 +44,8 @@ const NavBar = () => {
             <NavLink
                 className={styles.NavLink}
                 // activeClassName={styles.Active}
-                to="/signin">
+                to="/signin"
+                data-cy="login-button">
                 <i className="fa-solid fa-arrow-right-to-bracket"></i>
             </NavLink>
         </>
@@ -56,12 +57,14 @@ const NavBar = () => {
             <NavLink
                 className={styles.NavLink}
                 to="/anagram_creator"
+                data-cy="anagram-creator-link"
                 >
                 <i className="fa-solid fa-shuffle"></i>
             </NavLink>
             <NavLink
                 className={styles.NavLink}
                 to="/crossword_dashboard"
+                data-cy="crossword-link"
                 >
                 <i className="fa-solid fa-table-cells-large"></i>
             </NavLink>

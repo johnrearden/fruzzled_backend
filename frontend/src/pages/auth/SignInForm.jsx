@@ -64,6 +64,7 @@ const SignInForm = () => {
                                     placeholder="Username"
                                     name="username"
                                     value={username}
+                                    data-cy="username-input"
                                     onChange={handleChange} />
                             </Form.Group>
                             {errors.username?.map((message, idx) => (
@@ -78,13 +79,17 @@ const SignInForm = () => {
                                     placeholder="Password"
                                     name="password"
                                     value={password}
+                                    data-cy="password-input"
                                     onChange={handleChange} />
                             </Form.Group>
                             {errors.password1?.map((message, idx) => (
                                 <Alert variant="warning" key={idx}>{message}</Alert>
                             ))}
 
-                            <Button className={`${btnStyles.Button} ${styles.HalfWidth}`} type="submit">
+                            <Button 
+                                className={`${btnStyles.Button} ${styles.HalfWidth}`}
+                                type="submit"
+                                data-cy="submit-button">
                                 Sign In
                             </Button>
                             {errors.non_field_errors?.map((message, idx) => (
