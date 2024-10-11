@@ -71,6 +71,7 @@ const NavBar = () => {
             <NavLink
                 className={styles.NavLink}
                 to="/"
+                data-cy="logout-button"
                 onClick={() => {
                     handleSignout();
                 }}>
