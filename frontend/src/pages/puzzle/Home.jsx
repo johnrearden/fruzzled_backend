@@ -25,6 +25,7 @@ const Home = () => {
                 <button
                     className={`${btnStyles.Button} px-3 mx-3`}
                     onClick={() => navigate('/sudoku_home')}
+                    data-cy="sudoku-link"
                 >
                     Sudoku
                 </button>
@@ -33,6 +34,7 @@ const Home = () => {
                 <button
                     className={`${btnStyles.Button} px-3 mx-3`}
                     onClick={() => navigate('/crossword')}
+                    data-cy="crossword-link"
                 >
                     Crossword
                 </button>
@@ -41,6 +43,7 @@ const Home = () => {
                 <button
                     className={`${btnStyles.Button} px-3 mx-3`}
                     onClick={() => navigate('/anagram')}
+                    data-cy="anagram-link"
                 >
                     Anagram
                 </button>

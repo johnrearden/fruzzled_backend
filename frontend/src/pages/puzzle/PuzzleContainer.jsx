@@ -283,7 +283,7 @@ const PuzzleContainer = () => {
     return (
         <Container>
             <Row className="d-flex justify-content-center mt-3">
-                <p className="mr-5">{DIFFICULTY_LEVELS[difficulty].toUpperCase()}</p>
+                <p className="mr-5" data-cy="difficulty-display">{DIFFICULTY_LEVELS[difficulty].toUpperCase()}</p>
                 <Timer startTime={startTime}></Timer>
             </Row>
             <Row className="mt-2">
