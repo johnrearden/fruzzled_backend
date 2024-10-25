@@ -10,5 +10,7 @@ assignees: johnrearden
 As a **role**, I can **capability**, so that **benefit**
 
 Acceptance criteria:
+- [ ]
 
 Tasks:
+- [ ]
