@@ -1,16 +1,13 @@
-from django.shortcuts import render, get_object_or_404
-from django.db.models import Count
+from django.shortcuts import get_object_or_404
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics
 from django.http import JsonResponse
-from django.views import View
-from django.contrib.auth.mixins import UserPassesTestMixin
 from .models import DictionaryWord, DictionaryDefinition, Grid
 from .models import CrosswordPuzzle, CrosswordClue, PuzzleType
 from player_profile.models import PlayerProfile
-from .serializers import GridSerializer, CrosswordPuzzleSerializer, \
+from .serializers import CrosswordPuzzleSerializer, \
                          CrosswordClueSerializer, CrosswordInstanceSerializer
 from fruzzled_backend.permissions import HasPlayerProfileCookie
 from .utils import get_cell_concentration
@@ -183,7 +180,6 @@ class SavePuzzle(APIView):
             )
 
         # In both cases, we need to create new clues from the api call data
-        puzzle_complete = True
         for item in clues_data:
             new_clue = CrosswordClue.objects.create(
                 puzzle=puzzle,
@@ -198,13 +194,13 @@ class SavePuzzle(APIView):
             )
             if (len(new_clue.clue) == 0 
                 or new_clue.clue.lower() == 'no clue yet'
-                or '#' in new_clue.solution):
+                    or '#' in new_clue.solution):
                 allow_complete = False
-            
 
         # Save the crossword puzzle
         if request.POST['complete']:
-            puzzle.complete = allow_complete and request.POST['complete'] == 'true'
+            post_complete_flag = request.POST['complete'] == 'true'
+            puzzle.complete = allow_complete and post_complete_flag
         if request.POST['reviewed']:
             puzzle.reviewed = request.POST['reviewed'] == 'true'
         if request.POST['released']:
@@ -358,7 +354,8 @@ class CreateCrosswordInstance(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         request = self.request
-        profile_cookie = request.COOKIES.get(settings.PLAYER_PROFILE_COOKIE,'')
+        profile_cookie = request.COOKIES.get(
+            settings.PLAYER_PROFILE_COOKIE, '')
         profile = PlayerProfile.objects.filter(uuid=profile_cookie).first()
         serializer.save(owner=profile)
 
