@@ -106,6 +106,7 @@ INSTALLED_APPS = [
     'anagrams',
     'crosswords',
     'player_profile',
+    'usage_stats',
 ]
 
 SITE_ID = 1
