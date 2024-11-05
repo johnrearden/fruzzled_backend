@@ -15,7 +15,7 @@ urlpatterns = [
     path('api/', include('player_profile.urls')),
     path('api/crossword_builder/', include('crosswords.urls')),
     path('api/', include('anagrams.urls')),
-    path('api/', include('usage_stats.urls'))
+    path('api/usage_stats/', include('usage_stats.urls'))
 ]
 
 handler404 = TemplateView.as_view(template_name='index.html')

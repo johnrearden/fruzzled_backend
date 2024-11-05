@@ -4,12 +4,16 @@ import styles from '../../styles/Home.module.css';
 import btnStyles from '../../styles/Button.module.css';
 import { Row } from 'react-bootstrap';
 import { SiteLogo } from '../../components/SiteLogo';
+import { UsageReport } from '../../components/UsageReport';
+import { useCurrentUser } from '../../contexts/CurrentUserContext';
 
 const Home = () => {
 
     const mainLogoText = ['f', 'r', 'u', 'z', 'z', 'l', 'e', 'd'];
 
     const navigate = useNavigate();
+
+    const currentUser = useCurrentUser();
 
     return (
         <>
@@ -48,6 +52,16 @@ const Home = () => {
                     Anagram
                 </button>
             </Row> */}
+
+            {currentUser && (
+                <>
+                    <Row className="justify-content-center mt-5">
+                        <UsageReport/>
+                    </Row>
+                </>
+                
+            )}
+            
 
         </>
     )
