@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from .models import DictionaryWord, DictionaryDefinition, Grid
 from .models import CrosswordPuzzle, CrosswordClue, PuzzleType
 from player_profile.models import PlayerProfile
+from usage_stats.models import CrosswordPuzzleRequest
 from .serializers import CrosswordPuzzleSerializer, \
                          CrosswordClueSerializer, CrosswordInstanceSerializer
 from fruzzled_backend.permissions import HasPlayerProfileCookie
@@ -330,6 +331,13 @@ class GetUnseenPuzzle(APIView):
                     if '#' not in clue.solution:
                         solution_count += 1
             clue_serialzer = CrosswordClueSerializer(clues, many=True)
+
+            # Record the crossword puzzle request by the player
+            profile_cookie = request.COOKIES.get(settings.PLAYER_PROFILE_COOKIE, None)
+            CrosswordPuzzleRequest.objects.create(
+                puzzle=crossword,
+                player_uuid = profile_cookie
+            )
             
             data = {
                 'puzzle': puzzle_serializer.data,
