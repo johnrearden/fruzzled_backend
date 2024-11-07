@@ -6,6 +6,7 @@ import { Row } from 'react-bootstrap';
 import { SiteLogo } from '../../components/SiteLogo';
 import { UsageReport } from '../../components/UsageReport';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
+import CookieConsent from 'react-cookie-consent';
 
 const Home = () => {
 
@@ -61,6 +62,21 @@ const Home = () => {
                 </>
                 
             )}
+
+            <CookieConsent
+                disableStyles={true}
+                buttonClasses={styles.AcceptButton}
+                declineButtonClasses={styles.DeclineButton}
+                containerClasses={styles.CookieConsentContainer}
+                location="bottom"
+                buttonText="Accept"
+                declineButtonText="Decline"
+                cookieName="profile-consent-cookie"
+                expires={180}
+                enableDeclineButton
+            >
+                This website uses cookies to remember your profile.
+            </CookieConsent>
             
 
         </>
