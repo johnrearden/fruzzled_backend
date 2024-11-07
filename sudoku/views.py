@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from random import choice
 from .models import SudokuPuzzle, PuzzleInstance
 from player_profile.models import PlayerProfile
+from usage_stats.models import SudokuPuzzleRequest
 from .serializers import SudokuPuzzleSerializer, PuzzleInstanceSerializer
 from fruzzled_backend.permissions import IsOwnerOrReadOnly, HasPlayerProfileCookie
 
@@ -71,6 +72,15 @@ class GetRandomPuzzle(APIView):
                     context={'request': request})
             puzzle.instances_created += 1
             puzzle.save()
+
+            # Record the sudoku puzzle request by the player
+            profile_cookie = request.COOKIES.get(settings.PLAYER_PROFILE_COOKIE, None)
+            SudokuPuzzleRequest.objects.create(
+                puzzle=puzzle,
+                difficulty=puzzle.difficulty,
+                player_uuid = profile_cookie
+            )
+
             return Response(serializer.data)
         else:
             return Response(

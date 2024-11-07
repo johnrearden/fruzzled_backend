@@ -48,6 +48,12 @@ figure {
     display: inline-block;
 }
 
+table {
+    color: var(--fg-color) !important;
+    text-align: center !important;
+    font-size: 0.8rem;
+}
+
 /* scrollbar */
 *::-webkit-scrollbar {
     width: 5px;
