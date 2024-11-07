@@ -71,8 +71,6 @@ const PuzzleContainer = () => {
         setShowNotes(!showNotes);
     }
 
-    console.log(undoStack);
-
     // Load data on mount.
     useEffect(() => {
         const handleMount = async () => {
@@ -161,6 +159,13 @@ const PuzzleContainer = () => {
     }
 
     const handleUndo = () => {
+
+        // Bail early if showProfileModal is true to mitigate bug.
+        // https://github.com/johnrearden/fruzzled_backend/issues/27#issue-2642312961
+        if (showProfileModal) {
+            return;
+        }
+
         if (undoStack.length < 1) {
             alert('This is the original puzzle - can\'t undo from here')
             return;
