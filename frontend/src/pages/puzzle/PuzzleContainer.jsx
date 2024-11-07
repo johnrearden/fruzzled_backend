@@ -25,6 +25,8 @@ import { useProfile } from '../../contexts/ProfileContext';
 import { createSearchArray, getSearchArraysFromGrid, getSearchArraysRemoveOnly, solvePuzzle } from '../../utils/solver';
 import { bruteForce } from '../../utils/strategies/bruteForce';
 import SudokuKeyboardHandler from '../../components/SudokuKeyboardHandler';
+import { getCookieConsentValue } from 'react-cookie-consent';
+import ChooseDifficulty from './ChooseDifficulty';
 
 
 const PuzzleContainer = () => {
@@ -34,6 +36,7 @@ const PuzzleContainer = () => {
     const themeStyles = theme === 'light' ? themes.lightTheme : themes.darkTheme;
 
     const profile = useProfile();
+    const [cookieConsent, setCookieConsent] = useState(false);
 
     const { savePuzzleToHistory, getPuzzleHistory } = usePuzzleHistoryContext();
 
@@ -88,6 +91,8 @@ const PuzzleContainer = () => {
                 const searchArrays = getSearchArraysFromGrid(data.grid);
                 setSearchArray(searchArrays);
                 setStartTime(new Date());
+                const cookieConsentString = getCookieConsentValue('profile-consent-cookie');
+                setCookieConsent(cookieConsentString === 'true' ? true : false);
             } catch (err) {
                 console.log(err);
                 navigate('/');
@@ -199,7 +204,8 @@ const PuzzleContainer = () => {
     }, [undoStack]);
 
     const handleLeaderboardButtonClick = () => {
-        console.log('handleLeaderboardButtonClick');
+
+
         if (!profile) {
             setShowProfileModal(true);
         } else {
@@ -208,7 +214,6 @@ const PuzzleContainer = () => {
     }
 
     const profileModalCallback = () => {
-        console.log('profileModalCallback invoked');
         setShowProfileModal(false);
         submitPuzzle();
     }
@@ -285,6 +290,7 @@ const PuzzleContainer = () => {
         ? `${styles.SuccessMessage} ${styles.PointerEventsOn} ${styles.RevealMessage}` 
         : `${styles.SuccessMessage} ${styles.PointerEventsOff}`;
 
+
     return (
         <Container>
             <Row className="d-flex justify-content-center mt-3">
@@ -315,11 +321,29 @@ const PuzzleContainer = () => {
                     data-cy="success_message_div"    
                 >
                     <h1>Well Done!</h1>
-                    <button 
-                        className={`${btnStyles.Button} mt-4`}
-                        onClick={handleLeaderboardButtonClick}
-                        data-cy="leaderboard_button"
-                        >Leaderboard</button>
+                    <h4>Play again?</h4>
+                    {!!cookieConsent ? (
+                        <button 
+                            className={`${btnStyles.Button} mt-4`}
+                            onClick={handleLeaderboardButtonClick}
+                            data-cy="leaderboard_button"
+                            >Leaderboard
+                        </button>
+                    ) : (
+                        <>
+                            <button 
+                                className={`${btnStyles.Button} mt-4`}
+                                onClick={() => navigate('/sudoku_home')}
+                                >Yes
+                            </button>
+                            <button 
+                                className={`${btnStyles.Button} mt-4`}
+                                onClick={() => navigate('/')}
+                                >No
+                            </button>
+                        </>
+                    )}
+                    
                     
                 </div>
             </Row>
