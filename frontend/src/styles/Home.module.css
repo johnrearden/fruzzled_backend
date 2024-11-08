@@ -19,7 +19,7 @@
 }
 
 .CookieConsentContainer {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     text-align: center;
@@ -78,6 +78,26 @@
     border: none;
 }
 
+.CookieConsentOverlay {
+    background-color: black;
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    transition: opacity 0.5s;
+    animation: consent-cookie-overlay 1s;
+}
+
+@keyframes consent-cookie-overlay {
+    0% {
+        opacity: 0;
+    }
+    100%{
+        opacity: 0.8;
+    }
+}
 
 
 

@@ -65,15 +65,18 @@ const Home = () => {
 
             <CookieConsent
                 disableStyles={true}
+                location='bottom'
                 buttonClasses={styles.AcceptButton}
                 declineButtonClasses={styles.DeclineButton}
                 containerClasses={styles.CookieConsentContainer}
-                location="bottom"
+                overlayClasses={styles.CookieConsentOverlay}
                 buttonText="Accept"
                 declineButtonText="Decline"
                 cookieName="profile-consent-cookie"
                 expires={180}
                 enableDeclineButton
+                overlay
+                flipButtons
             >
                 This website uses cookies to remember your profile.
             </CookieConsent>
