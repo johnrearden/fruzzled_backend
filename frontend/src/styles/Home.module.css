@@ -17,3 +17,87 @@
     animation-timing-function: linear;
     animation-fill-mode: forwards;
 }
+
+.CookieConsentContainer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--scnd-color);
+    color: black;
+}
+
+.AcceptButton {
+    /* font-size: 0.8rem; */
+    align-self: center;
+    border-radius: 10px;
+    padding: 4px 10px;
+    background: linear-gradient(var(--common-warm), var(--button-color));
+    color: var(--fg-color);
+    border: none;
+    margin:  px 5px;
+    box-shadow: 1px 1px 2px 1px var(--shadow-color);
+    transition: all 0.2s;
+}
+
+.DeclineButton {
+    /* font-size: 0.8rem; */
+    align-self: center;
+    border-radius: 10px;
+    padding: 4px 10px;
+    background: linear-gradient(var(--brgt-color), var(--button-color));
+    color: var(--fg-color);
+    border: none;
+    margin:  10px 10px;
+    box-shadow: 1px 1px 2px 1px var(--shadow-color);
+    transition: all 0.2s;
+}
+
+.AcceptButton:hover, .DeclineButton:hover {
+    cursor: pointer;
+    /* border: 2px solid var(--fg-color); */
+    background: linear-gradient(var(--brgt-color), var(--common-warm));
+}
+
+.Button i {
+    color: inherit;
+}
+
+.Button:hover:active {
+    background-color: var(--brgt-color);
+    border: none;
+}
+
+.Button:focus {
+    background-color: var(--brgt-color);
+    border: none;
+}
+
+.CookieConsentOverlay {
+    background-color: black;
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    transition: opacity 0.5s;
+    animation: consent-cookie-overlay 1s;
+}
+
+@keyframes consent-cookie-overlay {
+    0% {
+        opacity: 0;
+    }
+    100%{
+        opacity: 0.8;
+    }
+}
+
+
+
