@@ -19,6 +19,7 @@ import AnagramCreator from './pages/anagram/AnagramCreator';
 import CreateNewCrossword from './pages/crossword/CreateNewCrossword';
 import { CrosswordEditLoader } from './pages/crossword/CrosswordEditLoader';
 import { CrosswordDashboard } from './pages/crossword/CrosswordDashboard';
+import CookieConsent from 'react-cookie-consent';
 
 
 function App() {
@@ -70,6 +71,23 @@ function App() {
                     <Route element={ <NotFound /> } />
                 </Routes>
             </Container>
+            <CookieConsent
+                disableStyles={true}
+                location='bottom'
+                buttonClasses={styles.AcceptButton}
+                declineButtonClasses={styles.DeclineButton}
+                containerClasses={styles.CookieConsentContainer}
+                // overlayClasses={styles.CookieConsentOverlay}
+                buttonText="Accept"
+                declineButtonText="Decline"
+                cookieName="profile-consent-cookie"
+                expires={180}
+                enableDeclineButton
+                // overlay
+                flipButtons
+            >
+                This website uses cookies to remember your profile.
+            </CookieConsent>
         </div>
     );
 }
