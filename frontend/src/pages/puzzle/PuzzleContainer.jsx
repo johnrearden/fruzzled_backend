@@ -26,7 +26,6 @@ import { createSearchArray, getSearchArraysFromGrid, getSearchArraysRemoveOnly, 
 import { bruteForce } from '../../utils/strategies/bruteForce';
 import SudokuKeyboardHandler from '../../components/SudokuKeyboardHandler';
 import { getCookieConsentValue } from 'react-cookie-consent';
-import ChooseDifficulty from './ChooseDifficulty';
 
 
 const PuzzleContainer = () => {
@@ -93,6 +92,8 @@ const PuzzleContainer = () => {
                 setStartTime(new Date());
                 const cookieConsentString = getCookieConsentValue('profile-consent-cookie');
                 setCookieConsent(cookieConsentString === 'true' ? true : false);
+
+                
             } catch (err) {
                 console.log(err);
                 navigate('/');

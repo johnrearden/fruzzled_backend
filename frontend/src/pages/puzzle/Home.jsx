@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import styles from '../../styles/Home.module.css';
 import btnStyles from '../../styles/Button.module.css';
 import { Row } from 'react-bootstrap';
@@ -27,22 +27,22 @@ const Home = () => {
             <h5 className={`${styles.fadeIn} text-center mt-5`}>Choose a Puzzle</h5>
 
             <Row className={`${styles.fadeIn} justify-content-center mt-3`}>
-                <button
-                    className={`${btnStyles.Button} px-3 mx-3`}
-                    onClick={() => navigate('/sudoku_home')}
+                <NavLink
+                    to="/sudoku_home"
                     data-cy="sudoku-link"
+                    className={`${btnStyles.Button} px-3 mx-3`}
                 >
                     Sudoku
-                </button>
+                </NavLink>
             </Row>
             <Row className={`${styles.fadeIn} justify-content-center mt-3`}>
-                <button
+                <NavLink
+                    to="/crossword"
                     className={`${btnStyles.Button} px-3 mx-3`}
-                    onClick={() => navigate('/crossword')}
                     data-cy="crossword-link"
                 >
                     Crossword
-                </button>
+                </NavLink>
             </Row>
             {/* <Row className={`${styles.fadeIn} justify-content-center mt-3`}>
                 <button
