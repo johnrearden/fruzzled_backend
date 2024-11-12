@@ -2,59 +2,59 @@ import React from 'react'
 import { Row } from 'react-bootstrap'
 import btnStyles from '../../styles/Button.module.css'
 import styles from '../../styles/sudoku/ChooseDifficulty.module.css';
-import { useNavigate } from 'react-router-dom'
-import { LCLSTRG_KEY } from '../../constants/constants'
+import { NavLink } from 'react-router-dom'
+import { LCLSTRG_KEY} from '../../constants/constants';
 
 
 const ChooseDifficulty = ({ message, fadeIn, square }) => {
 
-    const navigate = useNavigate();
-
     const handleClick = (event) => {
-        const difficulty = event.target.getAttribute("data-difficulty");
-        console.log('difficulty : ', difficulty)
-
         // Remove any stored puzzle from localStorage - keep things simple -
         // Selecting a new puzzle destroys the old one, if present
         window.localStorage.removeItem(LCLSTRG_KEY);
-
-        navigate(`/get_puzzle/${difficulty}`)   
     }
 
     const levelOne = (
-        <button
-            onClick={handleClick}
+        <NavLink
+            to="/get_puzzle/0"
             data-difficulty="0"
             data-cy="easy-difficulty-button"
-            className={` ${btnStyles.Button} ${btnStyles.MinWidth}`}
-        >Easy</button>
+            onClick={handleClick}
+            className={` ${btnStyles.Button} ${btnStyles.MinWidth} text-center`}
+        >
+            Easy
+        </NavLink>
+        
     )
 
     const levelTwo = (
-        <button
-            onClick={handleClick}
+        <NavLink
+            to="/get_puzzle/1"
             data-difficulty="1"
             data-cy="medium-difficulty-button"
-            className={` ${btnStyles.Button}  ${btnStyles.MinWidth}`}
-        >Medium</button>
+            onClick={handleClick}
+            className={` ${btnStyles.Button}  ${btnStyles.MinWidth} text-center`}
+        >Medium</NavLink>
     )
 
     const levelThree = (
-        <button
-            onClick={handleClick}
+        <NavLink
+            to="/get_puzzle/2"
             data-difficulty="2"
             data-cy="tricky-difficulty-button"
-            className={` ${btnStyles.Button}  ${btnStyles.MinWidth}`}
-        >Tricky</button>
+            onClick={handleClick}
+            className={` ${btnStyles.Button}  ${btnStyles.MinWidth} text-center`}
+        >Tricky</NavLink>
     )
 
     const levelFour = (
-        <button
-            onClick={handleClick}
+        <NavLink
+            to="/get_puzzle/3"
             data-difficulty="3"
             data-cy="hard-difficulty-button"
-            className={` ${btnStyles.Button}  ${btnStyles.MinWidth}`}
-        >Hard</button>
+            onClick={handleClick}
+            className={` ${btnStyles.Button}  ${btnStyles.MinWidth} text-center`}
+        >Hard</NavLink>
     )
 
     return (

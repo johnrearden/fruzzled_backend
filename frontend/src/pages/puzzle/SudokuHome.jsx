@@ -21,7 +21,7 @@ const SudokuHome = () => {
     return (
         <div className={styles.Container}>
             <h1 className="text-center mb-3">
-                Sudoku<small className="text-muted"> (demo)</small>
+                Sudoku
             </h1>
             <ChooseDifficulty />
 
