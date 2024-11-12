@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /api/
+Disallow: /signin/
+Sitemap: https://fruzzled.ie/sitemap.xml
