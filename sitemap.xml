@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+		<!--	created with www.mysitemapgenerator.com	-->
+		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+	<loc>https://fruzzled.ie/</loc>
+	<lastmod>2024-11-13T00:15:42+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://fruzzled.ie/signin</loc>
+	<lastmod>2024-11-13T00:15:42+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://fruzzled.ie/sudoku_home</loc>
+	<lastmod>2024-11-13T00:15:42+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://fruzzled.ie/crossword</loc>
+	<lastmod>2024-11-13T00:15:42+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://fruzzled.ie/get_puzzle/0</loc>
+	<lastmod>2024-11-13T00:15:42+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://fruzzled.ie/get_puzzle/1</loc>
+	<lastmod>2024-11-13T00:15:42+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://fruzzled.ie/get_puzzle/2</loc>
+	<lastmod>2024-11-13T00:15:42+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://fruzzled.ie/get_puzzle/3</loc>
+	<lastmod>2024-11-13T00:15:42+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://fruzzled.ie/signup</loc>
+	<lastmod>2024-11-13T00:15:42+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+</urlset>
