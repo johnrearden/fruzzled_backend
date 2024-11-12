@@ -17,9 +17,8 @@ export const SiteLogo = (props) => {
         return (
             <div
                 key={`letter_${index}`}
-                className="d-inline-block user-select-none"
+                className="d-inline-block letter"
                 style={{
-                    // color: `${LOGO_COLORS[index]}`
                     color: 'var(--scnd-color)'
                 }}
             >

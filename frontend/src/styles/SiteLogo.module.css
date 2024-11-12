@@ -8,6 +8,11 @@
     --component-delay: 0.1s;
 }
 
+.letter {
+    user-select: none;
+    cursor: none;
+}
+
 .FreckleFaceFont {
     font-family: "Freckle Face";
 }
