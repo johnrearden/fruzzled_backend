@@ -9,6 +9,7 @@ import useClickOutsideToggle from '../hooks/useClickOutsideToggle';
 import { useSetTheme, useTheme } from '../contexts/ThemeContext';
 import { useProfile } from '../contexts/ProfileContext';
 import ReactCountryFlag from 'react-country-flag';
+import { THEME_LS_KEY } from '../constants/constants';
 
 
 const NavBar = () => {
@@ -23,7 +24,9 @@ const NavBar = () => {
     const [isChecked, setIsChecked] = useState(theme === 'light');
 
     const handleThemeToggle = () => {
-        setTheme(theme === 'light' ? 'dark' : 'light');
+        const newTheme = theme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+        window.localStorage.setItem(THEME_LS_KEY, newTheme);
         setIsChecked(!isChecked);
     }
 

@@ -23,6 +23,8 @@ export const PUZZLE_ID_LS_KEY = 'puzzleId';
 
 export const CRANAGRAM_ID_LS_KEY = 'crannagramId';
 
+export const THEME_LS_KEY = 'theme_key';
+
 export const LOGO_COLORS = [
     'red', 'green', 'blue', 'darkred', 'purple', 'orange', 'darkgreen', 'darkblue',
 ]
