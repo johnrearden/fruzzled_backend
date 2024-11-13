@@ -14,13 +14,14 @@
 .lightTheme {
     --bg-color: #948f85;
     --fg-color: #1b1b1a;
-    --scnd-color: #bda472;
-    /* --thrd-color: #8d7f6f; */
-    --thrd-color: #534b3f;
+    /* --scnd-color: #bda472; */
+    --scnd-color: #67593b;
+    --thrd-color: #6b645f;
+    /* --thrd-color: #534b3f; */
     --brgt-color: #e4dfcb;
     --button-color: #bdb79c;
     --warn-color: #e0492b;
     --nav-bckgnd: #a6a29a;
     --shadow-color: #63594e;
-    --common-warm: #816755;
+    --common-warm: #7f451b;
 }
