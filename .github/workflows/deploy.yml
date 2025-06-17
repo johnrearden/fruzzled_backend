@@ -1,9 +1,13 @@
+name: Deploy to Linode Server
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # Allows manual triggering of the workflow
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    environment:
-      name: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
 
     steps:
     - name: Deploy to linode server
@@ -16,7 +20,7 @@ jobs:
         script: |
           set -e
 
-          # Use differect directories for different environements
+          # Use different directories for different environments
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
             PROJECT_DIR="~/fruzzled_backend"
             SERVICE_NAME="gunicorn"
