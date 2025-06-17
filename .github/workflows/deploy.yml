@@ -22,7 +22,7 @@ jobs:
 
           # Use different directories for different environments
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            PROJECT_DIR="~/fruzzled_backend"
+            PROJECT_DIR="/home/john/fruzzled_backend"
             SERVICE_NAME="gunicorn"
           else
             PROJECT_DIR="staging"
