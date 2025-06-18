@@ -106,14 +106,11 @@ jobs:
 
           # Collect Django static files (admin, DRF browsable API, etc.)
           echo "📁 Collecting Django static files..."
-          echo "Current directory:"
-          pwd
-          echo "Contents of current directory:"
-          ls
+          cd ..
           python manage.py collectstatic --noinput
           
           # Deploy built frontend
-          cd ..
+          
           echo "📁 Deploying frontend files..."
           rm -rf staticfiles/dist
           cp -r frontend/dist staticfiles/
