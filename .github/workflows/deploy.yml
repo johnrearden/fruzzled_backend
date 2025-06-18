@@ -42,8 +42,8 @@ jobs:
           fi
 
           # Create backup of current frontend build
-          BACKUP_DIR="~/deployments/backup-$(date +%Y%m%d_%H%M%S)"
-          mkdir -p ~/deployments
+          BACKUP_DIR="/home/john/deployments/backup-$(date +%Y%m%d_%H%M%S)"
+          mkdir -p /home/john/deployments
           if [ -d "staticfiles/dist" ]; then
             cp -r staticfiles/dist $BACKUP_DIR
             echo "📦 Backup created at $BACKUP_DIR"
@@ -64,6 +64,7 @@ jobs:
           # Check if Python requirements changed
           if git diff --name-only $COMMIT_BEFORE $COMMIT_AFTER | grep -q requirements.txt; then
             echo "📋 Requirements changed, updating Python packages..."
+            source /home/john/fruzzled_backend/venv/bin/activate
             pip install -r requirements.txt
           else
             echo "📋 No requirement changes detected"
