@@ -34,6 +34,9 @@ jobs:
 
           cd $PROJECT_DIR
 
+          # Activate the virtual environment
+          source /home/john/fruzzled_backend/venv/bin/activate
+
           # Check if git working directory is clean
           if [ -n "$(git status --porcelain)" ]; then
             echo "⚠️  Warning: Working directory has uncommitted changes"
@@ -64,7 +67,6 @@ jobs:
           # Check if Python requirements changed
           if git diff --name-only $COMMIT_BEFORE $COMMIT_AFTER | grep -q requirements.txt; then
             echo "📋 Requirements changed, updating Python packages..."
-            source /home/john/fruzzled_backend/venv/bin/activate
             pip install -r requirements.txt
           else
             echo "📋 No requirement changes detected"
@@ -101,16 +103,16 @@ jobs:
           fi
 
           echo "✅ Frontend build completed"
+
+          # Collect Django static files (admin, DRF browsable API, etc.)
+          echo "📁 Collecting Django static files..."
+          python manage.py collectstatic --noinput
           
           # Deploy built frontend
           cd ..
           echo "📁 Deploying frontend files..."
           rm -rf staticfiles/dist
           cp -r frontend/dist staticfiles/
-          
-          # Collect Django static files (admin, DRF browsable API, etc.)
-          echo "📁 Collecting Django static files..."
-          python manage.py collectstatic --noinput
 
           # Run Django system checks
           echo "🔍 Running Django system checks..."
