@@ -18,7 +18,7 @@ if os.path.exists('env.py'):
     import env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(os.environ.get('FRUZZLED_BACKEND_BASE_DIR', Path(__file__).resolve().parent.parent))
 
 # Are we running tests? If so, use SessionAuthentication
 RUNNING_TESTS = sys.argv.__contains__('test')
