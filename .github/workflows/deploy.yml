@@ -31,7 +31,8 @@ jobs:
           echo "New Release directory: $NEW_RELEASE_DIR"
 
           # Clone the repository into the new release directory
-          git clone https://github.com/johnrearden/fruzzled_backend.git "$NEW_RELEASE_DIR"          cd $NEW_RELEASE_DIR
+          git clone https://github.com/johnrearden/fruzzled_backend.git "$NEW_RELEASE_DIR"
+          cd $NEW_RELEASE_DIR
 
           # Activate the virtual environment
           python3 -m venv venv
