@@ -38,8 +38,9 @@ jobs:
           venv/bin/activate
           pip install -r requirements.txt
 
-          # Create a symlink to the canonical env.py file
+          # Create a symlink to the canonical env.py file and the frontend .env file
           ln -sf /home/john/fruzzled_backend/env.py env.py
+          ln -sf /home/john/fruzzled_backend/frontend/.env frontend/.env
 
           # Check if models or migrations changed
           # Let's leave this as a manual step for now
