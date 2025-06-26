@@ -1,8 +1,8 @@
 name: Deploy to Linode Server
 
 on:
-  push:
-    branches: [main]
+  release:
+    types: [published] # Trigger on new release
   workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:

@@ -24,7 +24,7 @@ const Home = () => {
                 />
             </Row>
 
-            <h5 className={`${styles.fadeIn} text-center mt-5`}>Choose a Puzzle</h5>
+            <h5 className={`${styles.fadeIn} text-center mt-5`}>Choose a Puzzle!</h5>
 
             <Row className={`${styles.fadeIn} justify-content-center mt-3`}>
                 <NavLink
