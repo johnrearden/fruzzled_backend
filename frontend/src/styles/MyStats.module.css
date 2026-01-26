@@ -47,10 +47,25 @@
     opacity: 0.8;
 }
 
+.StatsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .StatsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 .StatsCard {
     background: var(--bg-color);
     border: 1px solid var(--button-color);
     border-radius: 12px;
+    height: 100%;
 }
 
 .CardHeader {
@@ -158,4 +173,37 @@
 
 .Button:hover {
     background: linear-gradient(var(--brgt-color), var(--common-warm));
+}
+
+.HomeLinkContainer {
+    border: none;
+}
+
+.HomeLinkCard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 150px;
+}
+
+.HomeLink {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: var(--fg-color);
+    text-decoration: none;
+    padding: 1.5rem;
+    transition: color 0.2s;
+}
+
+.HomeLink:hover {
+    color: var(--common-warm);
+    text-decoration: none;
+}
+
+.HomeLink i {
+    font-size: 2rem;
+    color: inherit;
 }

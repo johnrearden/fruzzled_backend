@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import { axiosReq } from '../../api/axiosDefaults';
 import { useProfile } from '../../contexts/ProfileContext';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import SEO from '../../components/SEO';
 import styles from '../../styles/MyStats.module.css';
 import ReactCountryFlag from 'react-country-flag';
@@ -114,110 +114,111 @@ const MyStats = () => {
                 </Col>
             </Row>
 
-            {/* Sudoku Stats */}
-            <Row className="justify-content-center mb-4">
-                <Col xs={12} md={8} lg={6}>
-                    <Card className={styles.StatsCard}>
-                        <Card.Header className={styles.CardHeader}>
-                            <i className="fa-solid fa-table-cells mr-2"></i>
-                            Sudoku
-                        </Card.Header>
-                        <Card.Body>
-                            <p className="text-center mb-3">
-                                <strong>{stats.sudoku.total_completed}</strong> puzzles completed
-                            </p>
-                            {stats.sudoku.by_difficulty.length > 0 ? (
-                                <div className={styles.DifficultyGrid}>
-                                    {stats.sudoku.by_difficulty.map((item, index) => (
-                                        <div key={index} className={styles.DifficultyItem}>
-                                            <span className={styles.DifficultyName}>{item.difficulty}</span>
-                                            <span className={styles.DifficultyCount}>{item.count} completed</span>
-                                            <span className={styles.DifficultyTime}>
-                                                Best: {formatTime(item.best_time_ms)}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="text-center text-muted">No sudoku puzzles completed yet.</p>
-                            )}
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
+            {/* Stats Grid - 2x2 on desktop/tablet, stacked on mobile */}
+            <div className={styles.StatsGrid}>
+                {/* Sudoku Stats */}
+                <Card className={styles.StatsCard}>
+                    <Card.Header className={styles.CardHeader}>
+                        <i className="fa-solid fa-table-cells mr-2"></i>
+                        Sudoku
+                    </Card.Header>
+                    <Card.Body>
+                        <p className="text-center mb-3">
+                            <strong>{stats.sudoku.total_completed}</strong> puzzles completed
+                        </p>
+                        {stats.sudoku.by_difficulty.length > 0 ? (
+                            <div className={styles.DifficultyGrid}>
+                                {stats.sudoku.by_difficulty.map((item, index) => (
+                                    <div key={index} className={styles.DifficultyItem}>
+                                        <span className={styles.DifficultyName}>{item.difficulty}</span>
+                                        <span className={styles.DifficultyCount}>{item.count} completed</span>
+                                        <span className={styles.DifficultyTime}>
+                                            Best: {formatTime(item.best_time_ms)}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-center text-muted">No sudoku puzzles completed yet.</p>
+                        )}
+                    </Card.Body>
+                </Card>
 
-            {/* Crossword Stats */}
-            <Row className="justify-content-center mb-4">
-                <Col xs={12} md={8} lg={6}>
-                    <Card className={styles.StatsCard}>
-                        <Card.Header className={styles.CardHeader}>
-                            <i className="fa-solid fa-font mr-2"></i>
-                            Crossword
-                        </Card.Header>
-                        <Card.Body>
-                            <p className="text-center mb-3">
-                                <strong>{stats.crossword.total_completed}</strong> puzzles completed
-                            </p>
-                            {stats.crossword.total_completed > 0 ? (
-                                <div className={styles.CrosswordStats}>
-                                    <div className={styles.StatRow}>
-                                        <span>Best Time:</span>
-                                        <span>{formatTime(stats.crossword.best_time_ms)}</span>
-                                    </div>
-                                    <div className={styles.StatRow}>
-                                        <span>Average Time:</span>
-                                        <span>{formatTime(stats.crossword.avg_time_ms)}</span>
-                                    </div>
-                                    <div className={styles.StatRow}>
-                                        <span>Average Accuracy:</span>
-                                        <span>{stats.crossword.avg_accuracy}%</span>
-                                    </div>
+                {/* Crossword Stats */}
+                <Card className={styles.StatsCard}>
+                    <Card.Header className={styles.CardHeader}>
+                        <i className="fa-solid fa-font mr-2"></i>
+                        Crossword
+                    </Card.Header>
+                    <Card.Body>
+                        <p className="text-center mb-3">
+                            <strong>{stats.crossword.total_completed}</strong> puzzles completed
+                        </p>
+                        {stats.crossword.total_completed > 0 ? (
+                            <div className={styles.CrosswordStats}>
+                                <div className={styles.StatRow}>
+                                    <span>Best Time:</span>
+                                    <span>{formatTime(stats.crossword.best_time_ms)}</span>
                                 </div>
-                            ) : (
-                                <p className="text-center text-muted">No crossword puzzles completed yet.</p>
-                            )}
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
+                                <div className={styles.StatRow}>
+                                    <span>Average Time:</span>
+                                    <span>{formatTime(stats.crossword.avg_time_ms)}</span>
+                                </div>
+                                <div className={styles.StatRow}>
+                                    <span>Average Accuracy:</span>
+                                    <span>{stats.crossword.avg_accuracy}%</span>
+                                </div>
+                            </div>
+                        ) : (
+                            <p className="text-center text-muted">No crossword puzzles completed yet.</p>
+                        )}
+                    </Card.Body>
+                </Card>
 
-            {/* Recent Activity */}
-            <Row className="justify-content-center mb-4">
-                <Col xs={12} md={8} lg={6}>
-                    <Card className={styles.StatsCard}>
-                        <Card.Header className={styles.CardHeader}>
-                            <i className="fa-solid fa-clock-rotate-left mr-2"></i>
-                            Recent Activity
-                        </Card.Header>
-                        <Card.Body>
-                            {stats.recent_activity.length > 0 ? (
-                                <div className={styles.ActivityList}>
-                                    {stats.recent_activity.map((activity, index) => (
-                                        <div key={index} className={styles.ActivityItem}>
-                                            <span className={styles.ActivityType}>
-                                                {activity.type === 'sudoku' ? (
-                                                    <i className="fa-solid fa-table-cells mr-3"></i>
-                                                ) : (
-                                                    <i className="fa-solid fa-font mr-3"></i>
-                                                )}
-                                                {activity.type === 'sudoku' ? activity.difficulty : 'Crossword'}
-                                            </span>
-                                            <span className={styles.ActivityTime}>
-                                                {formatTime(activity.time_ms)}
-                                            </span>
-                                            <span className={styles.ActivityDate}>
-                                                {formatDate(activity.completed_at)}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="text-center text-muted">No recent activity.</p>
-                            )}
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
+                {/* Recent Activity */}
+                <Card className={styles.StatsCard}>
+                    <Card.Header className={styles.CardHeader}>
+                        <i className="fa-solid fa-clock-rotate-left mr-2"></i>
+                        Recent Activity
+                    </Card.Header>
+                    <Card.Body>
+                        {stats.recent_activity.length > 0 ? (
+                            <div className={styles.ActivityList}>
+                                {stats.recent_activity.map((activity, index) => (
+                                    <div key={index} className={styles.ActivityItem}>
+                                        <span className={styles.ActivityType}>
+                                            {activity.type === 'sudoku' ? (
+                                                <i className="fa-solid fa-table-cells mr-3"></i>
+                                            ) : (
+                                                <i className="fa-solid fa-font mr-3"></i>
+                                            )}
+                                            {activity.type === 'sudoku' ? activity.difficulty : 'Crossword'}
+                                        </span>
+                                        <span className={styles.ActivityTime}>
+                                            {formatTime(activity.time_ms)}
+                                        </span>
+                                        <span className={styles.ActivityDate}>
+                                            {formatDate(activity.completed_at)}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-center text-muted">No recent activity.</p>
+                        )}
+                    </Card.Body>
+                </Card>
+
+                {/* Home Link */}
+                <Card className={`${styles.StatsCard} ${styles.HomeLinkContainer}`}>
+                    <Card.Body className={styles.HomeLinkCard}>
+                        <NavLink to="/" className={styles.HomeLink}>
+                            <i className="fa-solid fa-house"></i>
+                            <span>Back to Home</span>
+                        </NavLink>
+                    </Card.Body>
+                </Card>
+            </div>
         </Container>
     );
 };

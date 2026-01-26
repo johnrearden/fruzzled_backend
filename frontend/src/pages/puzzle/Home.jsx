@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import styles from '../../styles/Home.module.css';
 import btnStyles from '../../styles/Button.module.css';
@@ -6,6 +6,8 @@ import { Row } from 'react-bootstrap';
 import { SiteLogo } from '../../components/SiteLogo';
 import { UsageReport } from '../../components/UsageReport';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
+import { useProfile } from '../../contexts/ProfileContext';
+import { axiosReq } from '../../api/axiosDefaults';
 import SEO from '../../components/SEO';
 
 const Home = () => {
@@ -15,6 +17,23 @@ const Home = () => {
     const navigate = useNavigate();
 
     const currentUser = useCurrentUser();
+    const profile = useProfile();
+    const [stats, setStats] = useState(null);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const { data } = await axiosReq.get('/player_stats/');
+                setStats(data);
+            } catch (err) {
+                // Silently fail - user may not have a profile
+            }
+        };
+
+        if (profile) {
+            fetchStats();
+        }
+    }, [profile]);
 
     return (
         <>
@@ -58,6 +77,34 @@ const Home = () => {
                     Anagram
                 </button>
             </Row> */}
+
+            {stats && (
+                <div className={`${styles.fadeIn} ${styles.StatsSection}`}>
+                    <div className={styles.StatsRow}>
+                        <div className={styles.StatItem}>
+                            <span className={styles.StatNumber}>{stats.profile.current_streak}</span>
+                            <span className={styles.StatLabel}>Current Streak</span>
+                        </div>
+                        <div className={styles.StatItem}>
+                            <span className={styles.StatNumber}>{stats.profile.longest_streak}</span>
+                            <span className={styles.StatLabel}>Longest Streak</span>
+                        </div>
+                        <div className={styles.StatItem}>
+                            <span className={styles.StatNumber}>{stats.total_puzzles_completed}</span>
+                            <span className={styles.StatLabel}>Puzzles Completed</span>
+                        </div>
+                    </div>
+                    <Row className="justify-content-center mt-3">
+                        <NavLink
+                            to="/stats"
+                            className={styles.StatsLink}
+                        >
+                            <i className="fa-solid fa-chart-line mr-2"></i>
+                            View My Stats
+                        </NavLink>
+                    </Row>
+                </div>
+            )}
 
             {currentUser && (
                 <>

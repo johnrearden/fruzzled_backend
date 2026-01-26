@@ -45,5 +45,50 @@
     }
 }
 
+.StatsSection {
+    margin-top: 4rem;
+    text-align: center;
+}
 
+.StatsRow {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.StatItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 100px;
+}
+
+.StatNumber {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--common-warm);
+}
+
+.StatLabel {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.StatsLink {
+    color: var(--fg-color);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.StatsLink:hover {
+    color: var(--common-warm);
+    text-decoration: none;
+}
+
+.StatsLink i {
+    color: inherit;
+}
 
