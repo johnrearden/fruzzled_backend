@@ -5,6 +5,7 @@ __pycache__/
 *.sqlite3
 db.sqlite3
 db.sqlite3.copy
+dump.json
 
 # Logs
 logs
