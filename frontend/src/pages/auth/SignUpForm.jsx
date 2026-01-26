@@ -8,6 +8,7 @@ import appStyles from "../../App.module.css";
 import { Form, Button, Col, Row, Container, Alert } from "react-bootstrap";
 import axios from "axios";
 import { useRedirect } from "../../hooks/useRedirect";
+import SEO from "../../components/SEO";
 
 const SignUpForm = () => {
 
@@ -42,10 +43,16 @@ const SignUpForm = () => {
     }
 
     return (
-        <Row className={styles.Row}>
-            <Col className="my-auto py-2 p-md-2" md={{ size: 6 }}>
-                <Container className={`${appStyles.Content} p-4 `}>
-                    <h1 className={styles.Header}>sign up</h1>
+        <>
+            <SEO
+                title="Sign Up"
+                description="Create a free Fruzzled account to track your puzzle progress, compete on leaderboards, and save your game history."
+                path="/signup"
+            />
+            <Row className={styles.Row}>
+                <Col className="my-auto py-2 p-md-2" md={{ size: 6 }}>
+                    <Container className={`${appStyles.Content} p-4 `}>
+                        <h1 className={styles.Header}>sign up</h1>
                     <Row className="d-flex justify-content-center">
                         <Form onSubmit={handleSubmit} className="text-center">
                             <Form.Group controlId="username">
@@ -107,8 +114,8 @@ const SignUpForm = () => {
                     </Link>
                 </Container>
             </Col>
-
         </Row>
+        </>
     );
 };
 

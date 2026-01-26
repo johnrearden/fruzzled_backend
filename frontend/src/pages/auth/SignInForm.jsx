@@ -10,6 +10,7 @@ import axios from "axios";
 import { useSetCurrentUser } from "../../contexts/CurrentUserContext";
 import { useRedirect } from "../../hooks/useRedirect";
 import { setTokenTimestamp } from "../../utils/utils";
+import SEO from "../../components/SEO";
 
 // comment
 
@@ -50,10 +51,16 @@ const SignInForm = () => {
     }
 
     return (
-        <Row className={styles.Row}>
-            <Col className="my-auto py-2 p-md-2" md={{ size: 6 }}>
-                <Container className={`${appStyles.Content}`}>
-                    <h1 className={styles.Header}>Sign In</h1>
+        <>
+            <SEO
+                title="Sign In"
+                description="Sign in to Fruzzled to track your puzzle progress, compete on leaderboards, and save your game history."
+                path="/signin"
+            />
+            <Row className={styles.Row}>
+                <Col className="my-auto py-2 p-md-2" md={{ size: 6 }}>
+                    <Container className={`${appStyles.Content}`}>
+                        <h1 className={styles.Header}>Sign In</h1>
                     <Row className="d-flex justify-content-center">
                         <Form onSubmit={handleSubmit} className="text-center">
                             <Form.Group controlId="username">
@@ -102,11 +109,12 @@ const SignInForm = () => {
                 </Container>
                 <Container className={`mt-3 ${appStyles.Content}`}>
                     <Link className={styles.Link} to="/signin">
-                        Already have an account? 
+                        Already have an account?
                     </Link>
                 </Container>
             </Col>
         </Row>
+        </>
     );
 };
 

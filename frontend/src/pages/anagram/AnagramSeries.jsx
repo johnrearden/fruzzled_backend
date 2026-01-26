@@ -5,6 +5,7 @@ import styles from '../../styles/anagram/AnagramSeries.module.css'
 import { CountdownTimer } from '../../components/CountdownTimer';
 import { Row } from 'react-bootstrap';
 import { axiosReq } from '../../api/axiosDefaults';
+import SEO from '../../components/SEO';
 
 const AnagramSeries = () => {
 
@@ -92,6 +93,11 @@ const AnagramSeries = () => {
 
     return loaded && (
         <div className={styles.Container}>
+            <SEO
+                title="Play Anagram Puzzles"
+                description="Test your word skills with timed anagram puzzles. Unscramble words before time runs out!"
+                path="/anagram"
+            />
             <Row className="d-flex justify-content-center mt-5">
                 <CountdownTimer
                     initialTime={timerInitialValue}

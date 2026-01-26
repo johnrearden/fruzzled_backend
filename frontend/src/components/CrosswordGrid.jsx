@@ -14,6 +14,7 @@ import { usePuzzleHistoryContext } from '../contexts/PuzzleHistoryContext';
 import ProfileForm from './ProfileForm.jsx';
 import { CrosswordTimer } from './CrosswordTimer.jsx';
 import { axiosReq } from '../api/axiosDefaults.js';
+import ShareButton from './ShareButton.jsx';
 
 import styles from '../styles/crossword/Grid.module.css';
 import btnStyles from '../styles/Button.module.css'
@@ -605,6 +606,13 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
                                     You got {percentageCorrect}% of the crossword correct in&nbsp;
                                     {getVerboseTimeString(timeExpiredRef.current)}!
                                 </div>
+                                <div className="mt-3">
+                                    <ShareButton
+                                        puzzleType="crossword"
+                                        time={getVerboseTimeString(timeExpiredRef.current)}
+                                        message={`I completed a crossword with ${percentageCorrect}% accuracy in ${getVerboseTimeString(timeExpiredRef.current)} on Fruzzled!`}
+                                    />
+                                </div>
                                 <div>
                                     <button
                                         className={`${btnStyles.Button} mt-md-4 mt-2`}
@@ -618,7 +626,7 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
                                     >Enough Crosswords</button>
                                 </div>
                             </>
-                            
+
                         )}
 
 

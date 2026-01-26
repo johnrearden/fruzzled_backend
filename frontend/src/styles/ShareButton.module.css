@@ -1,0 +1,51 @@
+.ShareContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.ShareButton {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.Dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.5rem;
+    background: var(--bg-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    overflow: hidden;
+    z-index: 100;
+    min-width: 140px;
+}
+
+.DropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--fg-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.9rem;
+}
+
+.DropdownItem:hover {
+    background: var(--button-color);
+}
+
+.DropdownItem i {
+    width: 1rem;
+    text-align: center;
+}
+
+.DropdownItem span {
+    white-space: nowrap;
+}

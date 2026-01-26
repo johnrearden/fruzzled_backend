@@ -130,6 +130,9 @@ if 'DEBUG' in os.environ:
 
 CORS_ALLOW_CREDENTIALS = True
 
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(' ')
+CSRF_TRUSTED_ORIGINS = [origin for origin in CSRF_TRUSTED_ORIGINS if origin]  # Filter empty strings
+
 ROOT_URLCONF = 'fruzzled_backend.urls'
 
 TEMPLATES = [

@@ -3,6 +3,7 @@ import { axiosReq, axiosRes } from '../../api/axiosDefaults';
 import styles from '../../styles/anagram/AnagramCreator.module.css';
 import btnStyles from "../../styles/Button.module.css";
 import { Alert } from 'react-bootstrap';
+import SEO from '../../components/SEO';
 
 const SHORTEST_WORD = 3;
 const MAX_ANAGRAMS = 8;
@@ -115,6 +116,11 @@ const AnagramCreator = () => {
 
     return (
         <div className={styles.Outer}>
+            <SEO
+                title="Create Anagram Series"
+                description="Create a new anagram puzzle series on Fruzzled."
+                path="/anagram_creator"
+            />
             <h5 className="text-center">New Anagram Series</h5>
             <form
                 className="mt-2"

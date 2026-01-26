@@ -26,6 +26,8 @@ import { createSearchArray, getSearchArraysFromGrid, getSearchArraysRemoveOnly, 
 import { bruteForce } from '../../utils/strategies/bruteForce';
 import SudokuKeyboardHandler from '../../components/SudokuKeyboardHandler';
 import { getCookieConsentValue } from 'react-cookie-consent';
+import SEO from '../../components/SEO';
+import ShareButton from '../../components/ShareButton';
 
 
 const PuzzleContainer = () => {
@@ -292,8 +294,15 @@ const PuzzleContainer = () => {
         : `${styles.SuccessMessage} ${styles.PointerEventsOff}`;
 
 
+    const difficultyName = DIFFICULTY_LEVELS[difficulty] || 'Sudoku';
+
     return (
         <Container>
+            <SEO
+                title={`${difficultyName.charAt(0).toUpperCase() + difficultyName.slice(1)} Sudoku Puzzle`}
+                description={`Play a ${difficultyName} sudoku puzzle online at Fruzzled. Challenge yourself and compete on the leaderboard!`}
+                path={`/get_puzzle/${difficulty}`}
+            />
             <Row className="d-flex justify-content-center mt-3">
                 <p className="mr-5" data-cy="difficulty-display">{DIFFICULTY_LEVELS[difficulty].toUpperCase()}</p>
                 <Timer startTime={startTime}></Timer>
@@ -323,8 +332,14 @@ const PuzzleContainer = () => {
                 >
                     <h1>Well Done!</h1>
                     <h4>Play again?</h4>
+                    <div className="mb-3">
+                        <ShareButton
+                            puzzleType="sudoku"
+                            difficulty={difficultyName}
+                        />
+                    </div>
                     {!!cookieConsent ? (
-                        <button 
+                        <button
                             className={`${btnStyles.Button} mt-4`}
                             onClick={handleLeaderboardButtonClick}
                             data-cy="leaderboard_button"
@@ -332,12 +347,12 @@ const PuzzleContainer = () => {
                         </button>
                     ) : (
                         <>
-                            <button 
+                            <button
                                 className={`${btnStyles.Button} mt-4`}
                                 onClick={() => navigate('/sudoku_home')}
                                 >Yes
                             </button>
-                            <button 
+                            <button
                                 className={`${btnStyles.Button} mt-4`}
                                 onClick={() => navigate('/')}
                                 >No

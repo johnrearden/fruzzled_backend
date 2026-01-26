@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { axiosReq, axiosRes } from '../../api/axiosDefaults';
 import { CrosswordEditor } from './CrosswordEditor';
 import { Navigate, useNavigate } from 'react-router-dom';
+import SEO from '../../components/SEO';
 
 const CreateNewCrossword = () => {
 
@@ -61,6 +62,11 @@ const CreateNewCrossword = () => {
         <CrosswordEditor data={data} />
     ) : (
         <div>
+            <SEO
+                title="Create New Crossword"
+                description="Create a new crossword puzzle on Fruzzled."
+                path="/create_crossword"
+            />
             <form>
                 <input 
                     type="number"

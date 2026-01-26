@@ -7,6 +7,7 @@ import styles from '../../styles/Leaderboard.module.css';
 import ChooseDifficulty from './ChooseDifficulty';
 import ReactCountryFlag from 'react-country-flag';
 import { millisToTimeString } from '../../utils/utils';
+import SEO from '../../components/SEO';
 
 
 const Leaderboard = () => {
@@ -89,6 +90,11 @@ const Leaderboard = () => {
 
     return (
         <>
+            <SEO
+                title="Sudoku Leaderboard"
+                description="See how your sudoku times compare with players from around the world. Compete for the top spot on the Fruzzled leaderboard!"
+                path={`/leaderboard/${id}`}
+            />
             <Row className="d-flex justify-content-center mt-3">
                 <h4 data-cy="leaderboard_heading">Leaderboard</h4>
             </Row>

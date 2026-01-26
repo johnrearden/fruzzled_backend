@@ -6,7 +6,7 @@ import { Row } from 'react-bootstrap';
 import { SiteLogo } from '../../components/SiteLogo';
 import { UsageReport } from '../../components/UsageReport';
 import { useCurrentUser } from '../../contexts/CurrentUserContext';
-import CookieConsent from 'react-cookie-consent';
+import SEO from '../../components/SEO';
 
 const Home = () => {
 
@@ -18,6 +18,11 @@ const Home = () => {
 
     return (
         <>
+            <SEO
+                title="Free Online Sudoku & Crossword Puzzles"
+                description="Play free sudoku and crossword puzzles online at Fruzzled. Challenge yourself with puzzles ranging from easy to expert difficulty. Track your times and compete on leaderboards!"
+                path="/"
+            />
             <Row className="mt-5 pt-5 d-flex justify-content-center">
                 <SiteLogo
                     mainText={mainLogoText}

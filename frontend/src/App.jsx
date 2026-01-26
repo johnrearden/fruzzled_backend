@@ -19,6 +19,7 @@ import AnagramCreator from './pages/anagram/AnagramCreator';
 import CreateNewCrossword from './pages/crossword/CreateNewCrossword';
 import { CrosswordEditLoader } from './pages/crossword/CrosswordEditLoader';
 import { CrosswordDashboard } from './pages/crossword/CrosswordDashboard';
+import MyStats from './pages/stats/MyStats';
 import CookieConsent from 'react-cookie-consent';
 
 
@@ -62,9 +63,12 @@ function App() {
                     <Route
                         path="/edit_crossword/:id"
                         element={ <CrosswordEditLoader />} />
-                    <Route 
+                    <Route
                         path="/create_crossword"
                         element={ <CreateNewCrossword /> }/>
+                    <Route
+                        path="/stats"
+                        element={ <MyStats /> }/>
                     <Route
                         path="/"
                         element={ <Home /> } />

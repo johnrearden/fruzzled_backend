@@ -128,18 +128,28 @@ const NavBar = () => {
                     {currentUser ? loggedInIcons : loggedOutIcons}
 
                     {profile && (
-                        <div className="mx-3">
-                            <ReactCountryFlag
-                                className="emojiFlag"
-                                countryCode={profile.country}
-                                svg
-                                style={{
-                                    fontSize: '2em',
-                                    lineHeight: '2em',
-                                }}
-                                aria-label={profile.country}
-                            ></ReactCountryFlag>
-                        </div>
+                        <>
+                            <NavLink
+                                className={styles.NavLink}
+                                to="/stats"
+                                title="My Stats"
+                                data-cy="stats-link"
+                            >
+                                <i className="fa-solid fa-chart-line"></i>
+                            </NavLink>
+                            <div className="mx-3">
+                                <ReactCountryFlag
+                                    className="emojiFlag"
+                                    countryCode={profile.country}
+                                    svg
+                                    style={{
+                                        fontSize: '2em',
+                                        lineHeight: '2em',
+                                    }}
+                                    aria-label={profile.country}
+                                ></ReactCountryFlag>
+                            </div>
+                        </>
                     )}
                 </div>
 

@@ -48,6 +48,10 @@ class CreatePuzzleInstance(generics.CreateAPIView):
         profile = PlayerProfile.objects.filter(uuid=profile_cookie).first()
         serializer.save(owner=profile)
 
+        # Update player's streak
+        if profile:
+            profile.update_streak()
+
 
 class GetRandomPuzzle(APIView):
     http_method_names = ['get']

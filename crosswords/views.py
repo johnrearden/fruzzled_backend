@@ -367,4 +367,8 @@ class CreateCrosswordInstance(generics.CreateAPIView):
         profile = PlayerProfile.objects.filter(uuid=profile_cookie).first()
         serializer.save(owner=profile)
 
+        # Update player's streak
+        if profile:
+            profile.update_streak()
+
 

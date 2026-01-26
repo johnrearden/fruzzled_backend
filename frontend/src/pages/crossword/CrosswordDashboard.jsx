@@ -5,6 +5,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import btnStyles from '../../styles/Button.module.css';
 import { Toggle } from '../../components/Toggle';
+import SEO from '../../components/SEO';
 
 
 export const CrosswordDashboard = () => {
@@ -139,6 +140,11 @@ export const CrosswordDashboard = () => {
 
     return (
         <Container>
+            <SEO
+                title="Crossword Dashboard"
+                description="Manage and create crossword puzzles on Fruzzled."
+                path="/crossword_dashboard"
+            />
             <Row className="d-flex justify-content-center">
                 <Link to={'/create_crossword'}>
                     <button className={btnStyles.Button}>

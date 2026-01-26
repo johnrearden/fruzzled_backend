@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom'
 import navStyles from '../../styles/NavBar.module.css';
 import styles from '../../styles/sudoku/SudokuHome.module.css';
 import { Row } from 'react-bootstrap';
+import SEO from '../../components/SEO';
 
 const SudokuHome = () => {
 
@@ -20,6 +21,11 @@ const SudokuHome = () => {
 
     return (
         <div className={styles.Container}>
+            <SEO
+                title="Play Free Sudoku Online"
+                description="Play free sudoku puzzles online at Fruzzled. Choose from Easy, Medium, Hard, or Vicious difficulty levels. Track your times and compete on the leaderboard!"
+                path="/sudoku_home"
+            />
             <h1 className="text-center mb-3">
                 Sudoku
             </h1>

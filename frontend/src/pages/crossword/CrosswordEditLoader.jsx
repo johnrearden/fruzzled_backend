@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { axiosReq } from "../../api/axiosDefaults";
 import { useParams } from "react-router-dom";
 import { CrosswordEditor } from "./CrosswordEditor";
+import SEO from "../../components/SEO";
 
 
 export const CrosswordEditLoader = () => {
@@ -21,7 +22,14 @@ export const CrosswordEditLoader = () => {
     }, [])
 
     const component = loaded ? (
-        <CrosswordEditor data={data} />
+        <>
+            <SEO
+                title="Edit Crossword"
+                description="Edit and refine your crossword puzzle on Fruzzled."
+                path={`/edit_crossword/${id}`}
+            />
+            <CrosswordEditor data={data} />
+        </>
     ) : (
         <span>Loading</span>
     )
