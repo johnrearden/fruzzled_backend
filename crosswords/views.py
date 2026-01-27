@@ -372,3 +372,40 @@ class CreateCrosswordInstance(generics.CreateAPIView):
             profile.update_streak()
 
 
+class GetCrosswordLeaderboard(APIView):
+    '''
+    A view that returns the crossword instance's position in the rankings,
+    the top 5 in the rankings, and the instance itself.
+    '''
+
+    def get(self, request, instance_id):
+        from .models import CrosswordInstance
+
+        instance = CrosswordInstance.objects.filter(id=instance_id).first()
+        if not instance:
+            return Response(
+                status=status.HTTP_404_NOT_FOUND,
+                data={'message': 'Instance not found'}
+            )
+
+        # Only count instances with 100% completion for fair comparison
+        index = CrosswordInstance.objects.filter(
+            percent_complete=100,
+            time_taken__lt=instance.time_taken
+        ).count()
+
+        rankings = CrosswordInstance.objects.filter(
+            percent_complete=100
+        ).order_by('time_taken')[:5]
+
+        top_n_serializer = CrosswordInstanceSerializer(rankings, many=True)
+        instance_serializer = CrosswordInstanceSerializer(instance)
+
+        data = {
+            'puzzle_instance': instance_serializer.data,
+            'ranking': index,
+            'top_n': top_n_serializer.data
+        }
+
+        return Response(data)
+

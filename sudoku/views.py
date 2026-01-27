@@ -95,7 +95,7 @@ class GetRandomPuzzle(APIView):
 
 class GetLeaderboard(APIView):
     '''
-    A view that returns this instances position in the rankings for its 
+    A view that returns this instances position in the rankings for its
     puzzle, the top 5 in the rankings, and the instance itself)
     '''
 
@@ -103,7 +103,7 @@ class GetLeaderboard(APIView):
         instance = PuzzleInstance.objects.filter(id=instance_id).first()
         index = PuzzleInstance.objects.filter(time_taken__lt=instance.time_taken).count()
         rankings = PuzzleInstance.objects.order_by('time_taken')[:5]
-        
+
         top_n_serializer = PuzzleInstanceSerializer(
             rankings, many=True
         )
@@ -115,3 +115,34 @@ class GetLeaderboard(APIView):
         }
 
         return Response(data)
+
+
+class GetPuzzleById(APIView):
+    '''
+    Returns a specific puzzle by its ID. Used for challenge links
+    where users can share a specific puzzle with friends.
+    '''
+    http_method_names = ['get']
+
+    def get(self, request, puzzle_id):
+        puzzle = SudokuPuzzle.objects.filter(id=puzzle_id).first()
+        if not puzzle:
+            return Response(
+                status=status.HTTP_404_NOT_FOUND,
+                data={'message': 'Puzzle not found'}
+            )
+
+        serializer = SudokuPuzzleSerializer(
+            puzzle,
+            context={'request': request}
+        )
+
+        # Record the puzzle request
+        profile_cookie = request.COOKIES.get(settings.PLAYER_PROFILE_COOKIE, None)
+        SudokuPuzzleRequest.objects.create(
+            puzzle=puzzle,
+            difficulty=puzzle.difficulty,
+            player_uuid=profile_cookie
+        )
+
+        return Response(serializer.data)

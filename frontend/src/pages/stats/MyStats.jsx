@@ -80,6 +80,10 @@ const MyStats = () => {
                 title="My Stats"
                 description="View your personal puzzle statistics including games completed, streaks, and best times."
                 path="/stats"
+                breadcrumbs={[
+                    { name: 'Home', url: 'https://fruzzled.ie' },
+                    { name: 'My Stats', url: 'https://fruzzled.ie/stats' }
+                ]}
             />
 
             {/* Profile Header */}

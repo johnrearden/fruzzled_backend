@@ -34,6 +34,7 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
     const timeExpiredRef = useRef(0);
     const [percentageCorrect, setPercentageCorrect] = useState(0);
     const percentageCompleteRef = useRef(0);
+    const [instanceId, setInstanceId] = useState(null);
 
     const { savePuzzleToHistory, getPuzzleHistory } = usePuzzleHistoryContext();
 
@@ -95,10 +96,10 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
         formData.append("percent_correct", percentageCorrect);
 
         try {
-            const {data} = await axiosReq.post(
+            const response = await axiosReq.post(
                 '/crossword_builder/create_crossword_instance/',
                 formData);
-                //navigate('/');
+            setInstanceId(response.data.id);
         } catch (err) {
             console.log(err);
         }
@@ -613,6 +614,14 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
                                         message={`I completed a crossword with ${percentageCorrect}% accuracy in ${getVerboseTimeString(timeExpiredRef.current)} on Fruzzled!`}
                                     />
                                 </div>
+                                {instanceId && (
+                                    <div>
+                                        <button
+                                            className={`${btnStyles.Button} mt-md-4 mt-2`}
+                                            onClick={() => navigate(`/crossword/leaderboard/${instanceId}`)}
+                                        >Leaderboard</button>
+                                    </div>
+                                )}
                                 <div>
                                     <button
                                         className={`${btnStyles.Button} mt-md-4 mt-2`}

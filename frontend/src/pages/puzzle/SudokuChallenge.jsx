@@ -30,20 +30,19 @@ import SEO from '../../components/SEO';
 import ShareButton from '../../components/ShareButton';
 
 
-const PuzzleContainer = () => {
+const SudokuChallenge = () => {
 
-    // Have to load theme here as react-bootstrap modal doesn't inherit them. WTF.
     const theme = useTheme();
     const themeStyles = theme === 'light' ? themes.lightTheme : themes.darkTheme;
 
     const profile = useProfile();
     const [cookieConsent, setCookieConsent] = useState(false);
 
-    const { savePuzzleToHistory, getPuzzleHistory } = usePuzzleHistoryContext();
+    const { savePuzzleToHistory } = usePuzzleHistoryContext();
 
     const [showProfileModal, setShowProfileModal] = useState(false);
 
-    const { difficulty } = useParams();
+    const { puzzleId } = useParams();
     const [puzzleData, setPuzzleData] = useState({
         grid: Array(82).join('-')
     });
@@ -51,40 +50,29 @@ const PuzzleContainer = () => {
     const [completeness, setCompleteness] = useState(0);
     const [initialKnownCount, setInitialKnownCount] = useState(0);
     const [startTime, setStartTime] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Digits already placed 9 times in the puzzle
     const [exhaustedDigits, setExhaustedDigits] = useState([]);
 
     const navigate = useNavigate();
     const currentUser = useCurrentUser();
 
-    // Current cell selected by user.
     const [selectedCellIndex, setSelectedCellIndex] = useState(0);
-
-    // The row, col or square in which a digit appears twice
     const [warningGroup, setWarningGroup] = useState([]);
-
-    // The cell that duplicated the value of the current selected cell.
     const [clashingCell, setClashingCell] = useState(-1);
-
     const [undoStack, setUndoStack] = useState([]);
-
     const [showNotes, setShowNotes] = useState(false);
 
     const toggleNotes = () => {
         setShowNotes(!showNotes);
     }
 
-    // Load data on mount.
+    // Load specific puzzle by ID on mount
     useEffect(() => {
         const handleMount = async () => {
             try {
-                const puzzleHistory = getPuzzleHistory("sudoku", difficulty);
-                let getQuery = '';
-                if (puzzleHistory) {
-                    getQuery = `?used_puzzles=${puzzleHistory}`;
-                }
-                const url = `/get_random_puzzle/${difficulty}/${getQuery}`;
+                const url = `/get_puzzle/${puzzleId}/`;
                 const { data } = await axiosReq.get(url);
                 setPuzzleData(data);
                 const initialKnownCount = data.grid.split('').filter(chr => chr !== '-');
@@ -94,29 +82,17 @@ const PuzzleContainer = () => {
                 setStartTime(new Date());
                 const cookieConsentString = getCookieConsentValue('profile-consent-cookie');
                 setCookieConsent(cookieConsentString === 'true' ? true : false);
-
-                
+                setLoading(false);
             } catch (err) {
                 console.log(err);
-                navigate('/');
+                setError('Puzzle not found');
+                setLoading(false);
             }
         }
 
-        const previousPuzzle = window.localStorage.getItem(LCLSTRG_KEY);
-        const previousUndoStack = window.localStorage.getItem(LCLSTRG_UNDO_STACK_KEY);
-        if (previousPuzzle) {
-            const puzzleData = JSON.parse(previousPuzzle);
-            setPuzzleData(puzzleData);
-            const uStack = JSON.parse(previousUndoStack);
-            setUndoStack(uStack);
-        } else {
-            handleMount();
-        }
-        
-    }, [difficulty, history, getPuzzleHistory]);
+        handleMount();
+    }, [puzzleId]);
 
-    // Tests if a digit is valid in the current selected cell, and displays
-    // the warnings if not.
     const performValidityCheck = (digit) => {
         const { isValid, clashingCell, group } = checkCellValidity(
             puzzleData.grid, selectedCellIndex, digit);
@@ -144,8 +120,6 @@ const PuzzleContainer = () => {
                 ...prevData,
                 grid: newGrid,
             }
-            window.localStorage.setItem(LCLSTRG_KEY, JSON.stringify(newData));
-            
             return newData;
         })
 
@@ -161,15 +135,11 @@ const PuzzleContainer = () => {
 
     const handleCellSelection = (index) => {
         if (warningGroup.length === 0) {
-            console.log(`index === ${index}`)
             setSelectedCellIndex(index);
         }
     }
 
     const handleUndo = () => {
-
-        // Bail early if showProfileModal is true to mitigate bug.
-        // https://github.com/johnrearden/fruzzled_backend/issues/27#issue-2642312961
         if (showProfileModal) {
             return;
         }
@@ -186,7 +156,6 @@ const PuzzleContainer = () => {
                 ...prev,
                 grid: replaceCharAt(puzzleData.grid, index, previousValue)
             }
-            window.localStorage.setItem(LCLSTRG_KEY, JSON.stringify(newData));
             return newData;
         })
 
@@ -198,17 +167,7 @@ const PuzzleContainer = () => {
         performValidityCheck(previousValue);
     }
 
-    /**
-     * Store undoStack in localStorage each time the array reference changes
-     */
-    useEffect(() => {
-        console.log('useEffect undoStack fired')
-        window.localStorage.setItem(LCLSTRG_UNDO_STACK_KEY, JSON.stringify(undoStack));
-    }, [undoStack]);
-
     const handleLeaderboardButtonClick = () => {
-
-
         if (!profile) {
             setShowProfileModal(true);
         } else {
@@ -222,8 +181,6 @@ const PuzzleContainer = () => {
     }
 
     const submitPuzzle = async () => {
-
-        // First, submit the puzzle
         const formData = new FormData();
         formData.append("puzzle", puzzleData.id);
         formData.append("grid", puzzleData.grid);
@@ -232,16 +189,15 @@ const PuzzleContainer = () => {
         formData.append("completed", "true");
         try {
             const {data} = await axiosReq.post(
-                '/create_puzzle_instance/', 
+                '/create_puzzle_instance/',
                 formData,
-                );
-                navigate(`/leaderboard/${data.id}/`)
+            );
+            navigate(`/leaderboard/${data.id}/`)
         } catch (err) {
             console.log(err);
         }
     }
 
-    // Update completeness and exhaustedDigits each time the grid changes
     useEffect(() => {
         if (puzzleData.grid != null) {
             const knownCellCount = puzzleData.grid.split('').filter(chr => chr !== '-');
@@ -255,14 +211,11 @@ const PuzzleContainer = () => {
         }
     }, [puzzleData, currentUser]);
 
-
-    // Submit the puzzle if completeness hits 100%
     useEffect(() => {
         if (completeness >= 100) {
-            window.localStorage.removeItem(LCLSTRG_KEY);
-            savePuzzleToHistory(puzzleData.id, "sudoku", difficulty);
+            savePuzzleToHistory(puzzleData.id, "sudoku", puzzleData.difficulty);
         }
-    }, [completeness, currentUser, puzzleData, history, difficulty, savePuzzleToHistory]) 
+    }, [completeness, currentUser, puzzleData, savePuzzleToHistory])
 
     const callback = (grid, newSearchArray) => {
         setPuzzleData(prev => ({
@@ -273,10 +226,8 @@ const PuzzleContainer = () => {
     }
 
     const handleSolve = useCallback(() => {
-        console.log(puzzleData.grid, 'source')
         solvePuzzle(puzzleData.grid, searchArray, callback);
     }, [puzzleData, searchArray]);
-
 
     const handleBruteForce = () => {
         bruteForce(puzzleData.grid.slice(), callback);
@@ -287,29 +238,55 @@ const PuzzleContainer = () => {
         setSearchArray(refreshed);
     }
 
-    // Set success message style
-    const successStyle = 
-        completeness === 100 
-        ? `${styles.SuccessMessage} ${styles.PointerEventsOn} ${styles.RevealMessage}` 
+    if (loading) {
+        return (
+            <Container>
+                <Row className="d-flex justify-content-center mt-5">
+                    <p>Loading puzzle...</p>
+                </Row>
+            </Container>
+        );
+    }
+
+    if (error) {
+        return (
+            <Container>
+                <Row className="d-flex justify-content-center mt-5">
+                    <p>{error}</p>
+                    <button
+                        className={`${btnStyles.Button} mt-3`}
+                        onClick={() => navigate('/sudoku_home')}
+                    >
+                        Play a random puzzle
+                    </button>
+                </Row>
+            </Container>
+        );
+    }
+
+    const successStyle =
+        completeness === 100
+        ? `${styles.SuccessMessage} ${styles.PointerEventsOn} ${styles.RevealMessage}`
         : `${styles.SuccessMessage} ${styles.PointerEventsOff}`;
 
-
-    const difficultyName = DIFFICULTY_LEVELS[difficulty] || 'Sudoku';
+    const difficultyName = DIFFICULTY_LEVELS[puzzleData.difficulty] || 'Sudoku';
 
     return (
         <Container>
             <SEO
-                title={`${difficultyName.charAt(0).toUpperCase() + difficultyName.slice(1)} Sudoku Puzzle`}
-                description={`Play a ${difficultyName} sudoku puzzle online at Fruzzled. Challenge yourself and compete on the leaderboard!`}
-                path={`/get_puzzle/${difficulty}`}
+                title={`Sudoku Challenge #${puzzleId}`}
+                description={`Play this ${difficultyName} sudoku puzzle challenge on Fruzzled. Can you beat your friend's time?`}
+                path={`/sudoku/challenge/${puzzleId}`}
                 breadcrumbs={[
                     { name: 'Home', url: 'https://fruzzled.ie' },
                     { name: 'Sudoku', url: 'https://fruzzled.ie/sudoku_home' },
-                    { name: `${difficultyName.charAt(0).toUpperCase() + difficultyName.slice(1)} Puzzle`, url: `https://fruzzled.ie/get_puzzle/${difficulty}` }
+                    { name: `Challenge #${puzzleId}`, url: `https://fruzzled.ie/sudoku/challenge/${puzzleId}` }
                 ]}
             />
             <Row className="d-flex justify-content-center mt-3">
-                <p className="mr-5" data-cy="difficulty-display">{DIFFICULTY_LEVELS[difficulty].toUpperCase()}</p>
+                <p className="mr-5" data-cy="difficulty-display">
+                    CHALLENGE #{puzzleId} - {difficultyName.toUpperCase()}
+                </p>
                 <Timer startTime={startTime}></Timer>
             </Row>
             <Row className="mt-2">
@@ -330,18 +307,18 @@ const PuzzleContainer = () => {
                     warningGroup={warningGroup}
                     clashingCell={clashingCell}
                     completed={completeness === 100}
-                    />
-                <div 
+                />
+                <div
                     className={`${successStyle} text-center`}
-                    data-cy="success_message_div"    
+                    data-cy="success_message_div"
                 >
                     <h1>Well Done!</h1>
-                    <h4>Play again?</h4>
+                    <h4>Challenge Complete!</h4>
                     <div className="mb-3">
                         <ShareButton
                             puzzleType="sudoku"
                             difficulty={difficultyName}
-                            puzzleId={puzzleData?.id}
+                            challengeId={puzzleId}
                         />
                     </div>
                     {!!cookieConsent ? (
@@ -349,44 +326,41 @@ const PuzzleContainer = () => {
                             className={`${btnStyles.Button} mt-4`}
                             onClick={handleLeaderboardButtonClick}
                             data-cy="leaderboard_button"
-                            >Leaderboard
+                        >Leaderboard
                         </button>
                     ) : (
                         <>
                             <button
                                 className={`${btnStyles.Button} mt-4`}
                                 onClick={() => navigate('/sudoku_home')}
-                                >Yes
+                            >Play Another
                             </button>
                             <button
                                 className={`${btnStyles.Button} mt-4`}
                                 onClick={() => navigate('/')}
-                                >No
+                            >Home
                             </button>
                         </>
                     )}
-                    
-                    
                 </div>
             </Row>
             <Row className="d-flex justify-content-center mt-3">
                 <DigitChooser
                     exhaustedDigits={exhaustedDigits}
                     handleDigitChoice={handleDigitChoice} />
-
             </Row>
             <Row className="d-flex justify-content-center mt-3">
                 <button
                     className={`${btnStyles.Button} mx-2`}
                     onClick={handleUndo}
                     aria-label="back button"
-                    >
+                >
                     <i className="fa-solid fa-arrow-rotate-left"></i>
                 </button>
                 <button
                     className={`${btnStyles.Button} mx-2`}
                     onClick={toggleNotes}>
-                        Notes
+                    Notes
                 </button>
                 { currentUser && (
                     <button
@@ -395,31 +369,24 @@ const PuzzleContainer = () => {
                         Brute Force
                     </button>
                 )}
-                
                 <button
                     className={`${btnStyles.Button} mx-2`}
                     onClick={handleRefreshNotes}
                     disabled={!showNotes}
-                    >
+                >
                     Refresh Notes
                 </button>
-                
-                
-                
                 { currentUser && (
-                    <>
-                        <Button
-                            className={`${btnStyles.Button} mx-2`}
-                            onClick={handleSolve}>
-                            Solve
-                        </Button>
-                        
-                </>
+                    <Button
+                        className={`${btnStyles.Button} mx-2`}
+                        onClick={handleSolve}>
+                        Solve
+                    </Button>
                 )}
             </Row>
 
-            <Modal 
-                show={showProfileModal} 
+            <Modal
+                show={showProfileModal}
                 onHide={() => setShowProfileModal(false)}
                 contentClassName={`${styles.ProfileModal} ${themeStyles}`}
                 centered
@@ -430,16 +397,15 @@ const PuzzleContainer = () => {
                 </Modal.Body>
             </Modal>
 
-            <SudokuKeyboardHandler 
+            <SudokuKeyboardHandler
                 selectedCellIndex={selectedCellIndex}
                 handleCellSelection={handleCellSelection}
                 handleDigitChoice={handleDigitChoice}
                 exhaustedDigits={exhaustedDigits}
                 handleUndo={handleUndo}
             />
-
         </Container>
     )
 }
 
-export default PuzzleContainer
+export default SudokuChallenge

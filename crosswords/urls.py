@@ -19,5 +19,8 @@ urlpatterns = [
          name='delete_puzzle'),
     path('create_crossword_instance/',
          views.CreateCrosswordInstance.as_view(),
-         name='create_crossword_instance')
+         name='create_crossword_instance'),
+    path('get_leaderboard/<int:instance_id>/',
+         views.GetCrosswordLeaderboard.as_view(),
+         name='get_crossword_leaderboard'),
 ]

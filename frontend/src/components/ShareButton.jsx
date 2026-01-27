@@ -7,11 +7,26 @@ const ShareButton = ({
     difficulty = '',
     time = '',
     message = '',
+    challengeId = null,
+    puzzleId = null,
 }) => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [copied, setCopied] = useState(false);
 
     const siteUrl = 'https://fruzzled.ie';
+
+    // Generate challenge URL if puzzleId is provided
+    const getShareUrl = () => {
+        if (challengeId) {
+            return `${siteUrl}/sudoku/challenge/${challengeId}`;
+        }
+        if (puzzleId && puzzleType === 'sudoku') {
+            return `${siteUrl}/sudoku/challenge/${puzzleId}`;
+        }
+        return siteUrl;
+    };
+
+    const shareUrl = getShareUrl();
 
     const getShareText = () => {
         if (message) return message;
@@ -20,12 +35,15 @@ const ShareButton = ({
         if (difficulty) text += ` (${difficulty})`;
         if (time) text += ` in ${time}`;
         text += ` on Fruzzled!`;
+        if (challengeId || puzzleId) {
+            text += ` Can you beat my time?`;
+        }
         return text;
     };
 
     const shareText = getShareText();
     const encodedText = encodeURIComponent(shareText);
-    const encodedUrl = encodeURIComponent(siteUrl);
+    const encodedUrl = encodeURIComponent(shareUrl);
 
     const handleTwitterShare = () => {
         const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
@@ -40,7 +58,7 @@ const ShareButton = ({
     };
 
     const handleCopyLink = async () => {
-        const fullText = `${shareText} ${siteUrl}`;
+        const fullText = `${shareText} ${shareUrl}`;
         try {
             await navigator.clipboard.writeText(fullText);
             setCopied(true);
@@ -57,7 +75,7 @@ const ShareButton = ({
                 await navigator.share({
                     title: 'Fruzzled',
                     text: shareText,
-                    url: siteUrl,
+                    url: shareUrl,
                 });
             } catch (err) {
                 if (err.name !== 'AbortError') {

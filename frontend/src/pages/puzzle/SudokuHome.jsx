@@ -25,6 +25,10 @@ const SudokuHome = () => {
                 title="Play Free Sudoku Online"
                 description="Play free sudoku puzzles online at Fruzzled. Choose from Easy, Medium, Hard, or Vicious difficulty levels. Track your times and compete on the leaderboard!"
                 path="/sudoku_home"
+                breadcrumbs={[
+                    { name: 'Home', url: 'https://fruzzled.ie' },
+                    { name: 'Sudoku', url: 'https://fruzzled.ie/sudoku_home' }
+                ]}
             />
             <h1 className="text-center mb-3">
                 Sudoku

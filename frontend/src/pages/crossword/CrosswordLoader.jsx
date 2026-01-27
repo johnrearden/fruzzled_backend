@@ -34,6 +34,10 @@ export const CrosswordLoader = () => {
                 title="Play Free Crossword Puzzles Online"
                 description="Play free crossword puzzles online at Fruzzled. Challenge yourself with our collection of handcrafted crosswords. Track your completion time and accuracy!"
                 path="/crossword"
+                breadcrumbs={[
+                    { name: 'Home', url: 'https://fruzzled.ie' },
+                    { name: 'Crossword', url: 'https://fruzzled.ie/crossword' }
+                ]}
             />
             <CrosswordGrid
                 key={key}
