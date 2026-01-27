@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { CurrentUserProvider } from './contexts/CurrentUserContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { PuzzleHistoryProvider } from './contexts/PuzzleHistoryContext';
@@ -13,15 +13,17 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 
 root.render(
-    <Router>
-        <ThemeProvider>
-            <CurrentUserProvider>
-                <ProfileProvider>
-                    <PuzzleHistoryProvider>
-                        <App />
-                    </PuzzleHistoryProvider>
-                </ProfileProvider>
-            </CurrentUserProvider>
-        </ThemeProvider>
-    </Router>
+    <HelmetProvider>
+        <Router>
+            <ThemeProvider>
+                <CurrentUserProvider>
+                    <ProfileProvider>
+                        <PuzzleHistoryProvider>
+                            <App />
+                        </PuzzleHistoryProvider>
+                    </ProfileProvider>
+                </CurrentUserProvider>
+            </ThemeProvider>
+        </Router>
+    </HelmetProvider>
 );
