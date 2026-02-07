@@ -8,6 +8,10 @@ export const Cell = (props) => {
         fontSize: `clamp(9px, ${props.cellsWidthRatio / 1.3}vw, ${props.maxDimension * 0.75}px)`,
     }
 
+    const clueNumberStyle = {
+        fontSize: `clamp(6px, ${props.cellsWidthRatio / 3}vw, 10px)`,
+    }
+
     const styleHighlighted = props.highlighted ? styles.part_of_current_clue : '';
     const styleSelected = props.selected ? styles.selected_cell : '';
     const styleSemantic = props.semantic ? styles.semantic : styles.non_semantic;
@@ -31,13 +35,18 @@ export const Cell = (props) => {
             className={ classString }
             onClick={ (event) => props.clickHandler(props.index, event) }
         >
+            {props.clueNumber && (
+                <span className={styles.clue_number} style={clueNumberStyle}>
+                    {props.clueNumber}
+                </span>
+            )}
             {props.showCorrectness && props.correct && (
                 <div className={styles.GreenTriangle}></div>
             )}
             {/* {props.showCorrectness && !props.correct && (
                 <div className={styles.RedTriangle}></div>
             )} */}
-            <span 
+            <span
                 className={ styles.cell_value }
                 style={ cellStyle }
             >

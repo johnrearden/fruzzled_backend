@@ -390,11 +390,13 @@ class GetCrosswordLeaderboard(APIView):
 
         # Only count instances with 100% completion for fair comparison
         index = CrosswordInstance.objects.filter(
+            crossword_puzzle=instance.crossword_puzzle,
             percent_complete=100,
             time_taken__lt=instance.time_taken
         ).count()
 
         rankings = CrosswordInstance.objects.filter(
+            crossword_puzzle=instance.crossword_puzzle,
             percent_complete=100
         ).order_by('time_taken')[:5]
 

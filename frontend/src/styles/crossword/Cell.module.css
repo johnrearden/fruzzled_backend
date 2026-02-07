@@ -62,3 +62,12 @@
     border-top: 6px solid red;
     border-right: 6px solid transparent;
 }
+
+.clue_number {
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    line-height: 1;
+    color: #333;
+    pointer-events: none;
+}

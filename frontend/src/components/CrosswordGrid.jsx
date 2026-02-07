@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { Row, Col, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,7 +6,7 @@ import { ClueList } from '../components/ClueList';
 import { Cell } from './Cell';
 import { CompletenessDisplay } from './CompletenessDisplay';
 import { getVerboseTimeString, replaceCharAt } from '../utils/utils';
-import { GRID_CONTENTS_LS_KEY, PUZZLE_ID_LS_KEY } from '../constants/constants.js';
+import { GRID_CONTENTS_LS_KEY, PUZZLE_ID_LS_KEY, CROSSWORD_TIMER_LS_KEY } from '../constants/constants.js';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProfile } from '../contexts/ProfileContext.jsx';
 import { MobileWordInput } from './MobileWordInput.jsx';
@@ -165,7 +165,22 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
         return array;
     });
 
-    /* 
+    /**
+     * Mapping from cell index to clue number for cells that start a clue.
+     * Used to display small numbers in the top-left corner of start cells.
+     */
+    const startCellClueNumbers = useMemo(() => {
+        const mapping = {};
+        data.clues.forEach((clue) => {
+            const startCellIndex = clue.start_col + clue.start_row * data.puzzle.grid.width;
+            if (mapping[startCellIndex] === undefined) {
+                mapping[startCellIndex] = clue.clue_number;
+            }
+        });
+        return mapping;
+    }, [data.clues, data.puzzle.grid.width]);
+
+    /*
     * As soon as the cellReferences array is populated, create an array consisting of the
     * correct characters for each cell in the grid, or '-' if the cell is blank.
     * Set the correctCellChars state variable to be this array.
@@ -262,6 +277,9 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
     const handleKeyPress = useCallback((event, keyCode) => {
 
         event.preventDefault();
+
+        // Bail early if modal is open
+        if (showProfileModal) return;
 
         if (currentClue == null) return;
 
@@ -375,7 +393,7 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
         } else if (keyCode === 13) {
             onCellClick(currentCell);
         }
-    }, [cellReferences, clueReferences, currentCell, currentClue, data.puzzle.id, gridContents]);
+    }, [cellReferences, clueReferences, currentCell, currentClue, data.puzzle.id, gridContents, showProfileModal]);
 
     /**
      * Add key listener to window on page load, and remove it when page is 
@@ -399,6 +417,9 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
      */
     const onFinished = () => {
         savePuzzleToHistory(data.puzzle.id, 'crossword', 0);
+        window.localStorage.removeItem(CROSSWORD_TIMER_LS_KEY);
+        window.localStorage.removeItem(PUZZLE_ID_LS_KEY);
+        window.localStorage.removeItem(GRID_CONTENTS_LS_KEY);
         if (!profile) {
             setShowProfileModal(true);
         } else {
@@ -488,6 +509,7 @@ export const CrosswordGrid = ({ data, loadNewCallback }) => {
                 correct={correct}
                 missing={missing}
                 semantic={true}
+                clueNumber={startCellClueNumbers[pointer]}
             ></Cell>
         )
     });
