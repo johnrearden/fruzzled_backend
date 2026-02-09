@@ -35,7 +35,7 @@
 - [x] Add Open Graph meta tags (og:title, og:description, og:image, og:url)
 - [x] Add Twitter Card meta tags (twitter:card, twitter:title, twitter:description, twitter:image)
 - [x] Create a shareable preview image template (1200x630px SVG at `static/images/fruzzled-og-image.svg`)
-- [ ] Convert SVG to PNG for production (social platforms prefer PNG)
+- [x] Convert SVG to PNG for production (social platforms prefer PNG)
 
 ### 1.3 Structured Data (JSON-LD) [MOSTLY DONE]
 **File:** `frontend/index.html`, `frontend/src/components/SEO.jsx`
@@ -182,7 +182,7 @@ PlayerAchievement: player, achievement, earned_at
 | 6 | Challenge links | Medium | Medium | DONE |
 | 7 | Crossword leaderboard | Medium | Medium | DONE |
 | 8 | BreadcrumbList schema | Low | Low-Medium | DONE |
-| 9 | Convert OG image to PNG | Low | Medium | TODO |
+| 9 | Convert OG image to PNG | Low | Medium | DONE |
 | 10 | Achievements system | High | Medium | NOT STARTED |
 | 11 | Dynamic sitemap generation | Low | Low | NOT STARTED |
 
@@ -223,7 +223,6 @@ PlayerAchievement: player, achievement, earned_at
 ---
 
 ## Next Steps (Recommended)
-1. Convert `fruzzled-og-image.svg` to PNG for social media compatibility
-2. Set up Google Search Console and submit sitemap
-3. Implement achievements system for improved retention
-4. Consider dynamic OG tags via SSR or prerendering for challenge links
+1. Set up Google Search Console and submit sitemap
+2. Implement achievements system for improved retention
+3. Consider dynamic OG tags via SSR or prerendering for challenge links
