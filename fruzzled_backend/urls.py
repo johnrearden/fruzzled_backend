@@ -9,6 +9,10 @@ urlpatterns = [
         template_name='sitemap.xml',
         content_type='application/xml'
     )),
+    path('robots.txt', TemplateView.as_view(
+        template_name='robots.txt',
+        content_type='text/plain'
+    )),
     path("accounts/", include("allauth.urls")),
     path('admin/', admin.site.urls),
     path('api/api-auth/', include('rest_framework.urls')),
