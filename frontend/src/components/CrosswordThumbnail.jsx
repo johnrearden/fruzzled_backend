@@ -27,7 +27,7 @@ export const CrosswordThumbnail = ({ puzzle }) => {
 
     const handleDelete = async () => {
         if (deleteAllowed) {
-            const url = `/crossword_builder/delete_puzzle/${id}`;
+            const url = `/crossword_builder/delete_puzzle/${id}/`;
             const formData = new FormData();
             formData.append('puzzle_id', id);
             try {

@@ -26,4 +26,10 @@ urlpatterns = [
     path('api/usage_stats/', include('usage_stats.urls'))
 ]
 
-handler404 = TemplateView.as_view(template_name='index.html')
+def custom_404_handler(request, exception):
+    if request.path.startswith('/api/'):
+        from django.http import JsonResponse
+        return JsonResponse({'detail': 'Not found.'}, status=404)
+    return TemplateView.as_view(template_name='index.html')(request)
+
+handler404 = custom_404_handler

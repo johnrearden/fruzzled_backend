@@ -47,7 +47,7 @@ const ProfileForm = ({ callback }) => {
 
         const checkAvailability = async (value) => {
             try {
-                const url = `is_nickname_available?nickname=${value}`;
+                const url = `is_nickname_available/?nickname=${value}`;
                 const { data } = await axiosReq.get(url);
                 console.log('available', JSON.stringify(data.available, null, 2))
                 setNicknameAvailable(data.available === 'true' ? true : false);
