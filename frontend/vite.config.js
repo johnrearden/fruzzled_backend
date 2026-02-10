@@ -4,6 +4,12 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    proxy: {
+      '/sitemap.xml': 'http://localhost:8000',
+      '/robots.txt': 'http://localhost:8000',
+    },
+  },
 })
 
 // https://vitejs.dev/config/

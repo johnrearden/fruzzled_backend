@@ -1,14 +1,14 @@
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 from .views import logout_route
+from .sitemaps import sitemaps
 from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html')),
-    path('sitemap.xml', TemplateView.as_view(
-        template_name='sitemap.xml',
-        content_type='application/xml'
-    )),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
+         name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', TemplateView.as_view(
         template_name='robots.txt',
         content_type='text/plain'

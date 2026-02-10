@@ -48,7 +48,7 @@
 - [x] Static sitemap with updated dates and changefreq values
 - [x] Sitemap served via Django URL route
 - [x] Add canonical tags to prevent duplicate content
-- [ ] Consider dynamic sitemap generation (Django sitemap framework)
+- [x] Dynamic sitemap generation (Django sitemap framework)
 - [ ] Verify Google Search Console setup
 
 ---
@@ -184,7 +184,7 @@ PlayerAchievement: player, achievement, earned_at
 | 8 | BreadcrumbList schema | Low | Low-Medium | DONE |
 | 9 | Convert OG image to PNG | Low | Medium | DONE |
 | 10 | Achievements system | High | Medium | NOT STARTED |
-| 11 | Dynamic sitemap generation | Low | Low | NOT STARTED |
+| 11 | Dynamic sitemap generation | Low | Low | DONE |
 
 ---
 
