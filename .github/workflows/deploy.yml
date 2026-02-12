@@ -43,9 +43,8 @@ jobs:
           ln -sf /home/john/fruzzled_backend/env.py env.py
           ln -sf /home/john/fruzzled_backend/frontend/.env frontend/.env
 
-          # Check if models or migrations changed
-          # Let's leave this as a manual step for now
-          # python manage.py migrate
+          # Run database migrations
+          python manage.py migrate
 
           # Build frontend
           echo "⚛️  Building React frontend..."
